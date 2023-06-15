@@ -1,0 +1,6 @@
+#!/bin/bash
+
+path=$1
+print_banner "$1" ">"
+cat $1
+print_banner "" "<"

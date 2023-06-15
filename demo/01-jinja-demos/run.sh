@@ -41,7 +41,9 @@ END_CELL
 
 # ------------------------------------------------------------------------------
 
-bash_cell 'jinja hello world from external template' << END_CELL
+bash_cell 'jinja hello world from external template' << 'END_CELL'
+
+print_template templates/hello.jinja
 
 python3 << END_PYTHON
 

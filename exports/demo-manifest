@@ -1,3 +1,5 @@
 demo-makefile
 demo-setup
 demo-targets
+print_banner
+print_template

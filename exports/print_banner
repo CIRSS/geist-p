@@ -1,0 +1,28 @@
+#!/bin/bash
+
+if [[ -n $1 ]] ; then
+    label=" $1 "
+else
+    label=""
+fi
+label_width=${#label}
+
+
+dashes="---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+if [[ -n $2 ]] ; then
+    banner=$(echo $dashes | tr '-' $2)
+else
+    banner=$dashes
+fi
+
+banner_width=80
+
+pad_left=$(( ($banner_width-$label_width)/2 ))
+if [[ $pad_left -lt 3 ]] ; then
+    pad_left=3
+    pad_right=3
+else
+    pad_right=$banner_width-$label_width-$pad_left
+fi
+
+echo "${banner:0:$pad_left}${label}${banner:0:$pad_right}"
