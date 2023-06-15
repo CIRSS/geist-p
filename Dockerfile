@@ -10,4 +10,6 @@ USER repro
 RUN repro.require shell-notebook master ${REPROS_DEV}
 RUN repro.require geist-p exports --demo
 
+RUN repro.env REPRO_DEMO_TMP_DIRNAME tmp
+
 CMD  /bin/bash -il
