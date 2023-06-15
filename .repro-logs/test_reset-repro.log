@@ -1,0 +1,12 @@
+I MESG Loaded repro logging functions
+I MESG Initialized repro logging system
+I MESG Loaded repro base functions
+I MESG Initializing REPRO session
+I MESG Building PATH variable
+I MESG Skipping rest of session initialization because REPRO_DEFER_INIT is set to 'true'
+I MESG Resetting REPRO
+I MESG Resetting all modules
+I MESG Resetting the 'repro' module
+I MESG Re-initializing trim files for module 'repro'
+I MESG Resetting the REPRO target mapping file (/mnt/repro-template/.repro/repro-targets)
+I MESG Installing a default (empty) target mapping file to /mnt/repro-template/.repro/repro-targets
