@@ -1,4 +1,4 @@
-REPRO_NAME=repro-template
+REPRO_NAME=geist-p
 REPRO_DOCKER_ORG=cirss
 REPRO_IMAGE_TAG=latest
 
