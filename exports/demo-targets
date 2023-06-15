@@ -1,0 +1,2 @@
+run-demo: run
+clean-demo: clean

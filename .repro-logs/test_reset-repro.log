@@ -8,5 +8,16 @@ I MESG Resetting REPRO
 I MESG Resetting all modules
 I MESG Resetting the 'repro' module
 I MESG Re-initializing trim files for module 'repro'
+I MESG Resetting the 'shell-notebook' module
+I MESG Re-initializing trim files for module 'shell-notebook'
+I MESG Ensuring other files listed in the 'shell-notebook' module trim manifest are in the module trim directory (/mnt/geist-p/.shell-notebook)
+I MESG Copying trim file Makefile.demo-runner from /home/repro/repro-modules/shell-notebook-master to /mnt/geist-p/.shell-notebook
+I MESG Resetting the 'geist-p' module
+I MESG Re-initializing trim files for module 'geist-p'
+I MESG Copying /home/repro/repro-modules/geist-p-exports/demo-makefile to the 'geist-p' trim directory (/mnt/geist-p/.geist-p)
+I MESG Resetting the 'python-dev' module
+I MESG Re-initializing trim files for module 'python-dev'
 I MESG Resetting the REPRO target mapping file (/mnt/geist-p/.repro/repro-targets)
 I MESG Installing a default (empty) target mapping file to /mnt/geist-p/.repro/repro-targets
+I MESG Mapping the 'geist-p:demo:run' target to the REPRO 'run-demo' target
+I MESG Mapping the 'geist-p:demo:clean' target to the REPRO 'clean-demo' target
