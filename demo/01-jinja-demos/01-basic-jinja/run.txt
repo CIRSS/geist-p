@@ -1,0 +1,202 @@
+=============================================== bash cell | jinja installation info ================================================
+
+pip show Jinja2
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+Name: Jinja2
+Version: 3.1.2
+Summary: A very fast and expressive template engine.
+Home-page: https://palletsprojects.com/p/jinja/
+Author: Armin Ronacher
+Author-email: armin.ronacher@active-4.com
+License: BSD-3-Clause
+Location: /home/repro/.local/lib/python3.10/site-packages
+Requires: MarkupSafe
+Required-by: 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+============================================== bash cell | imported jinja module info ==============================================
+
+python3 << END_PYTHON
+
+import jinja2
+
+print(jinja2)
+
+END_PYTHON
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+<module 'jinja2' from '/home/repro/.local/lib/python3.10/site-packages/jinja2/__init__.py'>
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+================================================== bash cell | jinja hello world ===================================================
+
+python3 << END_PYTHON
+
+import jinja2
+
+environment = jinja2.Environment()
+hello_template = environment.from_string("Hello {{ name }}!")
+hello_world = hello_template.render(name="World")
+print(hello_world)
+
+END_PYTHON
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+Hello World!
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+======================================= bash cell | jinja hello world from external template =======================================
+
+print_template templates/hello.jinja
+
+python3 << END_PYTHON
+
+import jinja2
+
+environment = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"))
+hello_template = environment.get_template("hello.jinja")
+hello_world = hello_template.render(name="World")
+print(hello_world)
+
+END_PYTHON
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+>>>>>>>>>>>>>>>>>>>>>>>>>>>> templates/hello.jinja >>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+Hello {{ name }}!
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+Hello World!
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+======================================== bash cell | jinja hello world with built-in filter ========================================
+
+print_template templates/hello_all_caps_name.jinja
+
+python3 << END_PYTHON
+
+import jinja2
+
+environment = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"))
+hello_template = environment.get_template("hello_all_caps_name.jinja")
+hello_world = hello_template.render(name="World")
+print(hello_world)
+
+END_PYTHON
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+>>>>>>>>>>>>>>>>>>>>> templates/hello_all_caps_name.jinja >>>>>>>>>>>>>>>>>>>>>>
+Hello {{ name | upper }}!
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+Hello WORLD!
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+====================================== bash cell | jinja hello world with variable assignment ======================================
+
+print_template templates/hello_assigned_variable.jinja
+
+python3 << END_PYTHON
+
+import jinja2
+
+environment = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"))
+hello_template = environment.get_template("hello_assigned_variable.jinja")
+hello_world = hello_template.render()
+print(hello_world)
+
+END_PYTHON
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+>>>>>>>>>>>>>>>>>>> templates/hello_assigned_variable.jinja >>>>>>>>>>>>>>>>>>>>
+{% set name = 'universe' %}
+Hello {{ name }}!
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+Hello universe!
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+============================= bash cell | jinja hello world with variable assignment and trimmed block =============================
+
+print_template templates/hello_assigned_variable.jinja
+
+python3 << END_PYTHON
+
+import jinja2
+
+environment = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"))
+hello_template = environment.get_template("hello_assigned_variable_trimblock.jinja")
+hello_world = hello_template.render()
+print(hello_world)
+
+END_PYTHON
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+>>>>>>>>>>>>>>>>>>> templates/hello_assigned_variable.jinja >>>>>>>>>>>>>>>>>>>>
+{% set name = 'universe' %}
+Hello {{ name }}!
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+Hello universe!
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================== bash cell | jinja hello world with block trimming default =====================================
+
+print_template templates/hello_assigned_variable.jinja
+
+python3 << END_PYTHON
+
+import jinja2
+
+environment = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), trim_blocks=True)
+hello_template = environment.get_template("hello_assigned_variable.jinja")
+hello_world = hello_template.render()
+print(hello_world)
+
+END_PYTHON
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+>>>>>>>>>>>>>>>>>>> templates/hello_assigned_variable.jinja >>>>>>>>>>>>>>>>>>>>
+{% set name = 'universe' %}
+Hello {{ name }}!
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+Hello universe!
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+======================================= bash cell | jinja hello world using global function ========================================
+
+print_template templates/hello_global_functions.jinja
+
+python3 << END_PYTHON
+
+import jinja2
+
+environment = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"),
+    trim_blocks=True)
+
+def get_greeting():
+    return 'Hello'
+environment.globals['get_greeting'] = get_greeting
+
+environment.globals['get_name'] = lambda: 'Planet'
+
+hello_template = environment.get_template("hello_global_functions.jinja")
+hello_world = hello_template.render()
+print(hello_world)
+
+END_PYTHON
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+>>>>>>>>>>>>>>>>>>>> templates/hello_global_functions.jinja >>>>>>>>>>>>>>>>>>>>
+{% set name = get_name() %}
+{{ get_greeting() }} {{ name }}!
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+Hello Planet!
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
