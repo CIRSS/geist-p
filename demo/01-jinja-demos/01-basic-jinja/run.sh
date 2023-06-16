@@ -161,3 +161,33 @@ print(hello_world)
 END_PYTHON
 
 END_CELL
+
+# ------------------------------------------------------------------------------
+
+bash_cell 'jinja nested template expansion' << 'END_CELL'
+
+print_template templates/hello_nested_outer_template.jinja
+print_template templates/hello_nested_inner_template.jinja
+
+python3 << END_PYTHON
+
+import jinja2
+
+environment = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"),
+    trim_blocks=True)
+
+def get_name():
+    inner_template = environment.get_template("hello_nested_inner_template.jinja")
+    return inner_template.render()
+
+environment.globals['get_name'] = get_name
+environment.globals['get_greeting'] = lambda: 'Hello'
+
+hello_template = environment.get_template("hello_nested_outer_template.jinja")
+hello_world = hello_template.render()
+print(hello_world)
+
+END_PYTHON
+
+END_CELL
+
