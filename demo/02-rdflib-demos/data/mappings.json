@@ -1,0 +1,6 @@
+{
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#": "rdf#",
+    "http://www.w3.org/2000/01/rdf-schema#": "rdfs#",
+    "https://w3id.org/trace/2023/05/trov#": "trov#",
+    "https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/": ""
+}

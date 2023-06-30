@@ -1,0 +1,171 @@
+#!/usr/bin/python3
+
+import click, pickle, json, os
+import pandas as pd
+from tabulate import tabulate
+import pygraphviz as pgv
+from rdflib import Graph
+from owlrl import DeductiveClosure, RDFS_Semantics, OWLRL_Semantics, RDFS_OWLRL_Semantics
+
+DATA_DIR = ".geistdata/"
+PASTEL_COLORS = ["#b3e2cd", "#fdccac", "#cbd5e8", "#f4cae4", "#e6f5c9", "#fff2ae", "#f1e2cc", "#cccccc"]
+
+@click.group()
+def cli():
+    pass
+
+def create_rdf_graph(input_file, input_format, infer):
+    """
+    This function is to load a file with a given format as a RDF Graph object supported by RDFLib
+    :param input_file: String. Path of the file
+    :param input_format: Defaults to json-ld. It could be one of [xml, n3, turtle, nt, pretty-xml, trix, trig, nquads, json-ld, hext]
+    :param infer: Inference to perform on update [none, rdfs, owl, rdfs_owl] (default "none")
+    :return rdf_graph: a RDF Graph object supported by RDFLib
+    """
+    if input_format not in ["xml", "n3", "turtle", "nt", "pretty-xml", "trix", "trig", "nquads", "json-ld", "hext"]:
+        raise ValueError("RDFLib .parse() only supports [xml, n3, turtle, nt, pretty-xml, trix, trig, nquads, json-ld, hext], but '" + str(input_format) + "' was given.")
+    if infer not in ["none", "rdfs", "owl", "rdfs_owl"]:
+        raise ValueError("Only [none, rdfs, owl, rdfs_owl] are supported.")
+    # Parse the file (e.g., a JSON-LD file) with RDFLib
+    rdf_graph = Graph()
+    rdf_graph.parse(source=input_file, format=input_format)
+    # Inference
+    if infer == "rdfs":
+        # RDFS_Semantics: implementing the RDFS semantics
+        DeductiveClosure(RDFS_Semantics).expand(rdf_graph)
+    elif infer == "owl":
+        # OWLRL_Semantics: implementing the OWL 2 RL
+        DeductiveClosure(OWLRL_Semantics).expand(rdf_graph)
+    elif infer == "rdfs_owl":
+        # RDFS_OWLRL_Semantics: implementing a combined semantics of RDFS semantics and OWL 2 RL
+        DeductiveClosure(RDFS_OWLRL_Semantics).expand(rdf_graph)
+    return rdf_graph
+
+def load_rdf_dataset(dataset):
+    data_path = DATA_DIR + dataset + ".pkl"
+    if not os.path.isfile(data_path):
+        raise ValueError("Please create the RDF dataset ({dataset}) before loading it. Run `geist create --help` for detailed information".format(dataset=dataset))
+    with open(data_path, mode='rb') as f:
+        rdf_graph = pickle.load(f)
+    return rdf_graph
+
+def delete_rdf_dataset(dataset):
+    data_path = DATA_DIR + dataset + ".pkl"
+    if not os.path.isfile(data_path):
+        raise ValueError("Nothing to be removed. Can NOT find {data_path}".format(data_path=data_path))
+    os.remove(data_path)
+    return
+
+def ensure_dir_exists(file_path):
+    dir_path = os.path.split(file_path)[0]
+    if not os.path.isdir(dir_path):
+        os.makedirs(dir_path)
+    return
+
+def query2df(rdf_graph, query):
+    """
+    This function is to run query on a RDF graph
+    :param rdf_graph: a RDF Graph object supported by RDFLib
+    :param query: string. A query to be applied to the given RDF graph
+    :return res: a Pandas data frame. Results of the query
+    """
+    rows = []
+    for r in rdf_graph.query(query):
+        rows.append(r)
+    res = pd.DataFrame(rows, columns=list(rows[0].labels.keys()))
+    return res
+
+def visualize_query_results(query_res, edges, same_color=False):
+    """
+    This function is to visualize query results
+    :param query_res: a Pandas data frame.
+    :param edges: a list of list. [[start_node1, end_node1, label1], [start_node2, end_node2, label2], ...] where these items are column names
+    :param same_color: a bool value to denote if all edges are filled with the same color (default: False)
+    :return g: a Graphviz graph
+    """
+    # Create a directed graph
+    G = pgv.AGraph(directed=True)
+    # Add nodes and edges
+    for _, row in query_res.iterrows():
+        for idx, edge in enumerate(edges):
+            if same_color:
+                color = PASTEL_COLORS[0]
+            else:
+                color = PASTEL_COLORS[idx % 8]
+            G.add_node(row[edge[0]], shape="box", style="filled, rounded", fillcolor=color)
+            G.add_node(row[edge[1]], shape="box", style="filled, rounded", fillcolor=color)
+            G.add_edge(row[edge[0]], row[edge[1]], label=row[edge[2]])
+    return G
+
+@cli.command()
+@click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to create (default "kb")')
+@click.option('--inputfile', '-ifile', required=True, type=str, help='Path of the file to be loaded as triples')
+@click.option('--inputformat', '-iformat', default='json-ld', type=click.Choice(['xml', 'n3', 'turtle', 'nt', 'pretty-xml', 'trix', 'trig', 'nquads', 'json-ld', 'hext']), help='Format of the file to be loaded as triples (default json-ld)')
+@click.option('--infer', default='none', type=click.Choice(['none', 'rdfs', 'owl', 'rdfs_owl']), help='Inference to perform on update [none, rdfs, owl, rdfs_owl] (default "none")')
+def create(dataset, inputfile, inputformat, infer):
+    """Create a new RDF dataset"""
+    data_path = DATA_DIR + dataset + ".pkl"
+    if os.path.isfile(data_path):
+        raise ValueError("Please remove the existing RDF dataset ({dataset}) before loading the new one. Run `geist destroy --help` for detailed information".format(dataset=dataset))
+    rdf_graph = create_rdf_graph(inputfile, inputformat, infer)
+    with open(data_path, "wb") as f:
+        pickle.dump(rdf_graph, f)
+
+@cli.command()
+@click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to be removed (default "kb")')
+def destroy(dataset):
+    """Delete an RDF dataset"""
+    delete_rdf_dataset(dataset)
+
+@cli.command()
+@click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to be exported (default "kb")')
+@click.option('--outputfile', '-ofile', default=None, type=str, help='Path of the file to store these exported triples (defult: None)')
+@click.option('--outputformat', '-oformat', default='nt', type=click.Choice(['json-ld', 'n3', 'nquads', 'nt', 'hext', 'pretty-xml', 'trig', 'trix', 'turtle', 'longturtle', 'xml']), help='Format of the exported triples (default nt)')
+def export(dataset, outputfile, outputformat):
+    """Export an RDF graph"""
+    rdf_graph = load_rdf_dataset(dataset)
+    if outputfile is None:
+        print(rdf_graph.serialize(format=outputformat))
+    else:
+        ensure_dir_exists(outputfile)
+        rdf_graph.serialize(destination=outputfile, format=outputformat)
+
+@cli.command()
+@click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to be queried (default "kb")')
+@click.option('--file', required=True, type=str, help='File containing the SPARQL query to execute')
+@click.option('--outputfile', '-ofile', default=None, type=str, help='Path of the file to store the query results (defult: None)')
+def query(dataset, file, outputfile):
+    """Perform a SPARQL query on a dataset"""
+    rdf_graph = load_rdf_dataset(dataset)
+    with open(file, mode='r', encoding='utf-8') as f:
+        query = f.read()
+    res = query2df(rdf_graph, query)
+    if outputfile is None:
+        print(res.to_markdown())
+    else:
+        ensure_dir_exists(outputfile)
+        res.to_csv(outputfile, index=False)
+
+@cli.command()
+@click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to be visualized (default "kb")')
+@click.option('--mappings', '-m', default=None, help='File of the mappings to shorten text (str): path of a JSON file, where the key is the original text and the value is the shorter text.')
+@click.option('--outputfile', '-ofile', default='res.png', type=str, help='Path of the file to store the plot of query results (defult: res.png)')
+def graph(dataset, mappings, outputfile):
+    """Visualize results of a SPARQL query on a dataset"""
+    if mappings:
+        with open(mappings, mode='r', encoding='utf-8') as fin:
+            mappings = json.loads(fin.read())
+    rdf_graph = load_rdf_dataset(dataset)
+    query = """
+            SELECT ?s ?p ?o
+            WHERE {
+                ?s ?p ?o
+            }
+        """
+    res = query2df(rdf_graph, query).replace(mappings, regex=True)
+    G = visualize_query_results(query_res=res, edges=[['s', 'o', 'p']], same_color=True)
+    G.layout(prog='dot')
+    G.draw(outputfile)
+
+if __name__ == '__main__':
+    cli()

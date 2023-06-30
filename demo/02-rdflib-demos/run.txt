@@ -1,0 +1,212 @@
+================================================== bash cell | available_commands ==================================================
+
+../../geist --help
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+Usage: geist [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  create   Create a new RDF dataset
+  destroy  Delete an RDF dataset
+  export   Export an RDF graph
+  graph    Visualize results of a SPARQL query on a dataset
+  query    Perform a SPARQL query on a dataset
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================================== bash cell | create_command ====================================================
+
+../../geist create --help
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+Usage: geist create [OPTIONS]
+
+  Create a new RDF dataset
+
+Options:
+  -d, --dataset TEXT              Name of RDF dataset to create (default "kb")
+  -ifile, --inputfile TEXT        Path of the file to be loaded as triples
+                                  [required]
+  -iformat, --inputformat [xml|n3|turtle|nt|pretty-xml|trix|trig|nquads|json-ld|hext]
+                                  Format of the file to be loaded as triples
+                                  (default json-ld)
+  --infer [none|rdfs|owl|rdfs_owl]
+                                  Inference to perform on update [none, rdfs,
+                                  owl, rdfs_owl] (default "none")
+  --help                          Show this message and exit.
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+================================================= bash cell | create_dataset_test ==================================================
+
+../../geist create -d test -ifile data/tro.jsonld
+
+ls .geistdata
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+test.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+=================================================== bash cell | destroy_command ====================================================
+
+../../geist destroy --help
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+Usage: geist destroy [OPTIONS]
+
+  Delete an RDF dataset
+
+Options:
+  -d, --dataset TEXT  Name of RDF dataset to be removed (default "kb")
+  --help              Show this message and exit.
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+================================================= bash cell | destroy_dataset_test =================================================
+
+../../geist destroy -d test
+
+ls .geistdata
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+================================================== bash cell | create_dataset_kb ===================================================
+
+../../geist create -ifile data/tro.jsonld
+
+ls .geistdata
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+kb.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================================== bash cell | export_command ====================================================
+
+../../geist export --help
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+Usage: geist export [OPTIONS]
+
+  Export an RDF graph
+
+Options:
+  -d, --dataset TEXT              Name of RDF dataset to be exported (default
+                                  "kb")
+  -ofile, --outputfile TEXT       Path of the file to store these exported
+                                  triples (defult: None)
+  -oformat, --outputformat [json-ld|n3|nquads|nt|hext|pretty-xml|trig|trix|turtle|longturtle|xml]
+                                  Format of the exported triples (default nt)
+  --help                          Show this message and exit.
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+================================================== bash cell | export_dataset_kb ===================================================
+
+../../geist export
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+<https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1> <https://w3id.org/trace/2023/05/trov#sha256> "art.sha256.1" .
+<https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2> <https://w3id.org/trace/2023/05/trov#hasArtifact> <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/100> .
+<https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1> <https://w3id.org/trace/2023/05/trov#sha256> "sha256.fp1" .
+<https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1> <https://w3id.org/trace/2023/05/trov#hasArtifact> <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1> .
+<https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://w3id.org/trace/2023/05/trov#ArtifactLocus> .
+_:N555b5cca624d472890f6dd15303061d5 <https://w3id.org/trace/2023/05/trov#hasArrangement> <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1> .
+<https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1> <https://w3id.org/trace/2023/05/trov#hasArtifact> <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1> .
+<https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1> <https://w3id.org/trace/2023/05/trov#hasFingerprint> <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1> .
+<https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2> <https://w3id.org/trace/2023/05/trov#hasLocation> "filepath2" .
+<https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://w3id.org/trace/2023/05/trov#ArtifactArrangement> .
+<https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1> <https://w3id.org/trace/2023/05/trov#hasLocus> <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1> .
+<https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://w3id.org/trace/2023/05/trov#CompositionFingerprint> .
+<https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://w3id.org/trace/2023/05/trov#ResearchArtifact> .
+<https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1> <https://w3id.org/trace/2023/05/trov#hasLocation> "filepath1" .
+<https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1> <https://w3id.org/trace/2023/05/trov#hasLocus> <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2> .
+<https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://w3id.org/trace/2023/05/trov#ArtifactLocus> .
+<https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://w3id.org/trace/2023/05/trov#ArtifactComposition> .
+_:N555b5cca624d472890f6dd15303061d5 <https://w3id.org/trace/2023/05/trov#hasComposition> <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1> .
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================================== bash cell | graph_command =====================================================
+
+../../geist graph --help
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+Usage: geist graph [OPTIONS]
+
+  Visualize results of a SPARQL query on a dataset
+
+Options:
+  -d, --dataset TEXT         Name of RDF dataset to be visualized (default
+                             "kb")
+  -m, --mappings TEXT        File of the mappings to shorten text (str): path
+                             of a JSON file, where the key is the original
+                             text and the value is the shorter text.
+  -ofile, --outputfile TEXT  Path of the file to store the plot of query
+                             results (defult: res.png)
+  --help                     Show this message and exit.
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+=================================================== bash cell | graph_dataset_kb ===================================================
+
+../../geist graph -m data/mappings.json -ofile products/kb.png
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================================== bash cell | query_command =====================================================
+
+../../geist query --help
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+Usage: geist query [OPTIONS]
+
+  Perform a SPARQL query on a dataset
+
+Options:
+  -d, --dataset TEXT         Name of RDF dataset to be queried (default "kb")
+  --file TEXT                File containing the SPARQL query to execute
+                             [required]
+  -ofile, --outputfile TEXT  Path of the file to store the query results
+                             (defult: None)
+  --help                     Show this message and exit.
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+=================================================== bash cell | query_dataset_kb ===================================================
+
+../../geist query --file data/query
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+|    | s                                                                                                                                        | p                                                  | o                                                                                                                                          |
+|---:|:-----------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------|
+|  0 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1    | https://w3id.org/trace/2023/05/trov#hasLocation    | filepath1                                                                                                                                  |
+|  1 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2    | http://www.w3.org/1999/02/22-rdf-syntax-ns#type    | https://w3id.org/trace/2023/05/trov#ArtifactLocus                                                                                          |
+|  2 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2    | https://w3id.org/trace/2023/05/trov#hasLocation    | filepath2                                                                                                                                  |
+|  3 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2    | https://w3id.org/trace/2023/05/trov#hasArtifact    | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/100 |
+|  4 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1            | https://w3id.org/trace/2023/05/trov#hasFingerprint | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1                        |
+|  5 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1                      | https://w3id.org/trace/2023/05/trov#sha256         | sha256.fp1                                                                                                                                 |
+|  6 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1    | http://www.w3.org/1999/02/22-rdf-syntax-ns#type    | https://w3id.org/trace/2023/05/trov#ArtifactLocus                                                                                          |
+|  7 | N555b5cca624d472890f6dd15303061d5                                                                                                        | https://w3id.org/trace/2023/05/trov#hasComposition | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1              |
+|  8 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1 | https://w3id.org/trace/2023/05/trov#sha256         | art.sha256.1                                                                                                                               |
+|  9 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1            | https://w3id.org/trace/2023/05/trov#hasArtifact    | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1   |
+| 10 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1 | http://www.w3.org/1999/02/22-rdf-syntax-ns#type    | https://w3id.org/trace/2023/05/trov#ResearchArtifact                                                                                       |
+| 11 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1    | https://w3id.org/trace/2023/05/trov#hasArtifact    | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1   |
+| 12 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1            | https://w3id.org/trace/2023/05/trov#hasLocus       | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1      |
+| 13 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1            | http://www.w3.org/1999/02/22-rdf-syntax-ns#type    | https://w3id.org/trace/2023/05/trov#ArtifactArrangement                                                                                    |
+| 14 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1                      | http://www.w3.org/1999/02/22-rdf-syntax-ns#type    | https://w3id.org/trace/2023/05/trov#CompositionFingerprint                                                                                 |
+| 15 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1            | http://www.w3.org/1999/02/22-rdf-syntax-ns#type    | https://w3id.org/trace/2023/05/trov#ArtifactComposition                                                                                    |
+| 16 | N555b5cca624d472890f6dd15303061d5                                                                                                        | https://w3id.org/trace/2023/05/trov#hasArrangement | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1              |
+| 17 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1            | https://w3id.org/trace/2023/05/trov#hasLocus       | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2      |
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
