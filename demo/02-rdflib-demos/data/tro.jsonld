@@ -7,6 +7,9 @@
     }],
     
     "@graph": [{
+        "@id": "tro/1",
+        "@type": "trov:TransparentResearchObject",
+
         "trov:hasComposition": [
         {
             "@id": "composition/1",
