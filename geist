@@ -14,6 +14,18 @@ PASTEL_COLORS = ["#b3e2cd", "#fdccac", "#cbd5e8", "#f4cae4", "#e6f5c9", "#fff2ae
 def cli():
     pass
 
+def infer_rdf_graph(rdf_graph, infer):
+    if infer == "rdfs":
+        # RDFS_Semantics: implementing the RDFS semantics
+        DeductiveClosure(RDFS_Semantics).expand(rdf_graph)
+    elif infer == "owl":
+        # OWLRL_Semantics: implementing the OWL 2 RL
+        DeductiveClosure(OWLRL_Semantics).expand(rdf_graph)
+    elif infer == "rdfs_owl":
+        # RDFS_OWLRL_Semantics: implementing a combined semantics of RDFS semantics and OWL 2 RL
+        DeductiveClosure(RDFS_OWLRL_Semantics).expand(rdf_graph)
+    return rdf_graph
+
 def create_rdf_graph(input_file, input_format, infer):
     """
     This function is to load a file with a given format as a RDF Graph object supported by RDFLib
@@ -29,16 +41,7 @@ def create_rdf_graph(input_file, input_format, infer):
     # Parse the file (e.g., a JSON-LD file) with RDFLib
     rdf_graph = Graph()
     rdf_graph.parse(source=input_file, format=input_format)
-    # Inference
-    if infer == "rdfs":
-        # RDFS_Semantics: implementing the RDFS semantics
-        DeductiveClosure(RDFS_Semantics).expand(rdf_graph)
-    elif infer == "owl":
-        # OWLRL_Semantics: implementing the OWL 2 RL
-        DeductiveClosure(OWLRL_Semantics).expand(rdf_graph)
-    elif infer == "rdfs_owl":
-        # RDFS_OWLRL_Semantics: implementing a combined semantics of RDFS semantics and OWL 2 RL
-        DeductiveClosure(RDFS_OWLRL_Semantics).expand(rdf_graph)
+    rdf_graph = infer_rdf_graph(rdf_graph, infer)
     return rdf_graph
 
 def load_rdf_dataset(dataset):
@@ -46,8 +49,9 @@ def load_rdf_dataset(dataset):
     if not os.path.isfile(data_path):
         raise ValueError("Please create the RDF dataset ({dataset}) before loading it. Run `geist create --help` for detailed information".format(dataset=dataset))
     with open(data_path, mode='rb') as f:
-        rdf_graph = pickle.load(f)
-    return rdf_graph
+        geist_graph_object = pickle.load(f)
+    rdf_graph, infer = geist_graph_object["rdf_graph"], geist_graph_object["infer"]
+    return rdf_graph, infer
 
 def delete_rdf_dataset(dataset):
     data_path = DATA_DIR + dataset + ".pkl"
@@ -108,9 +112,23 @@ def create(dataset, inputfile, inputformat, infer):
     if os.path.isfile(data_path):
         raise ValueError("Please remove the existing RDF dataset ({dataset}) before loading the new one. Run `geist destroy --help` for detailed information".format(dataset=dataset))
     rdf_graph = create_rdf_graph(inputfile, inputformat, infer)
+    # Save as a Gesit graph object
+    geist_graph_object = {"rdf_graph": rdf_graph, "infer": infer}
     ensure_dir_exists(data_path)
     with open(data_path, "wb") as f:
-        pickle.dump(rdf_graph, f)
+        pickle.dump(geist_graph_object, f)
+
+@cli.command()
+@click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to create (default "kb")')
+@click.option('--inputfile', '-ifile', required=True, type=str, help='Path of the file to be loaded as triples')
+@click.option('--inputformat', '-iformat', default='json-ld', type=click.Choice(['xml', 'n3', 'turtle', 'nt', 'pretty-xml', 'trix', 'trig', 'nquads', 'json-ld', 'hext']), help='Format of the file to be loaded as triples (default json-ld)')
+def add(dataset, inputfile, inputformat):
+    """Import data into a RDF dataset"""
+    (rdf_graph, infer) = load_rdf_dataset(dataset)
+    rdf_graph = rdf_graph + create_rdf_graph(inputfile, inputformat, infer)
+    geist_graph_object = {"rdf_graph": rdf_graph, "infer": infer}
+    with open(DATA_DIR + dataset + ".pkl", "wb") as f:
+        pickle.dump(geist_graph_object, f)
 
 @cli.command()
 @click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to be removed (default "kb")')
@@ -124,7 +142,7 @@ def destroy(dataset):
 @click.option('--outputformat', '-oformat', default='nt', type=click.Choice(['json-ld', 'n3', 'nquads', 'nt', 'hext', 'pretty-xml', 'trig', 'trix', 'turtle', 'longturtle', 'xml']), help='Format of the exported triples (default nt)')
 def export(dataset, outputfile, outputformat):
     """Export an RDF graph"""
-    rdf_graph = load_rdf_dataset(dataset)
+    (rdf_graph, infer) = load_rdf_dataset(dataset)
     if outputfile is None:
         print(rdf_graph.serialize(format=outputformat))
     else:
@@ -137,7 +155,7 @@ def export(dataset, outputfile, outputformat):
 @click.option('--outputfile', '-ofile', default=None, type=str, help='Path of the file to store the query results (defult: None)')
 def query(dataset, file, outputfile):
     """Perform a SPARQL query on a dataset"""
-    rdf_graph = load_rdf_dataset(dataset)
+    (rdf_graph, infer) = load_rdf_dataset(dataset)
     with open(file, mode='r', encoding='utf-8') as f:
         query = f.read()
     res = query2df(rdf_graph, query)
@@ -157,7 +175,7 @@ def graph(dataset, mappings, outputfile, outputformat):
     if mappings:
         with open(mappings, mode='r', encoding='utf-8') as fin:
             mappings = json.loads(fin.read())
-    rdf_graph = load_rdf_dataset(dataset)
+    (rdf_graph, infer) = load_rdf_dataset(dataset)
     query = """
             SELECT ?s ?p ?o
             WHERE {
