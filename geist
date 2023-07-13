@@ -58,7 +58,7 @@ def delete_rdf_dataset(dataset):
 
 def ensure_dir_exists(file_path):
     dir_path = os.path.split(file_path)[0]
-    if not os.path.isdir(dir_path):
+    if (dir_path != '') and (not os.path.isdir(dir_path)):
         os.makedirs(dir_path)
     return
 
@@ -108,6 +108,7 @@ def create(dataset, inputfile, inputformat, infer):
     if os.path.isfile(data_path):
         raise ValueError("Please remove the existing RDF dataset ({dataset}) before loading the new one. Run `geist destroy --help` for detailed information".format(dataset=dataset))
     rdf_graph = create_rdf_graph(inputfile, inputformat, infer)
+    ensure_dir_exists(data_path)
     with open(data_path, "wb") as f:
         pickle.dump(rdf_graph, f)
 
@@ -149,8 +150,9 @@ def query(dataset, file, outputfile):
 @cli.command()
 @click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to be visualized (default "kb")')
 @click.option('--mappings', '-m', default=None, help='File of the mappings to shorten text (str): path of a JSON file, where the key is the original text and the value is the shorter text.')
-@click.option('--outputfile', '-ofile', default='res.png', type=str, help='Path of the file to store the plot of query results (defult: res.png)')
-def graph(dataset, mappings, outputfile):
+@click.option('--outputfile', '-ofile', default='res', type=str, help='Path of the file without extension to store the graph (defult: res)')
+@click.option('--outputformat', '-oformat', default='png', type=click.Choice(['png', 'gv']), help='Format of the graph (defult: png): png or gv')
+def graph(dataset, mappings, outputfile, outputformat):
     """Visualize results of a SPARQL query on a dataset"""
     if mappings:
         with open(mappings, mode='r', encoding='utf-8') as fin:
@@ -164,8 +166,15 @@ def graph(dataset, mappings, outputfile):
         """
     res = query2df(rdf_graph, query).replace(mappings, regex=True)
     G = visualize_query_results(query_res=res, edges=[['s', 'o', 'p']], same_color=True)
-    G.layout(prog='dot')
-    G.draw(outputfile)
+
+    # Save the graph
+    output_path = outputfile + '.' + outputformat
+    ensure_dir_exists(output_path)
+    if outputformat == 'png':
+        G.layout(prog='dot')
+        G.draw(output_path)
+    else: # gv
+        G.write(output_path)
 
 if __name__ == '__main__':
     cli()
