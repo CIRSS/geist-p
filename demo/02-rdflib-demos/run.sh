@@ -22,25 +22,23 @@ bash_cell create_dataset_test << END_CELL
 
 ../../geist create -d test -ifile data/tro.jsonld
 
-ls -l .geistdata
+ls .geistdata
 
 END_CELL
 
 # ------------------------------------------------------------------------------
 
-bash_cell add_command << END_CELL
+bash_cell load_command << END_CELL
 
-../../geist add --help
+../../geist load --help
 
 END_CELL
 
 # ------------------------------------------------------------------------------
 
-bash_cell add_dataset_test << END_CELL
+bash_cell load_dataset_test << END_CELL
 
-../../geist add -d test -ifile data/tro.jsonld
-
-ls -l .geistdata
+../../geist load -d test -ifile data/tro.jsonld
 
 END_CELL
 
@@ -58,7 +56,7 @@ bash_cell destroy_dataset_test << END_CELL
 
 ../../geist destroy -d test
 
-ls -l .geistdata
+ls .geistdata
 
 END_CELL
 
@@ -68,7 +66,7 @@ bash_cell create_dataset_kb << END_CELL
 
 ../../geist create -ifile data/tro.jsonld
 
-ls -l .geistdata
+ls .geistdata
 
 END_CELL
 
@@ -84,7 +82,7 @@ END_CELL
 
 bash_cell export_dataset_kb << END_CELL
 
-../../geist export
+../../geist export | sort
 
 END_CELL
 

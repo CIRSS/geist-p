@@ -122,7 +122,7 @@ def create(dataset, inputfile, inputformat, infer):
 @click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to create (default "kb")')
 @click.option('--inputfile', '-ifile', required=True, type=str, help='Path of the file to be loaded as triples')
 @click.option('--inputformat', '-iformat', default='json-ld', type=click.Choice(['xml', 'n3', 'turtle', 'nt', 'pretty-xml', 'trix', 'trig', 'nquads', 'json-ld', 'hext']), help='Format of the file to be loaded as triples (default json-ld)')
-def add(dataset, inputfile, inputformat):
+def load(dataset, inputfile, inputformat):
     """Import data into a RDF dataset"""
     (rdf_graph, infer) = load_rdf_dataset(dataset)
     rdf_graph = rdf_graph + create_rdf_graph(inputfile, inputformat, infer)
@@ -138,7 +138,7 @@ def destroy(dataset):
 
 @cli.command()
 @click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to be exported (default "kb")')
-@click.option('--outputfile', '-ofile', default=None, type=str, help='Path of the file to store these exported triples (defult: None)')
+@click.option('--outputfile', '-ofile', default=None, type=str, help='Path of the file to store these exported triples (default: None)')
 @click.option('--outputformat', '-oformat', default='nt', type=click.Choice(['json-ld', 'n3', 'nquads', 'nt', 'hext', 'pretty-xml', 'trig', 'trix', 'turtle', 'longturtle', 'xml']), help='Format of the exported triples (default nt)')
 def export(dataset, outputfile, outputformat):
     """Export an RDF graph"""
@@ -152,7 +152,7 @@ def export(dataset, outputfile, outputformat):
 @cli.command()
 @click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to be queried (default "kb")')
 @click.option('--file', required=True, type=str, help='File containing the SPARQL query to execute')
-@click.option('--outputfile', '-ofile', default=None, type=str, help='Path of the file to store the query results (defult: None)')
+@click.option('--outputfile', '-ofile', default=None, type=str, help='Path of the file to store the query results (default: None)')
 def query(dataset, file, outputfile):
     """Perform a SPARQL query on a dataset"""
     (rdf_graph, infer) = load_rdf_dataset(dataset)
@@ -168,8 +168,8 @@ def query(dataset, file, outputfile):
 @cli.command()
 @click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to be visualized (default "kb")')
 @click.option('--mappings', '-m', default=None, help='File of the mappings to shorten text (str): path of a JSON file, where the key is the original text and the value is the shorter text.')
-@click.option('--outputfile', '-ofile', default='res', type=str, help='Path of the file without extension to store the graph (defult: res)')
-@click.option('--outputformat', '-oformat', default='png', type=click.Choice(['png', 'gv']), help='Format of the graph (defult: png): png or gv')
+@click.option('--outputfile', '-ofile', default='res', type=str, help='Path of the file without extension to store the graph (default: res)')
+@click.option('--outputformat', '-oformat', default='png', type=click.Choice(['png', 'gv']), help='Format of the graph (default: png): png or gv')
 def graph(dataset, mappings, outputfile, outputformat):
     """Visualize results of a SPARQL query on a dataset"""
     if mappings:
