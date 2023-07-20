@@ -120,9 +120,32 @@ END_CELL
 
 # ------------------------------------------------------------------------------
 
-bash_cell query_dataset_kb << END_CELL
+bash_cell file_query_dataset_kb << END_CELL
 
 ../../geist query --file data/query
+
+END_CELL
+
+# ------------------------------------------------------------------------------
+
+bash_cell stdin_query_dataset_kb << END_CELL
+
+../../geist query << __END_QUERY__
+
+SELECT ?s ?p ?o
+WHERE {
+    ?s ?p ?o
+}
+
+__END_QUERY__
+
+END_CELL
+
+# ------------------------------------------------------------------------------
+
+bash_cell destroy_dataset_kb << END_CELL
+
+../../geist destroy -d kb
 
 END_CELL
 

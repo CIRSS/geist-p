@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 
-import click, pickle, json, os
+import click, pickle, json, os, sys
+from io import StringIO
 import pandas as pd
-from tabulate import tabulate
 import pygraphviz as pgv
 from rdflib import Graph
 from owlrl import DeductiveClosure, RDFS_Semantics, OWLRL_Semantics, RDFS_OWLRL_Semantics
+from rdflib.plugins.sparql.results.jsonresults import JSONResultSerializer
 
 DATA_DIR = ".geistdata/"
 PASTEL_COLORS = ["#b3e2cd", "#fdccac", "#cbd5e8", "#f4cae4", "#e6f5c9", "#fff2ae", "#f1e2cc", "#cccccc"]
@@ -73,11 +74,16 @@ def query2df(rdf_graph, query):
     :param query: string. A query to be applied to the given RDF graph
     :return res: a Pandas data frame. Results of the query
     """
-    rows = []
-    for r in rdf_graph.query(query):
-        rows.append(r)
-    res = pd.DataFrame(rows, columns=list(rows[0].labels.keys()))
-    return res
+    file = StringIO()
+    JSONResultSerializer(rdf_graph.query(query)).serialize(file)
+    res_json = json.loads(file.getvalue())
+    bindings = res_json["results"]["bindings"]
+    colnames = res_json["head"]["vars"]
+    if bindings:
+        res_df = pd.DataFrame(bindings).apply(lambda row: row.apply(lambda x: x["value"]), axis=1)
+    else:
+        res_df = pd.DataFrame(columns=colnames)
+    return res_df[colnames]
 
 def visualize_query_results(query_res, edges, same_color=False):
     """
@@ -151,14 +157,12 @@ def export(dataset, outputfile, outputformat):
 
 @cli.command()
 @click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to be queried (default "kb")')
-@click.option('--file', required=True, type=str, help='File containing the SPARQL query to execute')
+@click.option('--file', required=True, type=click.File('r'), default=sys.stdin, help='Path of the file containing the SPARQL query to execute')
 @click.option('--outputfile', '-ofile', default=None, type=str, help='Path of the file to store the query results (default: None)')
 def query(dataset, file, outputfile):
     """Perform a SPARQL query on a dataset"""
     (rdf_graph, infer) = load_rdf_dataset(dataset)
-    with open(file, mode='r', encoding='utf-8') as f:
-        query = f.read()
-    res = query2df(rdf_graph, query)
+    res = query2df(rdf_graph, file)
     if outputfile is None:
         print(res.to_markdown())
     else:
