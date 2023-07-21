@@ -100,7 +100,7 @@ END_CELL
 
 bash_cell 'jinja hello world with variable assignment and trimmed block' << 'END_CELL'
 
-print_template templates/hello_assigned_variable.jinja
+print_template templates/hello_assigned_variable_trimblock.jinja
 
 python3 << END_PYTHON
 

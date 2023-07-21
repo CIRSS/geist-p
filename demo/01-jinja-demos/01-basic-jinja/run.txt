@@ -122,7 +122,7 @@ Hello universe!
 
 ============================= bash cell | jinja hello world with variable assignment and trimmed block =============================
 
-print_template templates/hello_assigned_variable.jinja
+print_template templates/hello_assigned_variable_trimblock.jinja
 
 python3 << END_PYTHON
 
@@ -136,8 +136,8 @@ print(hello_world)
 END_PYTHON
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
->>>>>>>>>>>>>>>>>>> templates/hello_assigned_variable.jinja >>>>>>>>>>>>>>>>>>>>
-{% set name = 'universe' %}
+>>>>>>>>>>>>>> templates/hello_assigned_variable_trimblock.jinja >>>>>>>>>>>>>>>
+{% set name = 'universe' -%}
 Hello {{ name }}!
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 Hello universe!
