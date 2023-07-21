@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import click, pickle, json, os, sys
+import click, jinja2, pickle, json, os, sys
 from io import StringIO
 import pandas as pd
 import pygraphviz as pgv
@@ -197,6 +197,39 @@ def graph(dataset, mappings, outputfile, outputformat):
         G.draw(output_path)
     else: # gv
         G.write(output_path)
+
+@cli.command()
+@click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to be visualized (default "kb")')
+@click.option('--file', required=True, type=click.File('r'), default=sys.stdin, help='Path of the file containing the report template to expand')
+@click.option('--outputfile', '-ofile', default='report', type=str, help='Path of the file without extension to store the report (default: report)')
+@click.option('outputformats', '--outputformat', '-oformat', default=['none'], type=click.Choice(['none', 'png', 'gv', 'txt']), multiple=True, help='Format of the report (default: none): none or png or gv or txt, where none will print the report directly.')
+def report(dataset, file, outputfile, outputformats):
+    
+    # Query the given dataset
+    (rdf_graph, _) = load_rdf_dataset(dataset)
+    def query_dataset(x):
+        res = query2df(rdf_graph, x)
+        return res
+
+    # Render the report
+    environment = jinja2.Environment(loader=jinja2.FileSystemLoader("./"), trim_blocks=True)
+    environment.globals['query'] = query_dataset
+    template = environment.from_string(file.read())
+    report = template.render()
+
+    # Save the report
+    ensure_dir_exists(outputfile)
+    for outputformat in set(outputformats):
+        if outputformat == 'none':
+            print(report)
+        else:
+            output_path = outputfile + '.' + outputformat
+            if outputformat == 'png':
+                graph = pgv.AGraph(string=report)
+                graph.draw(output_path, format='png', prog='dot')
+            else: # gv or txt
+                with open(output_path, 'w') as fout:
+                    fout.write(report)
 
 if __name__ == '__main__':
     cli()
