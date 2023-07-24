@@ -173,9 +173,9 @@ def query(dataset, file, outputfile):
 @click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to be visualized (default "kb")')
 @click.option('--mappings', '-m', default=None, help='File of the mappings to shorten text (str): path of a JSON file, where the key is the original text and the value is the shorter text.')
 @click.option('--outputfile', '-ofile', default='res', type=str, help='Path of the file without extension to store the graph (default: res)')
-@click.option('--outputformat', '-oformat', default='png', type=click.Choice(['png', 'gv']), help='Format of the graph (default: png): png or gv')
-def graph(dataset, mappings, outputfile, outputformat):
-    """Visualize results of a SPARQL query on a dataset"""
+@click.option('outputformats', '--outputformat', '-oformat', default=['none'], type=click.Choice(['none', 'png', 'gv']), multiple=True, help='Format of the graph (default: none): none or png or gv')
+def graph(dataset, mappings, outputfile, outputformats):
+    """Visualize a dataset"""
     if mappings:
         with open(mappings, mode='r', encoding='utf-8') as fin:
             mappings = json.loads(fin.read())
@@ -190,13 +190,17 @@ def graph(dataset, mappings, outputfile, outputformat):
     G = visualize_query_results(query_res=res, edges=[['s', 'o', 'p']], same_color=True)
 
     # Save the graph
-    output_path = outputfile + '.' + outputformat
-    ensure_dir_exists(output_path)
-    if outputformat == 'png':
-        G.layout(prog='dot')
-        G.draw(output_path)
-    else: # gv
-        G.write(output_path)
+    ensure_dir_exists(outputfile)
+    for outputformat in set(outputformats):
+        if outputformat == 'none':
+            print(G.string())
+        else:
+            output_path = outputfile + '.' + outputformat
+            if outputformat == 'png':
+                G.layout(prog='dot')
+                G.draw(output_path)
+            else: # gv
+                G.write(output_path)
 
 @cli.command()
 @click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to be visualized (default "kb")')
@@ -204,6 +208,7 @@ def graph(dataset, mappings, outputfile, outputformat):
 @click.option('--outputfile', '-ofile', default='report', type=str, help='Path of the file without extension to store the report (default: report)')
 @click.option('outputformats', '--outputformat', '-oformat', default=['none'], type=click.Choice(['none', 'png', 'gv', 'txt']), multiple=True, help='Format of the report (default: none): none or png or gv or txt, where none will print the report directly.')
 def report(dataset, file, outputfile, outputformats):
+    """Expand a report using a dataset"""
     
     # Query the given dataset
     (rdf_graph, _) = load_rdf_dataset(dataset)

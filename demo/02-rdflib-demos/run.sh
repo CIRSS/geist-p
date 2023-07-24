@@ -96,17 +96,9 @@ END_CELL
 
 # ------------------------------------------------------------------------------
 
-bash_cell graph_dataset_kb_png << END_CELL
+bash_cell graph_dataset_kb << END_CELL
 
-../../geist graph -m data/mappings.json -ofile products/kb -oformat png
-
-END_CELL
-
-# ------------------------------------------------------------------------------
-
-bash_cell graph_dataset_kb_gv << END_CELL
-
-../../geist graph -m data/mappings.json -ofile products/kb -oformat gv
+../../geist graph -m data/mappings.json -ofile products/kb -oformat none -oformat png -oformat gv
 
 END_CELL
 
