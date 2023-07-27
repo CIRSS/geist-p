@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import click, jinja2, pickle, json, os, sys
+import click, jinja2, pickle, json, os, sys, ast
 from io import StringIO
 import pandas as pd
 import pygraphviz as pgv
@@ -15,6 +15,18 @@ PASTEL_COLORS = ["#b3e2cd", "#fdccac", "#cbd5e8", "#f4cae4", "#e6f5c9", "#fff2ae
 def cli():
     pass
 
+def df2nt(df, colnames_of_triples):
+    """
+    This function is to convert a Pandas data frame to a string of N-Triples
+    :param df: a Pandas data frame
+    :param colnames_of_triples: a list of list. [[subject1, predicate1, object1], [subject2, predicate2, object2], ...] where these items are column names
+    :return nt: a string of N-Triples
+    """
+    nt = ""
+    for colnames_of_triple in colnames_of_triples:
+        nt += df.apply(lambda row: "{s} {p} {o} .\n".format(s=row[colnames_of_triple[0]], p=row[colnames_of_triple[1]], o=row[colnames_of_triple[2]]), axis=1).str.cat(sep='')
+    return nt
+
 def infer_rdf_graph(rdf_graph, infer):
     if infer == "rdfs":
         # RDFS_Semantics: implementing the RDFS semantics
@@ -27,21 +39,27 @@ def infer_rdf_graph(rdf_graph, infer):
         DeductiveClosure(RDFS_OWLRL_Semantics).expand(rdf_graph)
     return rdf_graph
 
-def create_rdf_graph(input_file, input_format, infer):
+def create_rdf_graph(input_file, input_format, colnames_of_triples, infer):
     """
     This function is to load a file with a given format as a RDF Graph object supported by RDFLib
     :param input_file: String. Path of the file
-    :param input_format: Defaults to json-ld. It could be one of [xml, n3, turtle, nt, pretty-xml, trix, trig, nquads, json-ld, hext]
+    :param input_format: Defaults to json-ld. It must be one of [xml, n3, turtle, nt, pretty-xml, trix, trig, nquads, json-ld, hext, csv]
     :param infer: Inference to perform on update [none, rdfs, owl, rdfs_owl] (default "none")
     :return rdf_graph: a RDF Graph object supported by RDFLib
     """
-    if input_format not in ["xml", "n3", "turtle", "nt", "pretty-xml", "trix", "trig", "nquads", "json-ld", "hext"]:
-        raise ValueError("RDFLib .parse() only supports [xml, n3, turtle, nt, pretty-xml, trix, trig, nquads, json-ld, hext], but '" + str(input_format) + "' was given.")
+    if input_format not in ["xml", "n3", "turtle", "nt", "pretty-xml", "trix", "trig", "nquads", "json-ld", "hext", "csv"]:
+        raise ValueError("Only supports [xml, n3, turtle, nt, pretty-xml, trix, trig, nquads, json-ld, hext, csv], but '" + str(input_format) + "' was given.")
     if infer not in ["none", "rdfs", "owl", "rdfs_owl"]:
         raise ValueError("Only [none, rdfs, owl, rdfs_owl] are supported.")
     # Parse the file (e.g., a JSON-LD file) with RDFLib
     rdf_graph = Graph()
-    rdf_graph.parse(source=input_file, format=input_format)
+    if input_format == "csv":
+        if not colnames_of_triples:
+            raise ValueError("Please provide the column names of triples for the CSV file.")
+        nt = df2nt(pd.read_csv(input_file), ast.literal_eval(colnames_of_triples))
+        rdf_graph.parse(data=nt, format="nt")
+    else:
+        rdf_graph.parse(source=input_file, format=input_format)
     rdf_graph = infer_rdf_graph(rdf_graph, infer)
     return rdf_graph
 
@@ -80,7 +98,8 @@ def query2df(rdf_graph, query):
     bindings = res_json["results"]["bindings"]
     colnames = res_json["head"]["vars"]
     if bindings:
-        res_df = pd.DataFrame(bindings).apply(lambda row: row.apply(lambda x: x["value"]), axis=1)
+        # type: uri, literal, or bnode
+        res_df = pd.DataFrame(bindings).apply(lambda row: row.apply(lambda x: "<"+x["value"]+">" if x["type"] == "uri" else '"'+x["value"]+'"' if x["type"] == "literal" else "_:"+x["value"]), axis=1)
     else:
         res_df = pd.DataFrame(columns=colnames)
     return res_df[colnames]
@@ -110,14 +129,17 @@ def visualize_query_results(query_res, edges, same_color=False):
 @cli.command()
 @click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to create (default "kb")')
 @click.option('--inputfile', '-ifile', required=True, type=str, help='Path of the file to be loaded as triples')
-@click.option('--inputformat', '-iformat', default='json-ld', type=click.Choice(['xml', 'n3', 'turtle', 'nt', 'pretty-xml', 'trix', 'trig', 'nquads', 'json-ld', 'hext']), help='Format of the file to be loaded as triples (default json-ld)')
+@click.option('--inputformat', '-iformat', default='json-ld', type=click.Choice(['xml', 'n3', 'turtle', 'nt', 'pretty-xml', 'trix', 'trig', 'nquads', 'json-ld', 'hext', 'csv']), help='Format of the file to be loaded as triples (default json-ld)')
+@click.option('--colnames', default=None, type=str, help='Column names of triples with the format of [[subject1, predicate1, object1], [subject2, predicate2, object2], ...] when the input format is csv')
 @click.option('--infer', default='none', type=click.Choice(['none', 'rdfs', 'owl', 'rdfs_owl']), help='Inference to perform on update [none, rdfs, owl, rdfs_owl] (default "none")')
-def create(dataset, inputfile, inputformat, infer):
+def create(dataset, inputfile, inputformat, colnames, infer):
     """Create a new RDF dataset"""
     data_path = DATA_DIR + dataset + ".pkl"
     if os.path.isfile(data_path):
         raise ValueError("Please remove the existing RDF dataset ({dataset}) before loading the new one. Run `geist destroy --help` for detailed information".format(dataset=dataset))
-    rdf_graph = create_rdf_graph(inputfile, inputformat, infer)
+    if inputformat == "csv" and (not colnames):
+        raise ValueError("Please provide the column names of triples for the CSV file, i.e., --colnames")
+    rdf_graph = create_rdf_graph(inputfile, inputformat, colnames, infer)
     # Save as a Gesit graph object
     geist_graph_object = {"rdf_graph": rdf_graph, "infer": infer}
     ensure_dir_exists(data_path)
@@ -127,11 +149,14 @@ def create(dataset, inputfile, inputformat, infer):
 @cli.command()
 @click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to create (default "kb")')
 @click.option('--inputfile', '-ifile', required=True, type=str, help='Path of the file to be loaded as triples')
-@click.option('--inputformat', '-iformat', default='json-ld', type=click.Choice(['xml', 'n3', 'turtle', 'nt', 'pretty-xml', 'trix', 'trig', 'nquads', 'json-ld', 'hext']), help='Format of the file to be loaded as triples (default json-ld)')
-def load(dataset, inputfile, inputformat):
+@click.option('--inputformat', '-iformat', default='json-ld', type=click.Choice(['xml', 'n3', 'turtle', 'nt', 'pretty-xml', 'trix', 'trig', 'nquads', 'json-ld', 'hext', 'csv']), help='Format of the file to be loaded as triples (default json-ld)')
+@click.option('--colnames', default=None, type=str, help='Column names of triples with the format of [[subject1, predicate1, object1], [subject2, predicate2, object2], ...] when the input format is csv')
+def load(dataset, inputfile, inputformat, colnames):
     """Import data into a RDF dataset"""
+    if inputformat == "csv" and (not colnames):
+        raise ValueError("Please provide the column names of triples for the CSV file, i.e., --colnames")
     (rdf_graph, infer) = load_rdf_dataset(dataset)
-    rdf_graph = rdf_graph + create_rdf_graph(inputfile, inputformat, infer)
+    rdf_graph = rdf_graph + create_rdf_graph(inputfile, inputformat, colnames, infer)
     geist_graph_object = {"rdf_graph": rdf_graph, "infer": infer}
     with open(DATA_DIR + dataset + ".pkl", "wb") as f:
         pickle.dump(geist_graph_object, f)

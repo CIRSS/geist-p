@@ -32,9 +32,13 @@ Options:
   -d, --dataset TEXT              Name of RDF dataset to create (default "kb")
   -ifile, --inputfile TEXT        Path of the file to be loaded as triples
                                   [required]
-  -iformat, --inputformat [xml|n3|turtle|nt|pretty-xml|trix|trig|nquads|json-ld|hext]
+  -iformat, --inputformat [xml|n3|turtle|nt|pretty-xml|trix|trig|nquads|json-ld|hext|csv]
                                   Format of the file to be loaded as triples
                                   (default json-ld)
+  --colnames TEXT                 Column names of triples with the format of
+                                  [[subject1, predicate1, object1], [subject2,
+                                  predicate2, object2], ...] when the input
+                                  format is csv
   --infer [none|rdfs|owl|rdfs_owl]
                                   Inference to perform on update [none, rdfs,
                                   owl, rdfs_owl] (default "none")
@@ -66,9 +70,13 @@ Options:
   -d, --dataset TEXT              Name of RDF dataset to create (default "kb")
   -ifile, --inputfile TEXT        Path of the file to be loaded as triples
                                   [required]
-  -iformat, --inputformat [xml|n3|turtle|nt|pretty-xml|trix|trig|nquads|json-ld|hext]
+  -iformat, --inputformat [xml|n3|turtle|nt|pretty-xml|trix|trig|nquads|json-ld|hext|csv]
                                   Format of the file to be loaded as triples
                                   (default json-ld)
+  --colnames TEXT                 Column names of triples with the format of
+                                  [[subject1, predicate1, object1], [subject2,
+                                  predicate2, object2], ...] when the input
+                                  format is csv
   --help                          Show this message and exit.
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -196,79 +204,79 @@ Options:
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 strict digraph "" {
-	"composition/1/artifact/1"	[fillcolor="#b3e2cd",
+	"<fp1>"	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];
-	"trov#ResearchArtifact"	[fillcolor="#b3e2cd",
+	"<trov#CompositionFingerprint>"	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];
-	"composition/1/artifact/1" -> "trov#ResearchArtifact"	[label="rdf#type"];
-	"art.sha256.1"	[fillcolor="#b3e2cd",
+	"<fp1>" -> "<trov#CompositionFingerprint>"	[label=<rdf#type>];
+	"\"sha256.fp1\""	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];
-	"composition/1/artifact/1" -> "art.sha256.1"	[label="trov#sha256"];
-	"arrangement/1/locus/2"	[fillcolor="#b3e2cd",
+	"<fp1>" -> "\"sha256.fp1\""	[label=<trov#sha256>];
+	"<arrangement/1/locus/2>"	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];
-	"composition/1/artifact/100"	[fillcolor="#b3e2cd",
+	"<composition/1/artifact/100>"	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];
-	"arrangement/1/locus/2" -> "composition/1/artifact/100"	[label="trov#hasArtifact"];
-	filepath2	[fillcolor="#b3e2cd",
+	"<arrangement/1/locus/2>" -> "<composition/1/artifact/100>"	[label=<trov#hasArtifact>];
+	"\"filepath2\""	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];
-	"arrangement/1/locus/2" -> filepath2	[label="trov#hasLocation"];
-	"trov#ArtifactLocus"	[fillcolor="#b3e2cd",
+	"<arrangement/1/locus/2>" -> "\"filepath2\""	[label=<trov#hasLocation>];
+	"<trov#ArtifactLocus>"	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];
-	"arrangement/1/locus/2" -> "trov#ArtifactLocus"	[label="rdf#type"];
-	"tro/1"	[fillcolor="#b3e2cd",
+	"<arrangement/1/locus/2>" -> "<trov#ArtifactLocus>"	[label=<rdf#type>];
+	"<arrangement/1>"	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];
-	"composition/1"	[fillcolor="#b3e2cd",
+	"<arrangement/1>" -> "<arrangement/1/locus/2>"	[label=<trov#hasLocus>];
+	"<trov#ArtifactArrangement>"	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];
-	"tro/1" -> "composition/1"	[label="trov#hasComposition"];
-	"arrangement/1"	[fillcolor="#b3e2cd",
+	"<arrangement/1>" -> "<trov#ArtifactArrangement>"	[label=<rdf#type>];
+	"<arrangement/1/locus/1>"	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];
-	"tro/1" -> "arrangement/1"	[label="trov#hasArrangement"];
-	"trov#TransparentResearchObject"	[fillcolor="#b3e2cd",
+	"<arrangement/1>" -> "<arrangement/1/locus/1>"	[label=<trov#hasLocus>];
+	"<composition/1>"	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];
-	"tro/1" -> "trov#TransparentResearchObject"	[label="rdf#type"];
-	"composition/1" -> "composition/1/artifact/1"	[label="trov#hasArtifact"];
-	fp1	[fillcolor="#b3e2cd",
+	"<composition/1>" -> "<fp1>"	[label=<trov#hasFingerprint>];
+	"<composition/1/artifact/1>"	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];
-	"composition/1" -> fp1	[label="trov#hasFingerprint"];
-	"trov#ArtifactComposition"	[fillcolor="#b3e2cd",
+	"<composition/1>" -> "<composition/1/artifact/1>"	[label=<trov#hasArtifact>];
+	"<trov#ArtifactComposition>"	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];
-	"composition/1" -> "trov#ArtifactComposition"	[label="rdf#type"];
-	"arrangement/1" -> "arrangement/1/locus/2"	[label="trov#hasLocus"];
-	"arrangement/1/locus/1"	[fillcolor="#b3e2cd",
+	"<composition/1>" -> "<trov#ArtifactComposition>"	[label=<rdf#type>];
+	"<trov#ResearchArtifact>"	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];
-	"arrangement/1" -> "arrangement/1/locus/1"	[label="trov#hasLocus"];
-	"trov#ArtifactArrangement"	[fillcolor="#b3e2cd",
+	"<composition/1/artifact/1>" -> "<trov#ResearchArtifact>"	[label=<rdf#type>];
+	"\"art.sha256.1\""	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];
-	"arrangement/1" -> "trov#ArtifactArrangement"	[label="rdf#type"];
-	"arrangement/1/locus/1" -> "composition/1/artifact/1"	[label="trov#hasArtifact"];
-	"arrangement/1/locus/1" -> "trov#ArtifactLocus"	[label="rdf#type"];
-	filepath1	[fillcolor="#b3e2cd",
+	"<composition/1/artifact/1>" -> "\"art.sha256.1\""	[label=<trov#sha256>];
+	"<tro/1>"	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];
-	"arrangement/1/locus/1" -> filepath1	[label="trov#hasLocation"];
-	"trov#CompositionFingerprint"	[fillcolor="#b3e2cd",
+	"<tro/1>" -> "<arrangement/1>"	[label=<trov#hasArrangement>];
+	"<tro/1>" -> "<composition/1>"	[label=<trov#hasComposition>];
+	"<trov#TransparentResearchObject>"	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];
-	fp1 -> "trov#CompositionFingerprint"	[label="rdf#type"];
-	"sha256.fp1"	[fillcolor="#b3e2cd",
+	"<tro/1>" -> "<trov#TransparentResearchObject>"	[label=<rdf#type>];
+	"<arrangement/1/locus/1>" -> "<composition/1/artifact/1>"	[label=<trov#hasArtifact>];
+	"\"filepath1\""	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];
-	fp1 -> "sha256.fp1"	[label="trov#sha256"];
+	"<arrangement/1/locus/1>" -> "\"filepath1\""	[label=<trov#hasLocation>];
+	"<arrangement/1/locus/1>" -> "<trov#ArtifactLocus>"	[label=<rdf#type>];
 }
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -298,27 +306,27 @@ Options:
 ../../geist query --file data/query
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
-|    | s                                                                                                                                        | p                                                  | o                                                                                                                                          |
-|---:|:-----------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------|
-|  0 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1            | https://w3id.org/trace/2023/05/trov#hasLocus       | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1      |
-|  1 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2    | http://www.w3.org/1999/02/22-rdf-syntax-ns#type    | https://w3id.org/trace/2023/05/trov#ArtifactLocus                                                                                          |
-|  2 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/tro/1                    | http://www.w3.org/1999/02/22-rdf-syntax-ns#type    | https://w3id.org/trace/2023/05/trov#TransparentResearchObject                                                                              |
-|  3 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1    | http://www.w3.org/1999/02/22-rdf-syntax-ns#type    | https://w3id.org/trace/2023/05/trov#ArtifactLocus                                                                                          |
-|  4 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1 | https://w3id.org/trace/2023/05/trov#sha256         | art.sha256.1                                                                                                                               |
-|  5 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1    | https://w3id.org/trace/2023/05/trov#hasLocation    | filepath1                                                                                                                                  |
-|  6 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1            | http://www.w3.org/1999/02/22-rdf-syntax-ns#type    | https://w3id.org/trace/2023/05/trov#ArtifactArrangement                                                                                    |
-|  7 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1                      | http://www.w3.org/1999/02/22-rdf-syntax-ns#type    | https://w3id.org/trace/2023/05/trov#CompositionFingerprint                                                                                 |
-|  8 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1            | https://w3id.org/trace/2023/05/trov#hasArtifact    | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1   |
-|  9 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2    | https://w3id.org/trace/2023/05/trov#hasLocation    | filepath2                                                                                                                                  |
-| 10 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/tro/1                    | https://w3id.org/trace/2023/05/trov#hasArrangement | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1              |
-| 11 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1 | http://www.w3.org/1999/02/22-rdf-syntax-ns#type    | https://w3id.org/trace/2023/05/trov#ResearchArtifact                                                                                       |
-| 12 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1            | http://www.w3.org/1999/02/22-rdf-syntax-ns#type    | https://w3id.org/trace/2023/05/trov#ArtifactComposition                                                                                    |
-| 13 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1                      | https://w3id.org/trace/2023/05/trov#sha256         | sha256.fp1                                                                                                                                 |
-| 14 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1            | https://w3id.org/trace/2023/05/trov#hasLocus       | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2      |
-| 15 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2    | https://w3id.org/trace/2023/05/trov#hasArtifact    | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/100 |
-| 16 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1    | https://w3id.org/trace/2023/05/trov#hasArtifact    | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1   |
-| 17 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/tro/1                    | https://w3id.org/trace/2023/05/trov#hasComposition | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1              |
-| 18 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1            | https://w3id.org/trace/2023/05/trov#hasFingerprint | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1                        |
+|    | s                                                                                                                                          | p                                                    | o                                                                                                                                            |
+|---:|:-------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------|
+|  0 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2>    | <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    | <https://w3id.org/trace/2023/05/trov#ArtifactLocus>                                                                                          |
+|  1 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1>            | <https://w3id.org/trace/2023/05/trov#hasLocus>       | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1>      |
+|  2 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1>                      | <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    | <https://w3id.org/trace/2023/05/trov#CompositionFingerprint>                                                                                 |
+|  3 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1>            | <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    | <https://w3id.org/trace/2023/05/trov#ArtifactArrangement>                                                                                    |
+|  4 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1>    | <https://w3id.org/trace/2023/05/trov#hasLocation>    | "filepath1"                                                                                                                                  |
+|  5 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1>            | <https://w3id.org/trace/2023/05/trov#hasLocus>       | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2>      |
+|  6 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/tro/1>                    | <https://w3id.org/trace/2023/05/trov#hasComposition> | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1>              |
+|  7 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/tro/1>                    | <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    | <https://w3id.org/trace/2023/05/trov#TransparentResearchObject>                                                                              |
+|  8 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1>    | <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    | <https://w3id.org/trace/2023/05/trov#ArtifactLocus>                                                                                          |
+|  9 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1> | <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    | <https://w3id.org/trace/2023/05/trov#ResearchArtifact>                                                                                       |
+| 10 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/tro/1>                    | <https://w3id.org/trace/2023/05/trov#hasArrangement> | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1>              |
+| 11 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1> | <https://w3id.org/trace/2023/05/trov#sha256>         | "art.sha256.1"                                                                                                                               |
+| 12 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2>    | <https://w3id.org/trace/2023/05/trov#hasArtifact>    | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/100> |
+| 13 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1>                      | <https://w3id.org/trace/2023/05/trov#sha256>         | "sha256.fp1"                                                                                                                                 |
+| 14 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2>    | <https://w3id.org/trace/2023/05/trov#hasLocation>    | "filepath2"                                                                                                                                  |
+| 15 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1>    | <https://w3id.org/trace/2023/05/trov#hasArtifact>    | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1>   |
+| 16 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1>            | <https://w3id.org/trace/2023/05/trov#hasFingerprint> | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1>                        |
+| 17 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1>            | <https://w3id.org/trace/2023/05/trov#hasArtifact>    | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1>   |
+| 18 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1>            | <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    | <https://w3id.org/trace/2023/05/trov#ArtifactComposition>                                                                                    |
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
@@ -333,36 +341,90 @@ WHERE {
 
 __END_QUERY__
 
------------------------------------------------------------ cell outputs -----------------------------------------------------------
-|    | s                                                                                                                                        | p                                                  | o                                                                                                                                          |
-|---:|:-----------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------|
-|  0 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1                      | http://www.w3.org/1999/02/22-rdf-syntax-ns#type    | https://w3id.org/trace/2023/05/trov#CompositionFingerprint                                                                                 |
-|  1 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1            | https://w3id.org/trace/2023/05/trov#hasFingerprint | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1                        |
-|  2 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2    | http://www.w3.org/1999/02/22-rdf-syntax-ns#type    | https://w3id.org/trace/2023/05/trov#ArtifactLocus                                                                                          |
-|  3 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1            | https://w3id.org/trace/2023/05/trov#hasLocus       | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1      |
-|  4 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2    | https://w3id.org/trace/2023/05/trov#hasLocation    | filepath2                                                                                                                                  |
-|  5 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1    | https://w3id.org/trace/2023/05/trov#hasArtifact    | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1   |
-|  6 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1            | https://w3id.org/trace/2023/05/trov#hasArtifact    | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1   |
-|  7 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1            | http://www.w3.org/1999/02/22-rdf-syntax-ns#type    | https://w3id.org/trace/2023/05/trov#ArtifactComposition                                                                                    |
-|  8 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/tro/1                    | https://w3id.org/trace/2023/05/trov#hasComposition | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1              |
-|  9 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1 | http://www.w3.org/1999/02/22-rdf-syntax-ns#type    | https://w3id.org/trace/2023/05/trov#ResearchArtifact                                                                                       |
-| 10 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1                      | https://w3id.org/trace/2023/05/trov#sha256         | sha256.fp1                                                                                                                                 |
-| 11 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1 | https://w3id.org/trace/2023/05/trov#sha256         | art.sha256.1                                                                                                                               |
-| 12 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/tro/1                    | http://www.w3.org/1999/02/22-rdf-syntax-ns#type    | https://w3id.org/trace/2023/05/trov#TransparentResearchObject                                                                              |
-| 13 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2    | https://w3id.org/trace/2023/05/trov#hasArtifact    | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/100 |
-| 14 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1            | https://w3id.org/trace/2023/05/trov#hasLocus       | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2      |
-| 15 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1    | https://w3id.org/trace/2023/05/trov#hasLocation    | filepath1                                                                                                                                  |
-| 16 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/tro/1                    | https://w3id.org/trace/2023/05/trov#hasArrangement | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1              |
-| 17 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1            | http://www.w3.org/1999/02/22-rdf-syntax-ns#type    | https://w3id.org/trace/2023/05/trov#ArtifactArrangement                                                                                    |
-| 18 | https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1    | http://www.w3.org/1999/02/22-rdf-syntax-ns#type    | https://w3id.org/trace/2023/05/trov#ArtifactLocus                                                                                          |
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
-================================================== bash cell | destroy_dataset_kb ==================================================
-
 ../../geist destroy -d kb
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
+|    | s                                                                                                                                          | p                                                    | o                                                                                                                                            |
+|---:|:-------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------|
+|  0 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1>            | <https://w3id.org/trace/2023/05/trov#hasLocus>       | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1>      |
+|  1 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1>            | <https://w3id.org/trace/2023/05/trov#hasArtifact>    | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1>   |
+|  2 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/tro/1>                    | <https://w3id.org/trace/2023/05/trov#hasArrangement> | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1>              |
+|  3 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1>            | <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    | <https://w3id.org/trace/2023/05/trov#ArtifactArrangement>                                                                                    |
+|  4 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1>            | <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    | <https://w3id.org/trace/2023/05/trov#ArtifactComposition>                                                                                    |
+|  5 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1>    | <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    | <https://w3id.org/trace/2023/05/trov#ArtifactLocus>                                                                                          |
+|  6 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1>            | <https://w3id.org/trace/2023/05/trov#hasLocus>       | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2>      |
+|  7 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1>            | <https://w3id.org/trace/2023/05/trov#hasFingerprint> | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1>                        |
+|  8 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1> | <https://w3id.org/trace/2023/05/trov#sha256>         | "art.sha256.1"                                                                                                                               |
+|  9 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1>    | <https://w3id.org/trace/2023/05/trov#hasLocation>    | "filepath1"                                                                                                                                  |
+| 10 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1>    | <https://w3id.org/trace/2023/05/trov#hasArtifact>    | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1>   |
+| 11 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/tro/1>                    | <https://w3id.org/trace/2023/05/trov#hasComposition> | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1>              |
+| 12 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1> | <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    | <https://w3id.org/trace/2023/05/trov#ResearchArtifact>                                                                                       |
+| 13 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1>                      | <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    | <https://w3id.org/trace/2023/05/trov#CompositionFingerprint>                                                                                 |
+| 14 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2>    | <https://w3id.org/trace/2023/05/trov#hasArtifact>    | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/100> |
+| 15 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2>    | <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    | <https://w3id.org/trace/2023/05/trov#ArtifactLocus>                                                                                          |
+| 16 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1>                      | <https://w3id.org/trace/2023/05/trov#sha256>         | "sha256.fp1"                                                                                                                                 |
+| 17 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/tro/1>                    | <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    | <https://w3id.org/trace/2023/05/trov#TransparentResearchObject>                                                                              |
+| 18 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2>    | <https://w3id.org/trace/2023/05/trov#hasLocation>    | "filepath2"                                                                                                                                  |
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+================================================ bash cell | query_dataset_to_newkb ================================================
+
+../../geist create -d kb -ifile data/tro.jsonld
+
+../../geist query -d kb --outputfile products/qres.csv << __END_QUERY__
+
+SELECT ?s ?p ?o
+WHERE {
+    ?s ?p ?o .
+    FILTER ( ?p = trov:sha256 ) .
+}
+
+__END_QUERY__
+
+../../geist create -d newkb -ifile products/qres.csv -iformat csv --colnames "[['s','p','o']]"
+
+../../geist query -d newkb << __END_QUERY__
+
+SELECT ?s ?p ?o
+WHERE {
+    ?s ?p ?o
+}
+
+__END_QUERY__
+
+../../geist destroy -d newkb
+../../geist destroy -d kb
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+|    | s                                                                                                                                          | p                                            | o              |
+|---:|:-------------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------------|:---------------|
+|  0 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1> | <https://w3id.org/trace/2023/05/trov#sha256> | "art.sha256.1" |
+|  1 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1>                      | <https://w3id.org/trace/2023/05/trov#sha256> | "sha256.fp1"   |
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================================== bash cell | report_command ====================================================
+
+../../geist report --help
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+Usage: geist report [OPTIONS]
+
+  Expand a report using a dataset
+
+Options:
+  -d, --dataset TEXT              Name of RDF dataset to be visualized
+                                  (default "kb")
+  --file FILENAME                 Path of the file containing the report
+                                  template to expand  [required]
+  -ofile, --outputfile TEXT       Path of the file without extension to store
+                                  the report (default: report)
+  -oformat, --outputformat [none|png|gv|txt]
+                                  Format of the report (default: none): none
+                                  or png or gv or txt, where none will print
+                                  the report directly.
+  --help                          Show this message and exit.
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 

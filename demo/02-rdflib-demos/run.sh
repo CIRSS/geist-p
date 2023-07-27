@@ -131,13 +131,47 @@ WHERE {
 
 __END_QUERY__
 
+../../geist destroy -d kb
+
 END_CELL
 
 # ------------------------------------------------------------------------------
 
-bash_cell destroy_dataset_kb << END_CELL
+bash_cell query_dataset_to_newkb << END_CELL
 
+../../geist create -d kb -ifile data/tro.jsonld
+
+../../geist query -d kb --outputfile products/qres.csv << __END_QUERY__
+
+SELECT ?s ?p ?o
+WHERE {
+    ?s ?p ?o .
+    FILTER ( ?p = trov:sha256 ) .
+}
+
+__END_QUERY__
+
+../../geist create -d newkb -ifile products/qres.csv -iformat csv --colnames "[['s','p','o']]"
+
+../../geist query -d newkb << __END_QUERY__
+
+SELECT ?s ?p ?o
+WHERE {
+    ?s ?p ?o
+}
+
+__END_QUERY__
+
+../../geist destroy -d newkb
 ../../geist destroy -d kb
+
+END_CELL
+
+# ------------------------------------------------------------------------------
+
+bash_cell report_command << END_CELL
+
+../../geist report --help
 
 END_CELL
 

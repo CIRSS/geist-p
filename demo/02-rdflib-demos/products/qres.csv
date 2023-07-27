@@ -1,0 +1,3 @@
+s,p,o
+<https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1>,<https://w3id.org/trace/2023/05/trov#sha256>,"""sha256.fp1"""
+<https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1>,<https://w3id.org/trace/2023/05/trov#sha256>,"""art.sha256.1"""
