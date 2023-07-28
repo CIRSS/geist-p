@@ -56,10 +56,10 @@ def create_rdf_graph(input_file, input_format, colnames_of_triples, infer):
     if input_format == "csv":
         if not colnames_of_triples:
             raise ValueError("Please provide the column names of triples for the CSV file.")
-        nt = df2nt(pd.read_csv(input_file), ast.literal_eval(colnames_of_triples))
+        nt = df2nt(pd.read_csv(StringIO(input_file)), ast.literal_eval(colnames_of_triples))
         rdf_graph.parse(data=nt, format="nt")
     else:
-        rdf_graph.parse(source=input_file, format=input_format)
+        rdf_graph.parse(data=input_file, format=input_format)
     rdf_graph = infer_rdf_graph(rdf_graph, infer)
     return rdf_graph
 
@@ -72,7 +72,8 @@ def load_rdf_dataset(dataset):
     rdf_graph, infer = geist_graph_object["rdf_graph"], geist_graph_object["infer"]
     return rdf_graph, infer
 
-def delete_rdf_dataset(dataset):
+def delete_rdf_dataset(**kwargs):
+    dataset = kwargs["dataset"] if "dataset" in kwargs else "kb"
     data_path = DATA_DIR + dataset + ".pkl"
     if not os.path.isfile(data_path):
         raise ValueError("Nothing to be removed. Can NOT find {data_path}".format(data_path=data_path))
@@ -126,13 +127,7 @@ def visualize_query_results(query_res, edges, same_color=False):
             G.add_edge(row[edge[0]], row[edge[1]], label=row[edge[2]])
     return G
 
-@cli.command()
-@click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to create (default "kb")')
-@click.option('--inputfile', '-ifile', required=True, type=str, help='Path of the file to be loaded as triples')
-@click.option('--inputformat', '-iformat', default='json-ld', type=click.Choice(['xml', 'n3', 'turtle', 'nt', 'pretty-xml', 'trix', 'trig', 'nquads', 'json-ld', 'hext', 'csv']), help='Format of the file to be loaded as triples (default json-ld)')
-@click.option('--colnames', default=None, type=str, help='Column names of triples with the format of [[subject1, predicate1, object1], [subject2, predicate2, object2], ...] when the input format is csv')
-@click.option('--infer', default='none', type=click.Choice(['none', 'rdfs', 'owl', 'rdfs_owl']), help='Inference to perform on update [none, rdfs, owl, rdfs_owl] (default "none")')
-def create(dataset, inputfile, inputformat, colnames, infer):
+def _create(dataset, inputfile, inputformat, colnames, infer):
     """Create a new RDF dataset"""
     data_path = DATA_DIR + dataset + ".pkl"
     if os.path.isfile(data_path):
@@ -145,13 +140,9 @@ def create(dataset, inputfile, inputformat, colnames, infer):
     ensure_dir_exists(data_path)
     with open(data_path, "wb") as f:
         pickle.dump(geist_graph_object, f)
+    return
 
-@cli.command()
-@click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to create (default "kb")')
-@click.option('--inputfile', '-ifile', required=True, type=str, help='Path of the file to be loaded as triples')
-@click.option('--inputformat', '-iformat', default='json-ld', type=click.Choice(['xml', 'n3', 'turtle', 'nt', 'pretty-xml', 'trix', 'trig', 'nquads', 'json-ld', 'hext', 'csv']), help='Format of the file to be loaded as triples (default json-ld)')
-@click.option('--colnames', default=None, type=str, help='Column names of triples with the format of [[subject1, predicate1, object1], [subject2, predicate2, object2], ...] when the input format is csv')
-def load(dataset, inputfile, inputformat, colnames):
+def _load(dataset, inputfile, inputformat, colnames):
     """Import data into a RDF dataset"""
     if inputformat == "csv" and (not colnames):
         raise ValueError("Please provide the column names of triples for the CSV file, i.e., --colnames")
@@ -160,12 +151,32 @@ def load(dataset, inputfile, inputformat, colnames):
     geist_graph_object = {"rdf_graph": rdf_graph, "infer": infer}
     with open(DATA_DIR + dataset + ".pkl", "wb") as f:
         pickle.dump(geist_graph_object, f)
+    return
+
+@cli.command()
+@click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to create (default "kb")')
+@click.option('--inputfile', '-ifile', required=True, type=click.File('r'), default=sys.stdin, help='Path of the file to be loaded as triples')
+@click.option('--inputformat', '-iformat', default='json-ld', type=click.Choice(['xml', 'n3', 'turtle', 'nt', 'pretty-xml', 'trix', 'trig', 'nquads', 'json-ld', 'hext', 'csv']), help='Format of the file to be loaded as triples (default json-ld)')
+@click.option('--colnames', default=None, type=str, help='Column names of triples with the format of [[subject1, predicate1, object1], [subject2, predicate2, object2], ...] when the input format is csv')
+@click.option('--infer', default='none', type=click.Choice(['none', 'rdfs', 'owl', 'rdfs_owl']), help='Inference to perform on update [none, rdfs, owl, rdfs_owl] (default "none")')
+def create(dataset, inputfile, inputformat, colnames, infer):
+    """Create a new RDF dataset"""
+    _create(dataset, inputfile.read(), inputformat, colnames, infer)
+
+@cli.command()
+@click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to create (default "kb")')
+@click.option('--inputfile', '-ifile', required=True, type=click.File('r'), default=sys.stdin, help='Path of the file to be loaded as triples')
+@click.option('--inputformat', '-iformat', default='json-ld', type=click.Choice(['xml', 'n3', 'turtle', 'nt', 'pretty-xml', 'trix', 'trig', 'nquads', 'json-ld', 'hext', 'csv']), help='Format of the file to be loaded as triples (default json-ld)')
+@click.option('--colnames', default=None, type=str, help='Column names of triples with the format of [[subject1, predicate1, object1], [subject2, predicate2, object2], ...] when the input format is csv')
+def load(dataset, inputfile, inputformat, colnames):
+    """Import data into a RDF dataset"""
+    _load(dataset, inputfile.read(), inputformat, colnames)
 
 @cli.command()
 @click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to be removed (default "kb")')
 def destroy(dataset):
     """Delete an RDF dataset"""
-    delete_rdf_dataset(dataset)
+    delete_rdf_dataset(dataset=dataset)
 
 @cli.command()
 @click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to be exported (default "kb")')
@@ -227,6 +238,22 @@ def graph(dataset, mappings, outputfile, outputformats):
             else: # gv
                 G.write(output_path)
 
+# Query the given dataset
+def query_dataset(file, **kwargs):
+    dataset = kwargs["dataset"] if "dataset" in kwargs else "kb"
+    (rdf_graph, _) = load_rdf_dataset(dataset)
+    res = query2df(rdf_graph, file)
+    return res
+
+# Create a dataset
+def create_dataset(inputfile, **kwargs):
+    dataset = kwargs["dataset"] if "dataset" in kwargs else "kb"
+    inputformat = kwargs["inputformat"] if "inputformat" in kwargs else "json-ld"
+    colnames = kwargs["colnames"] if "colnames" in kwargs else None
+    infer = kwargs["infer"] if "infer" in kwargs else "none"
+    _create(dataset, inputfile, inputformat, colnames, infer)
+    return
+
 @cli.command()
 @click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to be visualized (default "kb")')
 @click.option('--file', required=True, type=click.File('r'), default=sys.stdin, help='Path of the file containing the report template to expand')
@@ -235,15 +262,11 @@ def graph(dataset, mappings, outputfile, outputformats):
 def report(dataset, file, outputfile, outputformats):
     """Expand a report using a dataset"""
     
-    # Query the given dataset
-    (rdf_graph, _) = load_rdf_dataset(dataset)
-    def query_dataset(x):
-        res = query2df(rdf_graph, x)
-        return res
-
     # Render the report
     environment = jinja2.Environment(loader=jinja2.FileSystemLoader("./"), trim_blocks=True)
+    environment.globals['create'] = create_dataset
     environment.globals['query'] = query_dataset
+    environment.globals['destroy'] = delete_rdf_dataset
     template = environment.from_string(file.read())
     report = template.render()
 

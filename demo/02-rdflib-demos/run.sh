@@ -18,7 +18,24 @@ END_CELL
 
 # ------------------------------------------------------------------------------
 
-bash_cell create_dataset_test << END_CELL
+bash_cell create_stdin << END_CELL
+
+../../geist create -d test -iformat nt << __END_INPUT__
+
+<http://example.com/drewp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<http://example.com/drewp> <http://example.com/says> "Hello World" .
+
+__END_INPUT__
+
+../../geist export -d test | sort
+
+../../geist destroy -d test
+
+END_CELL
+
+# ------------------------------------------------------------------------------
+
+bash_cell create_file << END_CELL
 
 ../../geist create -d test -ifile data/tro.jsonld
 
@@ -176,3 +193,32 @@ bash_cell report_command << END_CELL
 END_CELL
 
 # ------------------------------------------------------------------------------
+
+bash_cell report_create << END_CELL
+
+../../geist report << END_TEMPLATE
+
+    {% set ntriples = '''
+    <http://example.com/drewp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+    <http://example.com/drewp> <http://example.com/says> "Hello World" .
+    ''' %}
+    {% set _ = create(ntriples, inputformat="nt") %}
+    {% set query_all_triples = query('''
+    SELECT ?s ?p ?o
+    WHERE {
+        ?s ?p ?o
+    }
+    ''') %}
+
+    {% for _, row in query_all_triples.iterrows() %}
+        Subject: {{ row["s"] }}, Predicate: {{ row["p"] }}, Object: {{ row["o"] }}.
+    {% endfor %}
+
+    {% set _ = destroy() %}
+
+END_TEMPLATE
+
+END_CELL
+
+# ------------------------------------------------------------------------------
+

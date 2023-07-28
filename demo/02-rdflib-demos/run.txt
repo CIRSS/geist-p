@@ -30,7 +30,7 @@ Usage: geist create [OPTIONS]
 
 Options:
   -d, --dataset TEXT              Name of RDF dataset to create (default "kb")
-  -ifile, --inputfile TEXT        Path of the file to be loaded as triples
+  -ifile, --inputfile FILENAME    Path of the file to be loaded as triples
                                   [required]
   -iformat, --inputformat [xml|n3|turtle|nt|pretty-xml|trix|trig|nquads|json-ld|hext|csv]
                                   Format of the file to be loaded as triples
@@ -46,7 +46,27 @@ Options:
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
-================================================= bash cell | create_dataset_test ==================================================
+===================================================== bash cell | create_stdin =====================================================
+
+../../geist create -d test -iformat nt << __END_INPUT__
+
+<http://example.com/drewp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<http://example.com/drewp> <http://example.com/says> "Hello World" .
+
+__END_INPUT__
+
+../../geist export -d test | sort
+
+../../geist destroy -d test
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+<http://example.com/drewp> <http://example.com/says> "Hello World" .
+<http://example.com/drewp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+===================================================== bash cell | create_file ======================================================
 
 ../../geist create -d test -ifile data/tro.jsonld
 
@@ -68,7 +88,7 @@ Usage: geist load [OPTIONS]
 
 Options:
   -d, --dataset TEXT              Name of RDF dataset to create (default "kb")
-  -ifile, --inputfile TEXT        Path of the file to be loaded as triples
+  -ifile, --inputfile FILENAME    Path of the file to be loaded as triples
                                   [required]
   -iformat, --inputformat [xml|n3|turtle|nt|pretty-xml|trix|trig|nquads|json-ld|hext|csv]
                                   Format of the file to be loaded as triples
@@ -425,6 +445,40 @@ Options:
                                   or png or gv or txt, where none will print
                                   the report directly.
   --help                          Show this message and exit.
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================================== bash cell | report_create =====================================================
+
+../../geist report << END_TEMPLATE
+
+    {% set ntriples = '''
+    <http://example.com/drewp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+    <http://example.com/drewp> <http://example.com/says> "Hello World" .
+    ''' %}
+    {% set _ = create(ntriples, inputformat="nt") %}
+    {% set query_all_triples = query('''
+    SELECT ?s ?p ?o
+    WHERE {
+        ?s ?p ?o
+    }
+    ''') %}
+
+    {% for _, row in query_all_triples.iterrows() %}
+        Subject: {{ row["s"] }}, Predicate: {{ row["p"] }}, Object: {{ row["o"] }}.
+    {% endfor %}
+
+    {% set _ = destroy() %}
+
+END_TEMPLATE
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+            
+            Subject: <http://example.com/drewp>, Predicate: <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>, Object: <http://xmlns.com/foaf/0.1/Person>.
+            Subject: <http://example.com/drewp>, Predicate: <http://example.com/says>, Object: "Hello World".
+    
+    
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
