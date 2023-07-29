@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import click, jinja2, pickle, json, os, sys, ast
+from jinja2_simple_tags import StandaloneTag, ContainerTag
 from io import StringIO
 import pandas as pd
 import pygraphviz as pgv
@@ -15,6 +16,25 @@ PASTEL_COLORS = ["#b3e2cd", "#fdccac", "#cbd5e8", "#f4cae4", "#e6f5c9", "#fff2ae
 def cli():
     pass
 
+def json2df(json_str):
+    """
+    This function is to convert a JSON string to a Pandas data frame
+    :param json_str: a JSON string
+    :return df: a Pandas data frame
+    """
+    return pd.read_json(json_str)
+
+def format_cell(cell):
+    """
+    This function is to format a cell in a Pandas data frame to a string of N-Triples
+    :param cell: a cell in a Pandas data frame
+    :return cell: a string of N-Triples
+    """
+    if cell.startswith("<") or cell.startswith("_:") or cell.startswith('"'):
+        return cell
+    else:
+        return '"' + cell + '"'        
+
 def df2nt(df, colnames_of_triples):
     """
     This function is to convert a Pandas data frame to a string of N-Triples
@@ -24,7 +44,7 @@ def df2nt(df, colnames_of_triples):
     """
     nt = ""
     for colnames_of_triple in colnames_of_triples:
-        nt += df.apply(lambda row: "{s} {p} {o} .\n".format(s=row[colnames_of_triple[0]], p=row[colnames_of_triple[1]], o=row[colnames_of_triple[2]]), axis=1).str.cat(sep='')
+        nt += df.apply(lambda row: "{s} {p} {o} .\n".format(s=format_cell(row[colnames_of_triple[0]]), p=format_cell(row[colnames_of_triple[1]]), o=format_cell(row[colnames_of_triple[2]])), axis=1).str.cat(sep='')
     return nt
 
 def infer_rdf_graph(rdf_graph, infer):
@@ -153,6 +173,38 @@ def _load(dataset, inputfile, inputformat, colnames):
         pickle.dump(geist_graph_object, f)
     return
 
+class CreateExtension(ContainerTag):
+    tags = {"create"}
+    
+    def render(self, dataset="kb", inputformat="json-ld", colnames=None, infer="none", caller=None):
+        content = str(caller()) #.encode()
+        _create(dataset, content, inputformat, colnames, infer)
+        return ""
+
+class LoadExtension(ContainerTag):
+    tags = {"load"}
+    
+    def render(self, dataset="kb", inputformat="json-ld", colnames=None, caller=None):
+        content = str(caller()) #.encode()
+        _load(dataset, content, inputformat, colnames)
+        return ""
+
+class QueryExtension(ContainerTag):
+    tags = {"query"}
+
+    def render(self, dataset="kb", caller=None):
+        content = str(caller()) #.encode()
+        (rdf_graph, _) = load_rdf_dataset(dataset)
+        res = query2df(rdf_graph, content)
+        return res.to_json()
+
+class DestroyExtension(StandaloneTag):
+    tags = {"destroy"}
+    
+    def render(self, dataset="kb"):
+        delete_rdf_dataset(dataset=dataset)
+        return ""
+
 @cli.command()
 @click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to create (default "kb")')
 @click.option('--inputfile', '-ifile', required=True, type=click.File('r'), default=sys.stdin, help='Path of the file to be loaded as triples')
@@ -238,35 +290,16 @@ def graph(dataset, mappings, outputfile, outputformats):
             else: # gv
                 G.write(output_path)
 
-# Query the given dataset
-def query_dataset(file, **kwargs):
-    dataset = kwargs["dataset"] if "dataset" in kwargs else "kb"
-    (rdf_graph, _) = load_rdf_dataset(dataset)
-    res = query2df(rdf_graph, file)
-    return res
-
-# Create a dataset
-def create_dataset(inputfile, **kwargs):
-    dataset = kwargs["dataset"] if "dataset" in kwargs else "kb"
-    inputformat = kwargs["inputformat"] if "inputformat" in kwargs else "json-ld"
-    colnames = kwargs["colnames"] if "colnames" in kwargs else None
-    infer = kwargs["infer"] if "infer" in kwargs else "none"
-    _create(dataset, inputfile, inputformat, colnames, infer)
-    return
-
 @cli.command()
-@click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to be visualized (default "kb")')
 @click.option('--file', required=True, type=click.File('r'), default=sys.stdin, help='Path of the file containing the report template to expand')
 @click.option('--outputfile', '-ofile', default='report', type=str, help='Path of the file without extension to store the report (default: report)')
 @click.option('outputformats', '--outputformat', '-oformat', default=['none'], type=click.Choice(['none', 'png', 'gv', 'txt']), multiple=True, help='Format of the report (default: none): none or png or gv or txt, where none will print the report directly.')
-def report(dataset, file, outputfile, outputformats):
+def report(file, outputfile, outputformats):
     """Expand a report using a dataset"""
     
     # Render the report
-    environment = jinja2.Environment(loader=jinja2.FileSystemLoader("./"), trim_blocks=True)
-    environment.globals['create'] = create_dataset
-    environment.globals['query'] = query_dataset
-    environment.globals['destroy'] = delete_rdf_dataset
+    environment = jinja2.Environment(loader=jinja2.FileSystemLoader("./"), trim_blocks=True, extensions=[CreateExtension, LoadExtension, QueryExtension, DestroyExtension])
+    environment.filters['json2df'] = json2df
     template = environment.from_string(file.read())
     report = template.render()
 

@@ -194,27 +194,58 @@ END_CELL
 
 # ------------------------------------------------------------------------------
 
-bash_cell report_create << END_CELL
+bash_cell report_create_kb << END_CELL
 
 ../../geist report << END_TEMPLATE
 
-    {% set ntriples = '''
+{% create inputformat="nt" %}
     <http://example.com/drewp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
     <http://example.com/drewp> <http://example.com/says> "Hello World" .
-    ''' %}
-    {% set _ = create(ntriples, inputformat="nt") %}
-    {% set query_all_triples = query('''
+{% endcreate %}
+
+{% query as res %}
     SELECT ?s ?p ?o
     WHERE {
         ?s ?p ?o
     }
-    ''') %}
+{% endquery %}
+{% set all_triples = res | json2df %}
 
-    {% for _, row in query_all_triples.iterrows() %}
-        Subject: {{ row["s"] }}, Predicate: {{ row["p"] }}, Object: {{ row["o"] }}.
-    {% endfor %}
+{% for _, row in all_triples.iterrows() %}
+    Subject: {{ row["s"] }}, Predicate: {{ row["p"] }}, Object: {{ row["o"] }}.
+{% endfor %}
 
-    {% set _ = destroy() %}
+{% destroy %}
+
+END_TEMPLATE
+
+END_CELL
+
+# ------------------------------------------------------------------------------
+
+bash_cell report_create_test << END_CELL
+
+../../geist report << END_TEMPLATE
+
+{% create dataset="test", inputformat="csv", colnames="[['s', 'p', 'o']]" %}
+s,p,o
+<http://example.com/drewp>,<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>,<http://xmlns.com/foaf/0.1/Person>
+<http://example.com/drewp>,<http://example.com/says>,"Hello World"
+{% endcreate %}
+
+{% query "test" as res %}
+    SELECT ?s ?p ?o
+    WHERE {
+        ?s ?p ?o
+    }
+{% endquery %}
+{% set all_triples = res | json2df %}
+
+{% for _, row in all_triples.iterrows() %}
+    Subject: {{ row["s"] }}, Predicate: {{ row["p"] }}, Object: {{ row["o"] }}.
+{% endfor %}
+
+{% destroy "test" %}
 
 END_TEMPLATE
 
