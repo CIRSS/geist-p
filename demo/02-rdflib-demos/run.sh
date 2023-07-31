@@ -198,12 +198,12 @@ bash_cell report_create_kb << END_CELL
 
 ../../geist report << END_TEMPLATE
 
-{% create inputformat="nt" %}
+{% create inputformat="nt", isfilepath=False %}
     <http://example.com/drewp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
     <http://example.com/drewp> <http://example.com/says> "Hello World" .
 {% endcreate %}
 
-{% query as res %}
+{% query isfilepath=False as res %}
     SELECT ?s ?p ?o
     WHERE {
         ?s ?p ?o
@@ -227,13 +227,13 @@ bash_cell report_create_test << END_CELL
 
 ../../geist report << END_TEMPLATE
 
-{% create dataset="test", inputformat="csv", colnames="[['s', 'p', 'o']]" %}
+{% create dataset="test", inputformat="csv", colnames="[['s', 'p', 'o']]", isfilepath=False %}
 s,p,o
 <http://example.com/drewp>,<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>,<http://xmlns.com/foaf/0.1/Person>
 <http://example.com/drewp>,<http://example.com/says>,"Hello World"
 {% endcreate %}
 
-{% query "test" as res %}
+{% query "test", isfilepath=False as res %}
     SELECT ?s ?p ?o
     WHERE {
         ?s ?p ?o
@@ -246,6 +246,27 @@ s,p,o
 {% endfor %}
 
 {% destroy "test" %}
+
+END_TEMPLATE
+
+END_CELL
+
+# ------------------------------------------------------------------------------
+
+bash_cell report_create_kb_file << END_CELL
+
+../../geist report << END_TEMPLATE
+
+{% create inputformat="csv", colnames="[['s', 'p', 'o']]" %} data/kb.csv {% endcreate %}
+
+{% query as res %} data/query {% endquery %}
+{% set all_triples = res | json2df %}
+
+{% for _, row in all_triples.iterrows() %}
+    Subject: {{ row["s"] }}, Predicate: {{ row["p"] }}, Object: {{ row["o"] }}.
+{% endfor %}
+
+{% destroy %}
 
 END_TEMPLATE
 

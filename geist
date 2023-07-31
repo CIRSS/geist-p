@@ -173,29 +173,40 @@ def _load(dataset, inputfile, inputformat, colnames):
         pickle.dump(geist_graph_object, f)
     return
 
+def get_content(data, isfilepath):
+    """
+    This function is to retrieve the content of the given file path or the input string itself.
+    :param data: a string. It can be a file path or content of the file
+    :param isfilepath: a bool value to denote if the given data is a file path or not (default: True, which is a file path)
+    :return content: a string
+    """
+    if isfilepath:
+        with open(data.strip(), mode='r', encoding='utf-8') as fin:
+            content = fin.read()
+    else:
+        content = data.strip()
+    return content
+
 class CreateExtension(ContainerTag):
     tags = {"create"}
     
-    def render(self, dataset="kb", inputformat="json-ld", colnames=None, infer="none", caller=None):
-        content = str(caller()) #.encode()
-        _create(dataset, content, inputformat, colnames, infer)
+    def render(self, dataset="kb", inputformat="json-ld", colnames=None, infer="none", isfilepath=True, caller=None):
+        _create(dataset, get_content(str(caller()), isfilepath), inputformat, colnames, infer)
         return ""
 
 class LoadExtension(ContainerTag):
     tags = {"load"}
     
-    def render(self, dataset="kb", inputformat="json-ld", colnames=None, caller=None):
-        content = str(caller()) #.encode()
-        _load(dataset, content, inputformat, colnames)
+    def render(self, dataset="kb", inputformat="json-ld", colnames=None, isfilepath=True, caller=None):
+        _load(dataset, get_content(str(caller()), isfilepath), inputformat, colnames)
         return ""
 
 class QueryExtension(ContainerTag):
     tags = {"query"}
 
-    def render(self, dataset="kb", caller=None):
-        content = str(caller()) #.encode()
+    def render(self, dataset="kb", isfilepath=True, caller=None):
         (rdf_graph, _) = load_rdf_dataset(dataset)
-        res = query2df(rdf_graph, content)
+        res = query2df(rdf_graph, get_content(str(caller()), isfilepath))
         return res.to_json()
 
 class DestroyExtension(StandaloneTag):
