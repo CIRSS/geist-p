@@ -11,6 +11,7 @@ from rdflib.plugins.sparql.results.jsonresults import JSONResultSerializer
 
 DATA_DIR = ".geistdata/"
 PASTEL_COLORS = ["#b3e2cd", "#fdccac", "#cbd5e8", "#f4cae4", "#e6f5c9", "#fff2ae", "#f1e2cc", "#cccccc"]
+TAGS = ["create", "load", "query", "destroy", "include", "import", "macro", "block", "extends", "call", "filter", "set", "for", "if", "elif", "else"]
 
 @click.group()
 def cli():
@@ -216,8 +217,8 @@ class DestroyExtension(StandaloneTag):
         delete_rdf_dataset(dataset=dataset)
         return ""
 
-class GeistIncludeExtension(StandaloneTag):
-    tags = {"geistinclude"}
+class TemplateExtension(StandaloneTag):
+    tags = {"template"}
 
     def render(self, filepath):
         return ""
@@ -228,37 +229,52 @@ def include_filepaths(data):
     :param data: a string, which might contains multiple included files
     :return file_paths: a list of file paths
     """
-    blocks = re.findall(r"{%\s*geistinclude.*?\s*%}", data)
+    blocks = re.findall(r"{%\s*template.*?\s*%}", data)
     file_paths = []
     for block in blocks:
-        file_path = re.search(r"{%\s*geistinclude\s+([^\s]*?)\s*%}", block).groups()[0].replace('"', "").replace("'", "")
+        file_path = re.search(r"{%\s*template\s+([^\s]*?)\s*%}", block).groups()[0].replace('"', "").replace("'", "")
         file_paths.append(file_path)
     return file_paths
 
-def generate_macros_class(file_paths):
+def generate_template_class(file_paths):
     """
-    This function is to generate a class named GeistMacrosExtension based on the give file paths
+    This function is to generate template class named {Tag}Extension based on the give file paths
     :param file_paths: a list of file paths
-    :return macros_class: a string of Python code to define the GeistMacrosExtension class
+    :return templates: a string of Python code to define template class and append it to the list of extensions
     """
-    macros_code = ""
+    templates = ""
     for file_path in file_paths:
         with open(file_path, mode='r', encoding='utf-8') as fin:
             macros = fin.read()
-        blocks = re.findall(r"{%\s*macro.*?{%\s*endmacro\s*%}", macros, re.DOTALL)
+        blocks = re.findall(r"{%\s*template.*?{%\s*endtemplate\s*%}", macros, re.DOTALL)
         for block in blocks:
-            (tag, params, content) = re.search(r"{%\s*macro\s*([a-zA-Z\d_]+)\s*([a-zA-Z\d_ ]*).*?%}(.*?){%\s*endmacro\s*%}", block, re.DOTALL).groups()
-            params_code = ", ".join(['{param}=kwargs["{param}"]'.format(param=param) for param in params.strip().split()])
-            macros_code = macros_code + '''
-            if tag == "{tag}":
-                curr_env = jinja2.Environment()
-                rendered_content = curr_env.from_string("""{content}""").render({params_code})
-                return rendered_content'''.format(tag=tag, content=content, params_code=params_code)
-    return """
-class GeistMacrosExtension(StandaloneTag):
-    tags = {"geistmacro"}
-
-    def render(self, tag, *args, **kwargs):""" + macros_code
+            # Parse tag, params, and content
+            (tag, params, content) = re.search(r"{%\s*template\s*([a-zA-Z\d_]+)\s*([a-zA-Z\d_ ]*).*?%}(.*?){%\s*endtemplate\s*%}", block, re.DOTALL).groups()
+            # Validate tag
+            tag_cap, tag_low = tag.capitalize(), tag.lower()
+            if tag_low.startswith("end") or tag_low in TAGS:
+                raise ValueError("The tag name ({tag}) is not allowed.".format(tag=tag))
+            TAGS.append(tag_low)
+            # Generate render function
+            params = params.strip().split()
+            params_def, params_assign = ", " + ", ".join(params), ", ".join(['{param}={param}'.format(param=param) for param in params])
+            if params:
+                render_func = '''
+    def render(self{params_def}):
+        curr_env = jinja2.Environment()
+        rendered_content = curr_env.from_string("""{content}""").render({params_assign})
+        return rendered_content'''.format(params_def=params_def, content=content, params_assign=params_assign)
+            else:
+                render_func = '''
+    def render(self):
+        return """{content}"""'''.format(content=content)
+            # Generate template class and append it to the list of extensions
+            templates = templates + '''
+class {tag_cap}Extension(StandaloneTag):
+    tags = {{"{tag_low}"}}
+{render_func}
+extensions.append({tag_cap}Extension)'''.format(tag_cap=tag_cap, tag_low=tag_low, render_func=render_func)
+        return templates
 
 @cli.command()
 @click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to create (default "kb")')
@@ -352,14 +368,14 @@ def graph(dataset, mappings, outputfile, outputformats):
 def report(file, outputfile, outputformats):
     """Expand a report using a dataset"""
 
-    # Define the GeistMacrosExtension class
-    extensions = [CreateExtension, LoadExtension, QueryExtension, DestroyExtension, GeistIncludeExtension]
+    # Define custom tags based on files with the "template" tag
+    global extensions
+    extensions = [CreateExtension, LoadExtension, QueryExtension, DestroyExtension, TemplateExtension]
     content = file.read()
     file_paths = include_filepaths(content)
     if file_paths:
-        macros_class = generate_macros_class(file_paths)
-        exec(macros_class, globals())
-        extensions.append(GeistMacrosExtension)
+        templates = generate_template_class(file_paths)
+        exec(templates, globals())
 
     # Render the report
     environment = jinja2.Environment(loader=jinja2.FileSystemLoader("./"), trim_blocks=True, extensions=extensions)
