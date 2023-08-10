@@ -217,30 +217,30 @@ class DestroyExtension(StandaloneTag):
         delete_rdf_dataset(dataset=dataset)
         return ""
 
-class TemplateExtension(StandaloneTag):
-    tags = {"template"}
+class UseExtension(StandaloneTag):
+    tags = {"use"}
 
     def render(self, filepath):
         return ""
 
 def include_filepaths(data):
     """
-    This function is to retrive file paths of the included files through matching the pattern {% geistinclude filepath %}
+    This function is to retrive file paths of the included files through matching the pattern {% use filepath %}
     :param data: a string, which might contains multiple included files
     :return file_paths: a list of file paths
     """
-    blocks = re.findall(r"{%\s*template.*?\s*%}", data)
+    blocks = re.findall(r"{%\s*use.*?\s*%}", data)
     file_paths = []
     for block in blocks:
-        file_path = re.search(r"{%\s*template\s+([^\s]*?)\s*%}", block).groups()[0].replace('"', "").replace("'", "")
+        file_path = re.search(r"{%\s*use\s+([^\s]*?)\s*%}", block).groups()[0].replace('"', "").replace("'", "")
         file_paths.append(file_path)
     return file_paths
 
 def generate_template_class(file_paths):
     """
-    This function is to generate template class named {Tag}Extension based on the give file paths
+    This function is to generate {Tag}Extension class based on the give file paths
     :param file_paths: a list of file paths
-    :return templates: a string of Python code to define template class and append it to the list of extensions
+    :return templates: a string of Python code to define at least one classes and append them to the list of extensions
     """
     templates = ""
     for file_path in file_paths:
@@ -257,10 +257,10 @@ def generate_template_class(file_paths):
             TAGS.append(tag_low)
             # Generate render function
             params = params.strip().split()
-            params_def, params_assign = ", " + ", ".join(params), ", ".join(['{param}={param}'.format(param=param) for param in params])
+            params_def, params_assign = ", ".join(params), ", ".join(['{param}={param}'.format(param=param) for param in params])
             if params:
                 render_func = '''
-    def render(self{params_def}):
+    def render(self, {params_def}):
         curr_env = jinja2.Environment()
         rendered_content = curr_env.from_string("""{content}""").render({params_assign})
         return rendered_content'''.format(params_def=params_def, content=content, params_assign=params_assign)
@@ -268,7 +268,7 @@ def generate_template_class(file_paths):
                 render_func = '''
     def render(self):
         return """{content}"""'''.format(content=content)
-            # Generate template class and append it to the list of extensions
+            # Generate a template class and append it to the list of extensions
             templates = templates + '''
 class {tag_cap}Extension(StandaloneTag):
     tags = {{"{tag_low}"}}
@@ -321,7 +321,7 @@ def export(dataset, outputfile, outputformat):
 def query(dataset, file, outputfile):
     """Perform a SPARQL query on a dataset"""
     (rdf_graph, infer) = load_rdf_dataset(dataset)
-    res = query2df(rdf_graph, file)
+    res = query2df(rdf_graph, file.read())
     if outputfile is None:
         print(res.to_markdown())
     else:
@@ -344,6 +344,7 @@ def graph(dataset, mappings, outputfile, outputformats):
             WHERE {
                 ?s ?p ?o
             }
+            ORDER BY ?s ?p ?o
         """
     res = query2df(rdf_graph, query).replace(mappings, regex=True)
     G = visualize_query_results(query_res=res, edges=[['s', 'o', 'p']], same_color=True)
@@ -368,9 +369,9 @@ def graph(dataset, mappings, outputfile, outputformats):
 def report(file, outputfile, outputformats):
     """Expand a report using a dataset"""
 
-    # Define custom tags based on files with the "template" tag
+    # Define custom tags based on files with the "use" tag
     global extensions
-    extensions = [CreateExtension, LoadExtension, QueryExtension, DestroyExtension, TemplateExtension]
+    extensions = [CreateExtension, LoadExtension, QueryExtension, DestroyExtension, UseExtension]
     content = file.read()
     file_paths = include_filepaths(content)
     if file_paths:

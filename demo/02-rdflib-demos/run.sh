@@ -145,6 +145,7 @@ SELECT ?s ?p ?o
 WHERE {
     ?s ?p ?o
 }
+ORDER BY ?s ?p ?o
 
 __END_QUERY__
 
@@ -165,6 +166,7 @@ WHERE {
     ?s ?p ?o .
     FILTER ( ?p = trov:sha256 ) .
 }
+ORDER BY ?s ?p ?o
 
 __END_QUERY__
 
@@ -176,6 +178,7 @@ SELECT ?s ?p ?o
 WHERE {
     ?s ?p ?o
 }
+ORDER BY ?s ?p ?o
 
 __END_QUERY__
 
@@ -208,6 +211,7 @@ bash_cell report_create_kb << END_CELL
     WHERE {
         ?s ?p ?o
     }
+    ORDER BY ?s ?p ?o
 {% endquery %}
 {% set all_triples = res | json2df %}
 
@@ -238,6 +242,7 @@ s,p,o
     WHERE {
         ?s ?p ?o
     }
+    ORDER BY ?s ?p ?o
 {% endquery %}
 {% set all_triples = res | json2df %}
 
