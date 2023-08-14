@@ -1,0 +1,19 @@
+{% rule predicate_1 %}
+<http://example.com/{@ predicate_term @}>
+{% endrule %}
+
+{% rule predicate_2 prefix %}
+<{{ prefix }}{@ predicate_term @}>
+{% endrule %}
+
+{% rule predicate_term %}
+says
+{% endrule %}
+
+{% template format_output_1 person sent %}
+{{ person }} says {{sent}}
+{% endtemplate %}
+
+{% template format_output_2 person sent %}
+{{ person }} {@ predicate_term @} {{sent}}
+{% endtemplate %}

@@ -12,6 +12,7 @@ from rdflib.plugins.sparql.results.jsonresults import JSONResultSerializer
 DATA_DIR = ".geistdata/"
 PASTEL_COLORS = ["#b3e2cd", "#fdccac", "#cbd5e8", "#f4cae4", "#e6f5c9", "#fff2ae", "#f1e2cc", "#cccccc"]
 TAGS = ["create", "load", "query", "destroy", "include", "import", "macro", "block", "extends", "call", "filter", "set", "for", "if", "elif", "else"]
+RULE_NAMES, RULES = [], {}
 
 @click.group()
 def cli():
@@ -236,6 +237,51 @@ def include_filepaths(data):
         file_paths.append(file_path)
     return file_paths
 
+def generate_rules_dict(file_paths):
+    for file_path in file_paths:
+        with open(file_path, mode='r', encoding='utf-8') as fin:
+            macros = fin.read()     
+        blocks = re.findall(r"{%\s*rule.*?{%\s*endrule\s*%}", macros, re.DOTALL)
+        for block in blocks:
+            # Parse rule_name, params, and content
+            (rule_name, params, content) = re.search(r"{%\s*rule\s*([a-zA-Z\d_]+)\s*([a-zA-Z\d_ ]*).*?%}(.*?){%\s*endrule\s*%}", block, re.DOTALL).groups()
+            # Validate rule_name
+            rule_name = rule_name.lower()
+            if rule_name in RULE_NAMES:
+                raise ValueError("Duplicate rule names (i.e., {rule_name}) are not allowed.".format(rule_name=rule_name))
+            RULE_NAMES.append(rule_name)
+            # Parse params
+            RULES[rule_name] = [params.strip().split(), content.strip()]
+    return
+
+def render_rules(data):
+    blocks = re.findall(r"{@.*?@}", data, re.DOTALL)
+    for block in blocks:
+        # Parse rule_name and params
+        (rule_name, params) = re.search(r"{@\s*([a-zA-Z\d_]+)\s*(.*)?@}", block, re.DOTALL).groups()
+        # Validate rule_name
+        if not rule_name in RULE_NAMES:
+            raise ValueError("Please define the rule {rule_name} first.".format(rule_name=rule_name))
+        #TODO: make equations works, now it requires the params follow the same order as the rule
+        params = params.strip()
+        param_vals, param_names = [x.strip() for x in params.split(",")] if params else [], RULES[rule_name][0]
+        if len(param_vals) != len(param_names):
+            raise ValueError("The number of parameters of the rule {rule_name} does not match.".format(rule_name=rule_name))
+        content = RULES[rule_name][1]
+
+        if param_vals:
+            namespace = {"rule_template": jinja2.Template(content, trim_blocks=True), "content": content}
+            exec("content = rule_template.render(" + ", ".join(f"{name}={value}" for name, value in zip(param_names, param_vals)) + ")", namespace)
+            content = namespace.get("content")
+
+        inner_blocks = re.findall(r"{@.*?@}", content, re.DOTALL)
+        if inner_blocks:
+            rendered_content = render_rules(content)
+        else:
+            rendered_content = content
+        data = data.replace(block, rendered_content)
+    return data
+
 def generate_template_class(file_paths):
     """
     This function is to generate {Tag}Extension class based on the give file paths
@@ -252,9 +298,11 @@ def generate_template_class(file_paths):
             (tag, params, content) = re.search(r"{%\s*template\s*([a-zA-Z\d_]+)\s*([a-zA-Z\d_ ]*).*?%}(.*?){%\s*endtemplate\s*%}", block, re.DOTALL).groups()
             # Validate tag
             tag_cap, tag_low = tag.capitalize(), tag.lower()
-            if tag_low.startswith("end") or tag_low in TAGS:
-                raise ValueError("The tag name ({tag}) is not allowed.".format(tag=tag))
+            if tag_low in TAGS:
+                raise ValueError("Duplicate tag names (i.e., {tag}) are not allowed. \nPlease make sure your tag is not one of the reserved tages [create, load, query, destroy, include, import, macro, block, extends, call, filter, set, for, if, elif, else].".format(tag=tag))
             TAGS.append(tag_low)
+            # Render rules
+            content = render_rules(content)
             # Generate render function
             params = params.strip().split()
             params_def, params_assign = ", ".join(params), ", ".join(['{param}={param}'.format(param=param) for param in params])
@@ -369,12 +417,16 @@ def graph(dataset, mappings, outputfile, outputformats):
 def report(file, outputfile, outputformats):
     """Expand a report using a dataset"""
 
-    # Define custom tags based on files with the "use" tag
+    # Define rules and custom tags based on files with the "use" tag
     global extensions
     extensions = [CreateExtension, LoadExtension, QueryExtension, DestroyExtension, UseExtension]
     content = file.read()
     file_paths = include_filepaths(content)
     if file_paths:
+        # Render rules {@ rule_name @}
+        generate_rules_dict(file_paths)
+        content = render_rules(content)
+        # Define custom tags {% tag_name %}
         templates = generate_template_class(file_paths)
         exec(templates, globals())
 

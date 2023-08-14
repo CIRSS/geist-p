@@ -279,3 +279,68 @@ END_CELL
 
 # ------------------------------------------------------------------------------
 
+bash_cell report_with_nested_rules << END_CELL
+
+../../geist report << END_TEMPLATE
+
+{% use "templates.geist" %}
+
+{% create inputformat="nt", isfilepath=False %}
+    <http://example.com/drewp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+    <http://example.com/drewp> <http://example.com/says> "Hello World" .
+    <http://example.com/drewp> <http://example.com/says> "What a Nice Day" .
+{% endcreate %}
+
+{% query isfilepath=False as res %}
+    SELECT ?s ?o
+    WHERE {
+        ?s {@ predicate_1 @} ?o
+    }
+    ORDER BY ?s ?o
+{% endquery %}
+{% set all_triples = res | json2df %}
+
+{% for _, row in all_triples.iterrows() %}
+    {% format_output_1 row["s"], row["o"] %}.
+{% endfor %}
+
+{% destroy %}
+
+END_TEMPLATE
+
+END_CELL
+
+# ------------------------------------------------------------------------------
+
+bash_cell report_with_rules_in_templates << END_CELL
+
+../../geist report << END_TEMPLATE
+
+{% use "templates.geist" %}
+
+{% create inputformat="nt", isfilepath=False %}
+    <http://example.com/drewp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+    <http://example.com/drewp> <http://example.com/says> "Hello World" .
+    <http://example.com/drewp> <http://example.com/says> "What a Nice Day" .
+{% endcreate %}
+
+{% query isfilepath=False as res %}
+    SELECT ?s ?o
+    WHERE {
+        ?s {@ predicate_2 "http://example.com/" @} ?o
+    }
+    ORDER BY ?s ?o
+{% endquery %}
+{% set all_triples = res | json2df %}
+
+{% for _, row in all_triples.iterrows() %}
+    {% format_output_2 row["s"], row["o"] %}.
+{% endfor %}
+
+{% destroy %}
+
+END_TEMPLATE
+
+END_CELL
+
+# ------------------------------------------------------------------------------
