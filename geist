@@ -11,8 +11,7 @@ from rdflib.plugins.sparql.results.jsonresults import JSONResultSerializer
 
 DATA_DIR = ".geistdata/"
 PASTEL_COLORS = ["#b3e2cd", "#fdccac", "#cbd5e8", "#f4cae4", "#e6f5c9", "#fff2ae", "#f1e2cc", "#cccccc"]
-TAGS = ["create", "load", "query", "destroy", "include", "import", "macro", "block", "extends", "call", "filter", "set", "for", "if", "elif", "else"]
-RULE_NAMES, RULES = [], {}
+TAGS = ["template", "create", "load", "query", "destroy", "include", "import", "macro", "block", "extends", "call", "filter", "set", "for", "if", "elif", "else"]
 
 @click.group()
 def cli():
@@ -193,14 +192,14 @@ class CreateExtension(ContainerTag):
     tags = {"create"}
     
     def render(self, dataset="kb", inputformat="json-ld", colnames=None, infer="none", isfilepath=True, caller=None):
-        _create(dataset, get_content(str(caller()), isfilepath), inputformat, colnames, infer)
+        _create(dataset, get_content(environment.from_string(str(caller())).render(), isfilepath), inputformat, colnames, infer)
         return ""
 
 class LoadExtension(ContainerTag):
     tags = {"load"}
     
     def render(self, dataset="kb", inputformat="json-ld", colnames=None, isfilepath=True, caller=None):
-        _load(dataset, get_content(str(caller()), isfilepath), inputformat, colnames)
+        _load(dataset, get_content(environment.from_string(str(caller())).render(), isfilepath), inputformat, colnames)
         return ""
 
 class QueryExtension(ContainerTag):
@@ -208,14 +207,14 @@ class QueryExtension(ContainerTag):
 
     def render(self, dataset="kb", isfilepath=True, caller=None):
         (rdf_graph, _) = load_rdf_dataset(dataset)
-        res = query2df(rdf_graph, get_content(str(caller()), isfilepath))
+        res = query2df(rdf_graph, get_content(environment.from_string(str(caller())).render(), isfilepath))
         return res.to_json()
 
 class DestroyExtension(StandaloneTag):
     tags = {"destroy"}
     
     def render(self, dataset="kb"):
-        delete_rdf_dataset(dataset=dataset)
+        delete_rdf_dataset(dataset=environment.from_string(dataset).render())
         return ""
 
 class UseExtension(StandaloneTag):
@@ -237,56 +236,11 @@ def include_filepaths(data):
         file_paths.append(file_path)
     return file_paths
 
-def generate_rules_dict(file_paths):
-    for file_path in file_paths:
-        with open(file_path, mode='r', encoding='utf-8') as fin:
-            macros = fin.read()     
-        blocks = re.findall(r"{%\s*rule.*?{%\s*endrule\s*%}", macros, re.DOTALL)
-        for block in blocks:
-            # Parse rule_name, params, and content
-            (rule_name, params, content) = re.search(r"{%\s*rule\s*([a-zA-Z\d_]+)\s*([a-zA-Z\d_ ]*).*?%}(.*?){%\s*endrule\s*%}", block, re.DOTALL).groups()
-            # Validate rule_name
-            rule_name = rule_name.lower()
-            if rule_name in RULE_NAMES:
-                raise ValueError("Duplicate rule names (i.e., {rule_name}) are not allowed.".format(rule_name=rule_name))
-            RULE_NAMES.append(rule_name)
-            # Parse params
-            RULES[rule_name] = [params.strip().split(), content.strip()]
-    return
-
-def render_rules(data):
-    blocks = re.findall(r"{@.*?@}", data, re.DOTALL)
-    for block in blocks:
-        # Parse rule_name and params
-        (rule_name, params) = re.search(r"{@\s*([a-zA-Z\d_]+)\s*(.*)?@}", block, re.DOTALL).groups()
-        # Validate rule_name
-        if not rule_name in RULE_NAMES:
-            raise ValueError("Please define the rule {rule_name} first.".format(rule_name=rule_name))
-        #TODO: make equations works, now it requires the params follow the same order as the rule
-        params = params.strip()
-        param_vals, param_names = [x.strip() for x in params.split(",")] if params else [], RULES[rule_name][0]
-        if len(param_vals) != len(param_names):
-            raise ValueError("The number of parameters of the rule {rule_name} does not match.".format(rule_name=rule_name))
-        content = RULES[rule_name][1]
-
-        if param_vals:
-            namespace = {"rule_template": jinja2.Template(content, trim_blocks=True), "content": content}
-            exec("content = rule_template.render(" + ", ".join(f"{name}={value}" for name, value in zip(param_names, param_vals)) + ")", namespace)
-            content = namespace.get("content")
-
-        inner_blocks = re.findall(r"{@.*?@}", content, re.DOTALL)
-        if inner_blocks:
-            rendered_content = render_rules(content)
-        else:
-            rendered_content = content
-        data = data.replace(block, rendered_content)
-    return data
-
 def generate_template_class(file_paths):
     """
     This function is to generate {Tag}Extension class based on the give file paths
     :param file_paths: a list of file paths
-    :return templates: a string of Python code to define at least one classes and append them to the list of extensions
+    :return templates: a string of Python code to define template classes and add them as extensions
     """
     templates = ""
     for file_path in file_paths:
@@ -298,30 +252,30 @@ def generate_template_class(file_paths):
             (tag, params, content) = re.search(r"{%\s*template\s*([a-zA-Z\d_]+)\s*([a-zA-Z\d_ ]*).*?%}(.*?){%\s*endtemplate\s*%}", block, re.DOTALL).groups()
             # Validate tag
             tag_cap, tag_low = tag.capitalize(), tag.lower()
-            if tag_low in TAGS:
-                raise ValueError("Duplicate tag names (i.e., {tag}) are not allowed. \nPlease make sure your tag is not one of the reserved tages [create, load, query, destroy, include, import, macro, block, extends, call, filter, set, for, if, elif, else].".format(tag=tag))
+            if tag_low.startswith("end"):
+                raise ValueError("The tag name (i.e., {tag}) cannot start with 'end'.".format(tag=tag))
+            if tag_low.startswith("end") or (tag_low in TAGS):
+                raise ValueError("Duplicate tag names (i.e., {tag}). \nPlease make sure your tag is not one of the reserved tages [template, create, load, query, destroy, include, import, macro, block, extends, call, filter, set, for, if, elif, else].".format(tag=tag))
             TAGS.append(tag_low)
-            # Render rules
-            content = render_rules(content)
             # Generate render function
             params = params.strip().split()
             params_def, params_assign = ", ".join(params), ", ".join(['{param}={param}'.format(param=param) for param in params])
             if params:
                 render_func = '''
     def render(self, {params_def}):
-        curr_env = jinja2.Environment()
-        rendered_content = curr_env.from_string("""{content}""").render({params_assign})
+        rendered_content = environment.from_string("""{content}""").render({params_assign})
         return rendered_content'''.format(params_def=params_def, content=content, params_assign=params_assign)
             else:
                 render_func = '''
     def render(self):
-        return """{content}"""'''.format(content=content)
-            # Generate a template class and append it to the list of extensions
+        rendered_content = environment.from_string("""{content}""").render()
+        return rendered_content'''.format(content=content)
+            # Generate a template class and add its extension
             templates = templates + '''
 class {tag_cap}Extension(StandaloneTag):
     tags = {{"{tag_low}"}}
 {render_func}
-extensions.append({tag_cap}Extension)'''.format(tag_cap=tag_cap, tag_low=tag_low, render_func=render_func)
+environment.add_extension({tag_cap}Extension)'''.format(tag_cap=tag_cap, tag_low=tag_low, render_func=render_func)
         return templates
 
 @cli.command()
@@ -417,22 +371,23 @@ def graph(dataset, mappings, outputfile, outputformats):
 def report(file, outputfile, outputformats):
     """Expand a report using a dataset"""
 
-    # Define rules and custom tags based on files with the "use" tag
-    global extensions
-    extensions = [CreateExtension, LoadExtension, QueryExtension, DestroyExtension, UseExtension]
+    # Create a global Jinja2 environment
+    global environment
+    environment = jinja2.Environment(
+        loader=jinja2.FileSystemLoader("./"), 
+        trim_blocks=True, 
+        extensions=[CreateExtension, LoadExtension, QueryExtension, DestroyExtension, UseExtension]
+    )
+    environment.filters['json2df'] = json2df
+
+    # Define custom tags based on files with the "use" tag
     content = file.read()
     file_paths = include_filepaths(content)
     if file_paths:
-        # Render rules {@ rule_name @}
-        generate_rules_dict(file_paths)
-        content = render_rules(content)
-        # Define custom tags {% tag_name %}
         templates = generate_template_class(file_paths)
         exec(templates, globals())
 
     # Render the report
-    environment = jinja2.Environment(loader=jinja2.FileSystemLoader("./"), trim_blocks=True, extensions=extensions)
-    environment.filters['json2df'] = json2df
     template = environment.from_string(content)
     report = template.render()
 

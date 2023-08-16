@@ -1,19 +1,28 @@
-{% rule predicate_1 %}
-<http://example.com/{@ predicate_term @}>
-{% endrule %}
+{% template singular %}s{% endtemplate %}
 
-{% rule predicate_2 prefix %}
-<{{ prefix }}{@ predicate_term @}>
-{% endrule %}
+{% template url %}http://example.com/{% endtemplate %}
 
-{% rule predicate_term %}
-says
-{% endrule %}
+{% template predicate_term %}say{% singular %}{% endtemplate %}
 
-{% template format_output_1 person sent %}
-{{ person }} says {{sent}}
+{% template predicate prefix %}<{{ prefix }}{% predicate_term %}>{% endtemplate %}
+
+{% template format_output person sent %}
+    {{ person }} {% predicate_term %} {{sent}}
 {% endtemplate %}
 
-{% template format_output_2 person sent %}
-{{ person }} {@ predicate_term @} {{sent}}
+{% template query_with_args %}
+    {% for p in ["<http://example.com/says>", "<http://example.com/feels>"] %}
+        {% query isfilepath=False as res %}
+            SELECT ?s ?o
+            WHERE {
+                ?s {{ p }} ?o
+            }
+            ORDER BY ?s ?o
+        {% endquery %}
+        {% set all_triples = res | json2df %}
+
+        {% for _, row in all_triples.iterrows() -%}
+            {{ row["s"] }} -- {{ p }} --> {{ row["o"] }}
+        {% endfor %}
+    {%- endfor %}
 {% endtemplate %}
