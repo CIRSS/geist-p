@@ -285,17 +285,28 @@ bash_cell report_with_nested_rules << END_CELL
 
 {% use "templates.geist" %}
 
-{% create inputformat="nt", isfilepath=False %}
+{% create "kb1", inputformat="nt", isfilepath=False %}
     <http://example.com/drewp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
     <http://example.com/drewp> <http://example.com/says> "Hello World" .
     <http://example.com/drewp> <http://example.com/says> "What a Nice Day" .
     <http://example.com/drewp> <http://example.com/feels> "Happy" .
 {% endcreate %}
 
-{% query isfilepath=False as res %}
+{% create "kb2", inputformat="nt", isfilepath=False %}
+    <http://example.com/test> <http://example.com/p1> <http://example.com/says>.
+    <http://example.com/test> <http://example.com/p2> <http://example.com/feels>.
+{% endcreate %}
+
+{% query "kb1", isfilepath=False as res %}
     SELECT ?s ?o
     WHERE {
-        ?s {% predicate "{% url %}" %} ?o
+        ?s ?p ?o
+        FILTER (?p IN ({% query "kb2", isfilepath=False as res %}
+                            SELECT ?p 
+                            WHERE {?s <http://example.com/p1> ?p}
+                        {% endquery %}
+                        {% set p = res | json2df %}
+                        {{", ".join(p["p"])}}))
     }
     ORDER BY ?s ?o
 {% endquery %}
@@ -307,7 +318,8 @@ bash_cell report_with_nested_rules << END_CELL
 
 {% query_with_args %}
 
-{% destroy %}
+{% destroy "kb1" %}
+{% destroy "kb2" %}
 
 END_TEMPLATE
 

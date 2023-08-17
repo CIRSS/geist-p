@@ -12,7 +12,7 @@
 
 {% template query_with_args %}
     {% for p in ["<http://example.com/says>", "<http://example.com/feels>"] %}
-        {% query isfilepath=False as res %}
+        {% query "kb1", isfilepath=False as res %}
             SELECT ?s ?o
             WHERE {
                 ?s {{ p }} ?o
