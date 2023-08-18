@@ -229,10 +229,10 @@ def include_filepaths(data):
     :param data: a string, which might contains multiple included files
     :return file_paths: a list of file paths
     """
-    blocks = re.findall(r"{%\s*use.*?\s*%}", data)
+    blocks = re.findall(r"{%[+\-\s]?\s*use.*?\s*[+\-\s]?%}", data)
     file_paths = []
     for block in blocks:
-        file_path = re.search(r"{%\s*use\s+([^\s]*?)\s*%}", block).groups()[0].replace('"', "").replace("'", "")
+        file_path = re.search(r"{%[+\-\s]?\s*use\s+([^\s]*?)\s*[+\-\s]?%}", block).groups()[0].replace('"', "").replace("'", "")
         file_paths.append(file_path)
     return file_paths
 

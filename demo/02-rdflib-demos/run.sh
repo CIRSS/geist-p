@@ -283,21 +283,21 @@ bash_cell report_with_nested_rules << END_CELL
 
 ../../geist report << END_TEMPLATE
 
-{% use "templates.geist" %}
+{%- use "templates.geist" %}
 
-{% create "kb1", inputformat="nt", isfilepath=False %}
+{%- create "kb1", inputformat="nt", isfilepath=False %}
     <http://example.com/drewp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
     <http://example.com/drewp> <http://example.com/says> "Hello World" .
     <http://example.com/drewp> <http://example.com/says> "What a Nice Day" .
     <http://example.com/drewp> <http://example.com/feels> "Happy" .
 {% endcreate %}
 
-{% create "kb2", inputformat="nt", isfilepath=False %}
+{%- create "kb2", inputformat="nt", isfilepath=False %}
     <http://example.com/test> <http://example.com/p1> <http://example.com/says>.
     <http://example.com/test> <http://example.com/p2> <http://example.com/feels>.
 {% endcreate %}
 
-{% query "kb1", isfilepath=False as res %}
+{%- query "kb1", isfilepath=False as res %}
     SELECT ?s ?o
     WHERE {
         ?s ?p ?o
@@ -316,10 +316,10 @@ bash_cell report_with_nested_rules << END_CELL
     {% format_output row["s"], row["o"] %}.
 {%- endfor %}
 
-{% query_with_args %}
+{%- query_with_args %}
 
-{% destroy "kb1" %}
-{% destroy "kb2" %}
+{%- destroy "kb1" %}
+{%- destroy "kb2" %}
 
 END_TEMPLATE
 
