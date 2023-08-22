@@ -9,7 +9,7 @@ Usage: geist create [OPTIONS]
 
 Options:
   -d, --dataset TEXT              Name of RDF dataset to create (default "kb")
-  -ifile, --inputfile TEXT        Path of the file to be loaded as triples
+  -ifile, --inputfile FILENAME    Path of the file to be loaded as triples
                                   [required]
   -iformat, --inputformat [xml|n3|turtle|nt|pretty-xml|trix|trig|nquads|json-ld|hext|csv]
                                   Format of the file to be loaded as triples
@@ -40,8 +40,8 @@ Options:
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 
-<file:///mnt/geist-p/demo/03-test-infer/data/a> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <file:///mnt/geist-p/demo/03-test-infer/data/b> .
-<file:///mnt/geist-p/demo/03-test-infer/data/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <file:///mnt/geist-p/demo/03-test-infer/data/a> .
+<file:///mnt/geist-p/demo/03-test-infer/a> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <file:///mnt/geist-p/demo/03-test-infer/b> .
+<file:///mnt/geist-p/demo/03-test-infer/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <file:///mnt/geist-p/demo/03-test-infer/a> .
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
@@ -86,12 +86,12 @@ Options:
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 
-<file:///mnt/geist-p/demo/03-test-infer/data/a> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
-<file:///mnt/geist-p/demo/03-test-infer/data/a> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <file:///mnt/geist-p/demo/03-test-infer/data/b> .
-<file:///mnt/geist-p/demo/03-test-infer/data/b> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
-<file:///mnt/geist-p/demo/03-test-infer/data/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <file:///mnt/geist-p/demo/03-test-infer/data/a> .
-<file:///mnt/geist-p/demo/03-test-infer/data/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <file:///mnt/geist-p/demo/03-test-infer/data/b> .
-<file:///mnt/geist-p/demo/03-test-infer/data/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<file:///mnt/geist-p/demo/03-test-infer/a> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<file:///mnt/geist-p/demo/03-test-infer/a> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <file:///mnt/geist-p/demo/03-test-infer/b> .
+<file:///mnt/geist-p/demo/03-test-infer/b> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<file:///mnt/geist-p/demo/03-test-infer/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <file:///mnt/geist-p/demo/03-test-infer/a> .
+<file:///mnt/geist-p/demo/03-test-infer/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <file:///mnt/geist-p/demo/03-test-infer/b> .
+<file:///mnt/geist-p/demo/03-test-infer/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> .
 <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
@@ -246,12 +246,12 @@ Options:
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 
-<file:///mnt/geist-p/demo/03-test-infer/data/a> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <file:///mnt/geist-p/demo/03-test-infer/data/b> .
-<file:///mnt/geist-p/demo/03-test-infer/data/a> <http://www.w3.org/2002/07/owl#sameAs> <file:///mnt/geist-p/demo/03-test-infer/data/a> .
-<file:///mnt/geist-p/demo/03-test-infer/data/b> <http://www.w3.org/2002/07/owl#sameAs> <file:///mnt/geist-p/demo/03-test-infer/data/b> .
-<file:///mnt/geist-p/demo/03-test-infer/data/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <file:///mnt/geist-p/demo/03-test-infer/data/a> .
-<file:///mnt/geist-p/demo/03-test-infer/data/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <file:///mnt/geist-p/demo/03-test-infer/data/b> .
-<file:///mnt/geist-p/demo/03-test-infer/data/foo> <http://www.w3.org/2002/07/owl#sameAs> <file:///mnt/geist-p/demo/03-test-infer/data/foo> .
+<file:///mnt/geist-p/demo/03-test-infer/a> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <file:///mnt/geist-p/demo/03-test-infer/b> .
+<file:///mnt/geist-p/demo/03-test-infer/a> <http://www.w3.org/2002/07/owl#sameAs> <file:///mnt/geist-p/demo/03-test-infer/a> .
+<file:///mnt/geist-p/demo/03-test-infer/b> <http://www.w3.org/2002/07/owl#sameAs> <file:///mnt/geist-p/demo/03-test-infer/b> .
+<file:///mnt/geist-p/demo/03-test-infer/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <file:///mnt/geist-p/demo/03-test-infer/a> .
+<file:///mnt/geist-p/demo/03-test-infer/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <file:///mnt/geist-p/demo/03-test-infer/b> .
+<file:///mnt/geist-p/demo/03-test-infer/foo> <http://www.w3.org/2002/07/owl#sameAs> <file:///mnt/geist-p/demo/03-test-infer/foo> .
 <http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Datatype> .
 <http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML> <http://www.w3.org/2002/07/owl#sameAs> <http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML> .
 <http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Datatype> .
@@ -734,18 +734,18 @@ Options:
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 
-<file:///mnt/geist-p/demo/03-test-infer/data/a> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
-<file:///mnt/geist-p/demo/03-test-infer/data/a> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Thing> .
-<file:///mnt/geist-p/demo/03-test-infer/data/a> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <file:///mnt/geist-p/demo/03-test-infer/data/b> .
-<file:///mnt/geist-p/demo/03-test-infer/data/a> <http://www.w3.org/2002/07/owl#sameAs> <file:///mnt/geist-p/demo/03-test-infer/data/a> .
-<file:///mnt/geist-p/demo/03-test-infer/data/b> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
-<file:///mnt/geist-p/demo/03-test-infer/data/b> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Thing> .
-<file:///mnt/geist-p/demo/03-test-infer/data/b> <http://www.w3.org/2002/07/owl#sameAs> <file:///mnt/geist-p/demo/03-test-infer/data/b> .
-<file:///mnt/geist-p/demo/03-test-infer/data/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <file:///mnt/geist-p/demo/03-test-infer/data/a> .
-<file:///mnt/geist-p/demo/03-test-infer/data/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <file:///mnt/geist-p/demo/03-test-infer/data/b> .
-<file:///mnt/geist-p/demo/03-test-infer/data/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
-<file:///mnt/geist-p/demo/03-test-infer/data/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Thing> .
-<file:///mnt/geist-p/demo/03-test-infer/data/foo> <http://www.w3.org/2002/07/owl#sameAs> <file:///mnt/geist-p/demo/03-test-infer/data/foo> .
+<file:///mnt/geist-p/demo/03-test-infer/a> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<file:///mnt/geist-p/demo/03-test-infer/a> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Thing> .
+<file:///mnt/geist-p/demo/03-test-infer/a> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <file:///mnt/geist-p/demo/03-test-infer/b> .
+<file:///mnt/geist-p/demo/03-test-infer/a> <http://www.w3.org/2002/07/owl#sameAs> <file:///mnt/geist-p/demo/03-test-infer/a> .
+<file:///mnt/geist-p/demo/03-test-infer/b> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<file:///mnt/geist-p/demo/03-test-infer/b> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Thing> .
+<file:///mnt/geist-p/demo/03-test-infer/b> <http://www.w3.org/2002/07/owl#sameAs> <file:///mnt/geist-p/demo/03-test-infer/b> .
+<file:///mnt/geist-p/demo/03-test-infer/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <file:///mnt/geist-p/demo/03-test-infer/a> .
+<file:///mnt/geist-p/demo/03-test-infer/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <file:///mnt/geist-p/demo/03-test-infer/b> .
+<file:///mnt/geist-p/demo/03-test-infer/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<file:///mnt/geist-p/demo/03-test-infer/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Thing> .
+<file:///mnt/geist-p/demo/03-test-infer/foo> <http://www.w3.org/2002/07/owl#sameAs> <file:///mnt/geist-p/demo/03-test-infer/foo> .
 <http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Datatype> .
 <http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
 <http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DataRange> .

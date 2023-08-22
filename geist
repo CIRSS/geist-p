@@ -11,11 +11,19 @@ from rdflib.plugins.sparql.results.jsonresults import JSONResultSerializer
 
 DATA_DIR = ".geistdata/"
 PASTEL_COLORS = ["#b3e2cd", "#fdccac", "#cbd5e8", "#f4cae4", "#e6f5c9", "#fff2ae", "#f1e2cc", "#cccccc"]
-TAGS = ["template", "create", "load", "query", "destroy", "include", "import", "macro", "block", "extends", "call", "filter", "set", "for", "if", "elif", "else"]
+TAGS = ["template", "create", "load", "query", "destroy", "html", "img", "table", "include", "import", "macro", "block", "extends", "call", "filter", "set", "for", "if", "elif", "else"]
 
 @click.group()
 def cli():
     pass
+
+def process_str_for_html(cell):
+    """
+    This function is to preprocess a string to be displayed within an HTML document
+    :param cell: a string
+    :return cell_prpcessed: a string
+    """
+    return cell.replace("<", "&lt").replace(">", "&gt")
 
 def json2df(json_str):
     """
@@ -24,6 +32,24 @@ def json2df(json_str):
     :return df: a Pandas data frame
     """
     return pd.read_json(json_str)
+
+def df2htmltable(df):
+    """
+    This function is to convert a Pandas data frame to an HTML table
+    :param df: a Pandas data frame
+    :return html_table: an HTML table
+    """
+    header = "".join("<th>{header}</th>".format(header=process_str_for_html(header)) for header in df.columns)
+    content = ""
+    for _, row in df.iterrows():
+        content = content + "\n\t\t\t<tr>" + "".join("<td>{cell}</td>".format(cell=process_str_for_html(cell)) for cell in row.tolist())
+    html_table = '''
+        <table>
+            <tr>{header}</tr>
+        {content}
+        </table>
+    '''.format(header=header, content=content)
+    return html_table
 
 def format_cell(cell):
     """
@@ -214,7 +240,7 @@ class DestroyExtension(StandaloneTag):
     tags = {"destroy"}
     
     def render(self, dataset="kb"):
-        delete_rdf_dataset(dataset=environment.from_string(dataset).render())
+        delete_rdf_dataset(dataset=dataset)
         return ""
 
 class UseExtension(StandaloneTag):
@@ -222,6 +248,52 @@ class UseExtension(StandaloneTag):
 
     def render(self, filepath):
         return ""
+
+class HtmlExtension(ContainerTag):
+    tags = {"html"}
+
+    def render(self, path="report.html", caller=None):
+        report = '''
+<!DOCTYPE html>
+<html>
+{content}
+</html>
+'''.format(content=environment.from_string(str(caller())).render())
+        ensure_dir_exists(path)
+        with open(path, 'w') as fout:
+            fout.write(report)
+        return report
+
+class ImgExtension(ContainerTag):
+    tags = {"img"}
+
+    def render(self, src, caller=None, **kwargs):
+        ensure_dir_exists(src)
+        report = environment.from_string(str(caller())).render()
+        # Extract extension from src
+        ext = src.split('.')[-1]
+        params_assign = " ".join(['{param_k}={param_v}'.format(param_k=param_k, param_v=param_v) for param_k, param_v in kwargs.items()])
+        if ext == 'gv' or ext == 'dot':
+            with open(src, 'w') as fout:
+                fout.write(report)
+            # Code to be embeded in an HTML file
+            code = '<pre><code {params_assign}>{report}</code></pre>'.format(params_assign=params_assign, report=report)
+        else:
+            # Save as an image
+            graph = pgv.AGraph(string=report)
+            graph.draw(src, format=ext, prog='dot')
+            # Code to be embeded in an HTML file
+            code = '<img src="{src}" {params_assign}>'.format(src=src, params_assign=params_assign)
+        return code
+
+class TableExtension(ContainerTag):
+    tags = {"table"}
+
+    def render(self, caller=None):
+        json_str = environment.from_string(str(caller())).render()
+        df = json2df(json_str)
+        code = df2htmltable(df)
+        return code
 
 def include_filepaths(data):
     """
@@ -366,9 +438,8 @@ def graph(dataset, mappings, outputfile, outputformats):
 
 @cli.command()
 @click.option('--file', required=True, type=click.File('r'), default=sys.stdin, help='Path of the file containing the report template to expand')
-@click.option('--outputfile', '-ofile', default='report', type=str, help='Path of the file without extension to store the report (default: report)')
-@click.option('outputformats', '--outputformat', '-oformat', default=['none'], type=click.Choice(['none', 'png', 'gv', 'txt']), multiple=True, help='Format of the report (default: none): none or png or gv or txt, where none will print the report directly.')
-def report(file, outputfile, outputformats):
+@click.option('--suppressoutput', '-so', default=False, help='Suppress output or not (default: False)')
+def report(file, suppressoutput):
     """Expand a report using a dataset"""
 
     # Create a global Jinja2 environment
@@ -376,9 +447,10 @@ def report(file, outputfile, outputformats):
     environment = jinja2.Environment(
         loader=jinja2.FileSystemLoader("./"), 
         trim_blocks=True, 
-        extensions=[CreateExtension, LoadExtension, QueryExtension, DestroyExtension, UseExtension]
+        extensions=[CreateExtension, LoadExtension, QueryExtension, DestroyExtension, UseExtension, HtmlExtension, ImgExtension, TableExtension]
     )
     environment.filters['json2df'] = json2df
+    environment.filters['df2htmltable'] = df2htmltable
 
     # Define custom tags based on files with the "use" tag
     content = file.read()
@@ -391,19 +463,9 @@ def report(file, outputfile, outputformats):
     template = environment.from_string(content)
     report = template.render()
 
-    # Save the report
-    ensure_dir_exists(outputfile)
-    for outputformat in set(outputformats):
-        if outputformat == 'none':
-            print(report)
-        else:
-            output_path = outputfile + '.' + outputformat
-            if outputformat == 'png':
-                graph = pgv.AGraph(string=report)
-                graph.draw(output_path, format='png', prog='dot')
-            else: # gv or txt
-                with open(output_path, 'w') as fout:
-                    fout.write(report)
+    if not suppressoutput:
+        print(report)
+
 
 if __name__ == '__main__':
     cli()
