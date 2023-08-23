@@ -2,6 +2,9 @@ REPRO_NAME=geist-p
 REPRO_DOCKER_ORG=cirss
 REPRO_IMAGE_TAG=latest
 
+PYTHON_VERSION=3.10.12
+PARENT_IMAGE=${REPRO_DOCKER_ORG}/python-dev-${PYTHON_VERSION}-parent:latest
+
 image:                  build-image   ## 
 start:                  start-repro   ## 
 

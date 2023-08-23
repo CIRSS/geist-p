@@ -1,4 +1,6 @@
-FROM cirss/repro-parent:latest
+ARG PARENT_IMAGE=cirss/repro-parent:latest
+
+FROM ${PARENT_IMAGE}
 
 COPY exports /repro/exports
 
