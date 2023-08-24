@@ -10,9 +10,9 @@ Home-page: https://palletsprojects.com/p/jinja/
 Author: Armin Ronacher
 Author-email: armin.ronacher@active-4.com
 License: BSD-3-Clause
-Location: /usr/local/lib/python3.10/site-packages
+Location: /mnt/geist-p/.python-dev/.local/lib/python3.10/site-packages
 Requires: MarkupSafe
-Required-by: jinja2-simple-tags
+Required-by: geist-p, jinja2-simple-tags
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
@@ -27,7 +27,7 @@ print(jinja2)
 END_PYTHON
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
-<module 'jinja2' from '/usr/local/lib/python3.10/site-packages/jinja2/__init__.py'>
+<module 'jinja2' from '/mnt/geist-p/.python-dev/.local/lib/python3.10/site-packages/jinja2/__init__.py'>
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 

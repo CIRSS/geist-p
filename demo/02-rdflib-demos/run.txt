@@ -1,6 +1,6 @@
 ================================================== bash cell | available_commands ==================================================
 
-../../geist --help
+geist --help
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 Usage: geist [OPTIONS] COMMAND [ARGS]...
@@ -21,7 +21,7 @@ Commands:
 
 ==================================================== bash cell | create_command ====================================================
 
-../../geist create --help
+geist create --help
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 Usage: geist create [OPTIONS]
@@ -48,16 +48,16 @@ Options:
 
 ===================================================== bash cell | create_stdin =====================================================
 
-../../geist create -d test -iformat nt << __END_INPUT__
+geist create -d test -iformat nt << __END_INPUT__
 
 <http://example.com/drewp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
 <http://example.com/drewp> <http://example.com/says> "Hello World" .
 
 __END_INPUT__
 
-../../geist export -d test | sort
+geist export -d test | sort
 
-../../geist destroy -d test
+geist destroy -d test
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 
@@ -68,7 +68,7 @@ __END_INPUT__
 
 ===================================================== bash cell | create_file ======================================================
 
-../../geist create -d test -ifile data/tro.jsonld
+geist create -d test -ifile data/tro.jsonld
 
 ls .geistdata
 
@@ -79,7 +79,7 @@ test.pkl
 
 ===================================================== bash cell | load_command =====================================================
 
-../../geist load --help
+geist load --help
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 Usage: geist load [OPTIONS]
@@ -103,7 +103,7 @@ Options:
 
 ================================================== bash cell | load_dataset_test ===================================================
 
-../../geist load -d test -ifile data/tro.jsonld
+geist load -d test -ifile data/tro.jsonld
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -111,7 +111,7 @@ Options:
 
 =================================================== bash cell | destroy_command ====================================================
 
-../../geist destroy --help
+geist destroy --help
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 Usage: geist destroy [OPTIONS]
@@ -126,7 +126,7 @@ Options:
 
 ================================================= bash cell | destroy_dataset_test =================================================
 
-../../geist destroy -d test
+geist destroy -d test
 
 ls .geistdata
 
@@ -136,7 +136,7 @@ ls .geistdata
 
 ================================================== bash cell | create_dataset_kb ===================================================
 
-../../geist create -ifile data/tro.jsonld
+geist create -ifile data/tro.jsonld
 
 ls .geistdata
 
@@ -147,7 +147,7 @@ kb.pkl
 
 ==================================================== bash cell | export_command ====================================================
 
-../../geist export --help
+geist export --help
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 Usage: geist export [OPTIONS]
@@ -167,7 +167,7 @@ Options:
 
 ================================================== bash cell | export_dataset_kb ===================================================
 
-../../geist export | sort
+geist export | sort
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 
@@ -195,7 +195,7 @@ Options:
 
 ==================================================== bash cell | graph_command =====================================================
 
-../../geist graph --help
+geist graph --help
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 Usage: geist graph [OPTIONS]
@@ -220,7 +220,7 @@ Options:
 
 =================================================== bash cell | graph_dataset_kb ===================================================
 
-../../geist graph -m data/mappings.json -ofile products/kb -oformat none -oformat png -oformat gv
+geist graph -m data/mappings.json -ofile products/kb -oformat none -oformat png -oformat gv
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 strict digraph "" {
@@ -304,7 +304,7 @@ strict digraph "" {
 
 ==================================================== bash cell | query_command =====================================================
 
-../../geist query --help
+geist query --help
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 Usage: geist query [OPTIONS]
@@ -323,7 +323,7 @@ Options:
 
 ================================================ bash cell | file_query_dataset_kb =================================================
 
-../../geist query --file data/query
+geist query --file data/query
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 |    | s                                                                                                                                          | p                                                    | o                                                                                                                                            |
@@ -352,7 +352,7 @@ Options:
 
 ================================================ bash cell | stdin_query_dataset_kb ================================================
 
-../../geist query << __END_QUERY__
+geist query << __END_QUERY__
 
 SELECT ?s ?p ?o
 WHERE {
@@ -362,7 +362,7 @@ ORDER BY ?s ?p ?o
 
 __END_QUERY__
 
-../../geist destroy -d kb
+geist destroy -d kb
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 |    | s                                                                                                                                          | p                                                    | o                                                                                                                                            |
@@ -391,9 +391,9 @@ __END_QUERY__
 
 ================================================ bash cell | query_dataset_to_newkb ================================================
 
-../../geist create -d kb -ifile data/tro.jsonld
+geist create -d kb -ifile data/tro.jsonld
 
-../../geist query -d kb --outputfile products/qres.csv << __END_QUERY__
+geist query -d kb --outputfile products/qres.csv << __END_QUERY__
 
 SELECT ?s ?p ?o
 WHERE {
@@ -404,9 +404,9 @@ ORDER BY ?s ?p ?o
 
 __END_QUERY__
 
-../../geist create -d newkb -ifile products/qres.csv -iformat csv --colnames "[['s','p','o']]"
+geist create -d newkb -ifile products/qres.csv -iformat csv --colnames "[['s','p','o']]"
 
-../../geist query -d newkb << __END_QUERY__
+geist query -d newkb << __END_QUERY__
 
 SELECT ?s ?p ?o
 WHERE {
@@ -416,8 +416,8 @@ ORDER BY ?s ?p ?o
 
 __END_QUERY__
 
-../../geist destroy -d newkb
-../../geist destroy -d kb
+geist destroy -d newkb
+geist destroy -d kb
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 |    | s                                                                                                                                          | p                                            | o              |
@@ -429,7 +429,7 @@ __END_QUERY__
 
 ==================================================== bash cell | report_command ====================================================
 
-../../geist report --help
+geist report --help
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 Usage: geist report [OPTIONS]
@@ -446,7 +446,7 @@ Options:
 
 =================================================== bash cell | report_create_kb ===================================================
 
-../../geist report << END_TEMPLATE
+geist report << END_TEMPLATE
 
 {% create inputformat="nt", isfilepath=False %}
     <http://example.com/drewp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
@@ -483,7 +483,7 @@ END_TEMPLATE
 
 ================================================== bash cell | report_create_test ==================================================
 
-../../geist report << END_TEMPLATE
+geist report << END_TEMPLATE
 
 {% create dataset="test", inputformat="csv", colnames="[['s', 'p', 'o']]", isfilepath=False %}
 s,p,o
@@ -521,7 +521,7 @@ END_TEMPLATE
 
 ================================================ bash cell | report_create_kb_file =================================================
 
-../../geist report << END_TEMPLATE
+geist report << END_TEMPLATE
 
 {% create inputformat="csv", colnames="[['s', 'p', 'o']]" %} data/kb.csv {% endcreate %}
 
@@ -549,7 +549,7 @@ END_TEMPLATE
 
 =============================================== bash cell | report_with_nested_rules ===============================================
 
-../../geist report << END_TEMPLATE
+geist report << END_TEMPLATE
 
 {%- use "templates.geist" %}
 

@@ -1,0 +1,8 @@
+Jinja2
+jinja2-simple-tags
+rdflib
+click
+owlrl
+pandas
+tabulate
+pygraphviz
