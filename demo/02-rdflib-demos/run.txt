@@ -120,6 +120,8 @@ Usage: geist destroy [OPTIONS]
 
 Options:
   -d, --dataset TEXT  Name of RDF dataset to be removed (default "kb")
+  -q, --quiet         Suppress error messages if the provided dataset does not
+                      exist
   --help              Show this message and exit.
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

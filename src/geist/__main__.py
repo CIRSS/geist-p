@@ -31,7 +31,7 @@ def json2df(json_str):
     :param json_str: a JSON string
     :return df: a Pandas data frame
     """
-    return pd.read_json(json_str)
+    return pd.read_json(StringIO(json_str))
 
 def df2htmltable(df):
     """
@@ -123,6 +123,8 @@ def delete_rdf_dataset(**kwargs):
     dataset = kwargs["dataset"] if "dataset" in kwargs else "kb"
     data_path = DATA_DIR + dataset + ".pkl"
     if not os.path.isfile(data_path):
+        if "quiet" in kwargs and kwargs["quiet"]:
+            return
         raise ValueError("Nothing to be removed. Can NOT find {data_path}".format(data_path=data_path))
     os.remove(data_path)
     return
@@ -239,8 +241,8 @@ class QueryExtension(ContainerTag):
 class DestroyExtension(StandaloneTag):
     tags = {"destroy"}
     
-    def render(self, dataset="kb"):
-        delete_rdf_dataset(dataset=dataset)
+    def render(self, dataset="kb", quiet=False):
+        delete_rdf_dataset(dataset=dataset, quiet=quiet)
         return ""
 
 class UseExtension(StandaloneTag):
@@ -371,9 +373,10 @@ def load(dataset, inputfile, inputformat, colnames):
 
 @cli.command()
 @click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to be removed (default "kb")')
-def destroy(dataset):
+@click.option('--quiet', '-q', is_flag=True, show_default=True, default=False, help="Suppress error messages if the provided dataset does not exist")
+def destroy(dataset, quiet):
     """Delete an RDF dataset"""
-    delete_rdf_dataset(dataset=dataset)
+    delete_rdf_dataset(dataset=dataset, quiet=quiet)
 
 @cli.command()
 @click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to be exported (default "kb")')
