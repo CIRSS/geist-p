@@ -213,9 +213,9 @@ Options:
                                   text.
   -ofile, --outputfile TEXT       Path of the file without extension to store
                                   the graph (default: res)
-  -oformat, --outputformat [none|png|gv]
+  -oformat, --outputformat [none|svg|png|gv]
                                   Format of the graph (default: none): none or
-                                  png or gv
+                                  svg or png or gv
   --help                          Show this message and exit.
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -439,8 +439,10 @@ Usage: geist report [OPTIONS]
   Expand a report using a dataset
 
 Options:
-  --file FILENAME                Path of the file containing the report
+  -f, --file FILENAME            Path of the file containing the report
                                  template to expand  [required]
+  -odir, --outputdir TEXT        Path of the directory to store the expanded
+                                 report (default: current directory)
   -so, --suppressoutput BOOLEAN  Suppress output or not (default: False)
   --help                         Show this message and exit.
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

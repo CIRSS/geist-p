@@ -469,7 +469,8 @@ def query(dataset, file, outputfile):
 @click.option('outputformats', '--outputformat', '-oformat', default=['none'], type=click.Choice(['none', 'svg', 'png', 'gv']), multiple=True, help='Format of the graph (default: none): none or svg or png or gv')
 def graph(dataset, mappings, outputfile, outputformats):
     """Visualize a dataset"""
-    _graph(dataset, mappings, outputfile, outputformats)
+    (rdf_graph, infer) = load_rdf_dataset(dataset)
+    _graph(rdf_graph, mappings, outputfile, outputformats)
 
 @cli.command()
 @click.option('--file', '-f', required=True, type=click.File('r'), default=sys.stdin, help='Path of the file containing the report template to expand')
