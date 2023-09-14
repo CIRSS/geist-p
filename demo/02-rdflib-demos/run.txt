@@ -159,6 +159,11 @@ Usage: geist export [OPTIONS]
 Options:
   -d, --dataset TEXT              Name of RDF dataset to be exported (default
                                   "kb")
+  -oroot, --outputroot TEXT       Path of the directory to store these
+                                  exported triples (default: current
+                                  directory). If the given path (i.e.,
+                                  --outputfile) is None or a relative path, it
+                                  will be ignored.
   -ofile, --outputfile TEXT       Path of the file to store these exported
                                   triples (default: None)
   -oformat, --outputformat [json-ld|n3|nquads|nt|hext|pretty-xml|trig|trix|turtle|longturtle|xml]
@@ -211,6 +216,10 @@ Options:
                                   path of a JSON file, where the key is the
                                   original text and the value is the shorter
                                   text.
+  -oroot, --outputroot TEXT       Path of the directory to store the graph
+                                  (default: current directory). If the given
+                                  path (i.e., --outputfile) is a relative
+                                  path, it will be ignored.
   -ofile, --outputfile TEXT       Path of the file without extension to store
                                   the graph (default: res)
   -oformat, --outputformat [none|svg|png|gv]
@@ -317,6 +326,10 @@ Options:
   -d, --dataset TEXT         Name of RDF dataset to be queried (default "kb")
   --file FILENAME            Path of the file containing the SPARQL query to
                              execute  [required]
+  -oroot, --outputroot TEXT  Path of the directory to store the query results
+                             (default: current directory). If the given path
+                             (i.e., --outputfile) is None or a relative path,
+                             it will be ignored.
   -ofile, --outputfile TEXT  Path of the file to store the query results
                              (default: None)
   --help                     Show this message and exit.
@@ -441,7 +454,7 @@ Usage: geist report [OPTIONS]
 Options:
   -f, --file FILENAME            Path of the file containing the report
                                  template to expand  [required]
-  -odir, --outputdir TEXT        Path of the directory to store the expanded
+  -oroot, --outputroot TEXT      Path of the directory to store the expanded
                                  report (default: current directory)
   -so, --suppressoutput BOOLEAN  Suppress output or not (default: False)
   --help                         Show this message and exit.

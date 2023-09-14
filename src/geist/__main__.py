@@ -15,8 +15,38 @@ TAGS = ["use", "template", "create", "load", "query", "destroy", "graph", "map",
 
 @click.group()
 def cli():
-    global outputdir
+    global outputroot
+    outputroot = './'
     pass
+
+def update_outputroot(dir):
+    # Update the global variable outputroot
+    if not dir.endswith('/'):
+        dir = dir + '/'
+    globals()["outputroot"] = dir
+    return
+
+def get_full_path(dir, file):
+    # If file is an absolute path
+    if file.startswith('~') or file.startswith('/'):
+        path = file
+    else: # Relative path
+        path = dir + file
+    return path
+
+def ensure_dir_exists(file_path, output=True):
+    """
+    This function is to (1) get the full file path; and (2) ensure the directory of the given file path exists
+    :param file_path: a string. An absolute file path or a relative file path
+    :param output: a bool value to denote if the given file path is an output file path (default: True) or not (e.g., the path where we store the RDF dataset)
+    :return file_path: a string. A full file path.
+    """
+    if output:
+        file_path = get_full_path(outputroot, file_path)
+    dir_path = os.path.split(file_path)[0]
+    if (dir_path != '') and (not os.path.isdir(dir_path)):
+        os.makedirs(dir_path)
+    return file_path
 
 def process_str_for_html(cell):
     """
@@ -143,12 +173,6 @@ def delete_rdf_dataset(**kwargs):
     os.remove(data_path)
     return
 
-def ensure_dir_exists(file_path):
-    dir_path = os.path.split(file_path)[0]
-    if (dir_path != '') and (not os.path.isdir(dir_path)):
-        os.makedirs(dir_path)
-    return
-
 def query2df(rdf_graph, query):
     """
     This function is to run query on a RDF graph
@@ -200,7 +224,7 @@ def _create(dataset, inputfile, inputformat, colnames, infer):
     rdf_graph = create_rdf_graph(inputfile, inputformat, colnames, infer)
     # Save as a Gesit graph object
     geist_graph_object = {"rdf_graph": rdf_graph, "infer": infer}
-    ensure_dir_exists(data_path)
+    ensure_dir_exists(data_path, output=False)
     with open(data_path, "wb") as f:
         pickle.dump(geist_graph_object, f)
     return
@@ -216,7 +240,8 @@ def _load(dataset, inputfile, inputformat, colnames):
         pickle.dump(geist_graph_object, f)
     return
 
-def _graph(rdf_graph, mappings, outputfile, outputformats):
+def _graph(rdf_graph, mappings):
+    """Convert a RDF graph object to a Graphviz graph object"""
     query = """
             SELECT ?s ?p ?o
             WHERE {
@@ -227,18 +252,7 @@ def _graph(rdf_graph, mappings, outputfile, outputformats):
     res = query2df(rdf_graph, query)
     res = map_df(res, mappings)
     G = visualize_query_results(query_res=res, edges=[['s', 'o', 'p']], same_color=True)
-
-    # Save the graph
-    ensure_dir_exists(outputfile)
-    for outputformat in set(outputformats):
-        if outputformat == 'none':
-            print(G.string())
-        else:
-            output_path = outputfile + '.' + outputformat
-            if outputformat == 'gv' or outputformat == 'dot':
-                G.write(output_path)
-            else: # svg, png
-                G.draw(output_path, prog='dot')
+    return G
 
 def get_content(data, isfilepath):
     """
@@ -286,10 +300,10 @@ class DestroyExtension(StandaloneTag):
 class GraphExtension(StandaloneTag):
     tags = {"graph"}
 
-    def render(self, dataset="kb", mappings=None, outputfile='res', outputformats=['none']):
-        (rdf_graph, infer) = load_rdf_dataset(dataset)
-        _graph(rdf_graph, mappings, outputfile, outputformats)
-        return ""
+    def render(self, dataset="kb", mappings=None):
+        (rdf_graph, _) = load_rdf_dataset(dataset)
+        G = _graph(rdf_graph, mappings)
+        return G.string()
 
 class MapExtension(ContainerTag):
     tags = {"map"}
@@ -315,8 +329,7 @@ class HtmlExtension(ContainerTag):
 {content}
 </html>
 '''.format(content=environment.from_string(str(caller())).render())
-        path = outputdir + '/' + path
-        ensure_dir_exists(path)
+        path = ensure_dir_exists(path)
         with open(path, 'w') as fout:
             fout.write(report)
         return report
@@ -325,8 +338,7 @@ class ImgExtension(ContainerTag):
     tags = {"img"}
 
     def render(self, src, caller=None, **kwargs):
-        path = outputdir + '/' + src
-        ensure_dir_exists(path)
+        path = ensure_dir_exists(src)
         report = environment.from_string(str(caller())).render()
         # Extract extension from src
         ext = src.split('.')[-1]
@@ -437,49 +449,69 @@ def destroy(dataset, quiet):
 
 @cli.command()
 @click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to be exported (default "kb")')
+@click.option('--outputroot', '-oroot', default='./', type=str, help='Path of the directory to store these exported triples (default: current directory). If the given path (i.e., --outputfile) is None or a relative path, it will be ignored.')
 @click.option('--outputfile', '-ofile', default=None, type=str, help='Path of the file to store these exported triples (default: None)')
 @click.option('--outputformat', '-oformat', default='nt', type=click.Choice(['json-ld', 'n3', 'nquads', 'nt', 'hext', 'pretty-xml', 'trig', 'trix', 'turtle', 'longturtle', 'xml']), help='Format of the exported triples (default nt)')
-def export(dataset, outputfile, outputformat):
+def export(dataset, outputroot, outputfile, outputformat):
     """Export an RDF graph"""
-    (rdf_graph, infer) = load_rdf_dataset(dataset)
+    update_outputroot(outputroot)
+    (rdf_graph, _) = load_rdf_dataset(dataset)
     if outputfile is None:
         print(rdf_graph.serialize(format=outputformat))
     else:
-        ensure_dir_exists(outputfile)
+        outputfile = ensure_dir_exists(outputfile)
         rdf_graph.serialize(destination=outputfile, format=outputformat)
 
 @cli.command()
 @click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to be queried (default "kb")')
 @click.option('--file', required=True, type=click.File('r'), default=sys.stdin, help='Path of the file containing the SPARQL query to execute')
+@click.option('--outputroot', '-oroot', default='./', type=str, help='Path of the directory to store the query results (default: current directory). If the given path (i.e., --outputfile) is None or a relative path, it will be ignored.')
 @click.option('--outputfile', '-ofile', default=None, type=str, help='Path of the file to store the query results (default: None)')
-def query(dataset, file, outputfile):
+def query(dataset, file, outputroot, outputfile):
     """Perform a SPARQL query on a dataset"""
-    (rdf_graph, infer) = load_rdf_dataset(dataset)
+    update_outputroot(outputroot)
+    (rdf_graph, _) = load_rdf_dataset(dataset)
     res = query2df(rdf_graph, file.read())
     if outputfile is None:
         print(res.to_markdown())
     else:
-        ensure_dir_exists(outputfile)
+        outputfile = ensure_dir_exists(outputfile)
         res.to_csv(outputfile, index=False)
 
 @cli.command()
 @click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to be visualized (default "kb")')
 @click.option('--mappings', '-m', default=None, help='File of the mappings to shorten text (str): path of a JSON file, where the key is the original text and the value is the shorter text.')
+@click.option('--outputroot', '-oroot', default='./', type=str, help='Path of the directory to store the graph (default: current directory). If the given path (i.e., --outputfile) is a relative path, it will be ignored.')
 @click.option('--outputfile', '-ofile', default='res', type=str, help='Path of the file without extension to store the graph (default: res)')
 @click.option('outputformats', '--outputformat', '-oformat', default=['none'], type=click.Choice(['none', 'svg', 'png', 'gv']), multiple=True, help='Format of the graph (default: none): none or svg or png or gv')
-def graph(dataset, mappings, outputfile, outputformats):
+def graph(dataset, mappings, outputroot, outputfile, outputformats):
     """Visualize a dataset"""
-    (rdf_graph, infer) = load_rdf_dataset(dataset)
-    _graph(rdf_graph, mappings, outputfile, outputformats)
+    update_outputroot(outputroot)
+
+    # Load a RDF dataset
+    (rdf_graph, _) = load_rdf_dataset(dataset)
+    # Convert a RDF graph object to a Graphviz graph object
+    G = _graph(rdf_graph, mappings)
+
+    # Save the graph
+    outputfile = ensure_dir_exists(outputfile)
+    for outputformat in set(outputformats):
+        if outputformat == 'none':
+            print(G.string())
+        else:
+            output_path = outputfile + '.' + outputformat
+            if outputformat == 'gv' or outputformat == 'dot':
+                G.write(output_path)
+            else: # svg, png
+                G.draw(output_path, prog='dot')
 
 @cli.command()
 @click.option('--file', '-f', required=True, type=click.File('r'), default=sys.stdin, help='Path of the file containing the report template to expand')
-@click.option('--outputdir', '-odir', default='.', type=str, help='Path of the directory to store the expanded report (default: current directory)')
+@click.option('--outputroot', '-oroot', default='./', type=str, help='Path of the directory to store the expanded report (default: current directory)')
 @click.option('--suppressoutput', '-so', default=False, help='Suppress output or not (default: False)')
-def report(file, outputdir, suppressoutput):
+def report(file, outputroot, suppressoutput):
     """Expand a report using a dataset"""
-    if outputdir:
-        globals()["outputdir"] = outputdir
+    update_outputroot(outputroot)
 
     # Create a global Jinja2 environment
     global environment
