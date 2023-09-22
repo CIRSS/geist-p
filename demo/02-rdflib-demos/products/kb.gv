@@ -1,4 +1,5 @@
 strict digraph "" {
+	graph [rankdir=TB];
 	"<arrangement/1>"	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];

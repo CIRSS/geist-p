@@ -212,6 +212,8 @@ Usage: geist graph [OPTIONS]
 Options:
   -d, --dataset TEXT              Name of RDF dataset to be visualized
                                   (default "kb")
+  -r, --rankdir [TB|BT|LR|RL]     Direction of the graph (default TB): TB or
+                                  BT or LR or RL
   -m, --mappings TEXT             File of the mappings to shorten text (str):
                                   path of a JSON file, where the key is the
                                   original text and the value is the shorter
@@ -235,6 +237,7 @@ geist graph -m data/mappings.json -ofile products/kb -oformat none -oformat png 
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 strict digraph "" {
+	graph [rankdir=TB];
 	"<arrangement/1>"	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];
