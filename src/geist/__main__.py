@@ -230,9 +230,9 @@ def visualize_query_results_without_pygraphviz(query_res, edges, rankdir="TB", s
     graph2_env.globals['enumerate'] = enumerate
     graph2_env.filters['escape_quotes'] = escape_quotes
     gv = graph2_env.from_string("""
-                graph [rankdir={{ rankdir }}{{ params_assign }}];
+        {% set ns = namespace(params=params, query_res=query_res, edges=edges, same_color=same_color, pastel_colors=pastel_colors) %}
+                graph [rankdir={{ rankdir }}{% for param_k, param_v in ns.params.items() %}{{ param_k }}={{ param_v }}{% endfor %}];
                 node[shape=box style="filled, rounded" peripheries=1 fontname=Courier];
-        {% set ns = namespace(query_res=query_res, edges=edges, same_color=same_color, pastel_colors=pastel_colors) %}
         {% for _, row in ns.query_res.iterrows() -%}
             {% for idx, edge in enumerate(ns.edges) -%}
                 {% set color = ns.pastel_colors[0] if ns.same_color else ns.pastel_colors[idx % 8] %}
@@ -242,11 +242,11 @@ def visualize_query_results_without_pygraphviz(query_res, edges, rankdir="TB", s
             {% endfor%}
         {% endfor %}
         """).render(rankdir=rankdir,
-                         params_assign=", " + ", ".join(['{param_k}={param_v}'.format(param_k=param_k, param_v=param_v) for param_k, param_v in kwargs.items()]) if kwargs else "",
-                         query_res=query_res,
-                         edges=edges,
-                         same_color=same_color,
-                         pastel_colors=PASTEL_COLORS)
+                    params=kwargs,
+                    query_res=query_res,
+                    edges=edges,
+                    same_color=same_color,
+                    pastel_colors=PASTEL_COLORS)
     return 'digraph "" {' + gv + '}'
 
 def _create(dataset, inputfile, inputformat, colnames, infer):
