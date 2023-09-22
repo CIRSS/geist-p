@@ -231,7 +231,7 @@ def visualize_query_results_without_pygraphviz(query_res, edges, rankdir="TB", s
     graph2_env.filters['escape_quotes'] = escape_quotes
     gv = graph2_env.from_string("""
         {% set ns = namespace(params=params, query_res=query_res, edges=edges, same_color=same_color, pastel_colors=pastel_colors) %}
-                graph [rankdir={{ rankdir }}{% for param_k, param_v in ns.params.items() %}{{ param_k }}={{ param_v }}{% endfor %}];
+                graph [rankdir={{ rankdir }}{% for param_k, param_v in ns.params.items() %}, {{ param_k }}={{ param_v }}{% endfor %}];
                 node[shape=box style="filled, rounded" peripheries=1 fontname=Courier];
         {% for _, row in ns.query_res.iterrows() -%}
             {% for idx, edge in enumerate(ns.edges) -%}
