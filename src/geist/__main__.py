@@ -19,6 +19,9 @@ def cli():
     outputroot = './'
     pass
 
+def escape_quotes(txt):
+    return txt.replace("'", "\'").replace('"', '\"')
+
 def update_outputroot(dir):
     # Update the global variable outputroot
     if not dir.endswith('/'):
@@ -192,16 +195,16 @@ def query2df(rdf_graph, query):
         res_df = pd.DataFrame(columns=colnames)
     return res_df[colnames]
 
-def visualize_query_results(query_res, edges, same_color=False):
+def visualize_query_results(query_res, edges, rankdir="TB", same_color=False):
     """
-    This function is to visualize query results
+    This function is to visualize query results with pygraphviz
     :param query_res: a Pandas data frame.
     :param edges: a list of list. [[start_node1, end_node1, label1], [start_node2, end_node2, label2], ...] where these items are column names
     :param same_color: a bool value to denote if all edges are filled with the same color (default: False)
     :return g: a Graphviz graph
     """
     # Create a directed graph
-    G = pgv.AGraph(directed=True)
+    G = pgv.AGraph(directed=True, rankdir=rankdir)
     # Add nodes and edges
     for _, row in query_res.iterrows():
         for idx, edge in enumerate(edges):
@@ -213,6 +216,38 @@ def visualize_query_results(query_res, edges, same_color=False):
             G.add_node(row[edge[1]], shape="box", style="filled, rounded", fillcolor=color)
             G.add_edge(row[edge[0]], row[edge[1]], label=row[edge[2]])
     return G
+
+def visualize_query_results_without_pygraphviz(query_res, edges, rankdir="TB", same_color=False, **kwargs):
+    """
+    This function is to visualize query results without using pygraphviz
+    :param query_res: a Pandas data frame.
+    :param edges: a list of list. [[start_node1, end_node1, label1], [start_node2, end_node2, label2], ...] where these items are column names
+    :param kwargs: a dict. Parameters for Graphviz
+    :return g: a string of Graphviz DOT language
+    """
+
+    graph2_env = jinja2.Environment()
+    graph2_env.globals['enumerate'] = enumerate
+    graph2_env.filters['escape_quotes'] = escape_quotes
+    gv = graph2_env.from_string("""
+                graph [rankdir={{ rankdir }}{{ params_assign }}];
+                node[shape=box style="filled, rounded" peripheries=1 fontname=Courier];
+        {% set ns = namespace(query_res=query_res, edges=edges, same_color=same_color, pastel_colors=pastel_colors) %}
+        {% for _, row in ns.query_res.iterrows() -%}
+            {% for idx, edge in enumerate(ns.edges) -%}
+                {% set color = ns.pastel_colors[0] if ns.same_color else ns.pastel_colors[idx % 8] %}
+                {{ row[edge[0]] | escape_quotes }} [fillcolor="{{ color }}"];
+                {{ row[edge[1]] | escape_quotes }} [fillcolor="{{ color }}"];
+                {{ row[edge[0]] | escape_quotes }} -> {{ row[edge[1]] | escape_quotes }} [label={{ row[edge[2]] | escape_quotes }} fontname=Courier]; 
+            {% endfor%}
+        {% endfor %}
+        """).render(rankdir=rankdir,
+                         params_assign=", " + ", ".join(['{param_k}={param_v}'.format(param_k=param_k, param_v=param_v) for param_k, param_v in kwargs.items()]) if kwargs else "",
+                         query_res=query_res,
+                         edges=edges,
+                         same_color=same_color,
+                         pastel_colors=PASTEL_COLORS)
+    return 'digraph "" {' + gv + '}'
 
 def _create(dataset, inputfile, inputformat, colnames, infer):
     """Create a new RDF dataset"""
@@ -240,7 +275,7 @@ def _load(dataset, inputfile, inputformat, colnames):
         pickle.dump(geist_graph_object, f)
     return
 
-def _graph(rdf_graph, mappings):
+def _graph(rdf_graph, rankdir, mappings):
     """Convert a RDF graph object to a Graphviz graph object"""
     query = """
             SELECT ?s ?p ?o
@@ -251,8 +286,22 @@ def _graph(rdf_graph, mappings):
         """
     res = query2df(rdf_graph, query)
     res = map_df(res, mappings)
-    G = visualize_query_results(query_res=res, edges=[['s', 'o', 'p']], same_color=True)
+    G = visualize_query_results(query_res=res, edges=[['s', 'o', 'p']], rankdir=rankdir, same_color=True)
     return G
+
+def _graph2(rdf_graph, rankdir, mappings, **kwargs):
+    """Convert a RDF graph object to a Graphviz graph object"""
+    query = """
+            SELECT ?s ?p ?o
+            WHERE {
+                ?s ?p ?o
+            }
+            ORDER BY ?s ?p ?o
+        """
+    res = query2df(rdf_graph, query)
+    res = map_df(res, mappings)
+    gv = visualize_query_results_without_pygraphviz(query_res=res, edges=[['s', 'o', 'p']], rankdir=rankdir, same_color=True, **kwargs)
+    return gv
 
 def get_content(data, isfilepath):
     """
@@ -300,10 +349,18 @@ class DestroyExtension(StandaloneTag):
 class GraphExtension(StandaloneTag):
     tags = {"graph"}
 
-    def render(self, dataset="kb", mappings=None):
+    def render(self, dataset="kb", rankdir="TB", mappings=None):
         (rdf_graph, _) = load_rdf_dataset(dataset)
-        G = _graph(rdf_graph, mappings)
+        G = _graph(rdf_graph, rankdir, mappings)
         return G.string()
+
+class Graph2Extension(StandaloneTag):
+    tags = {"graph2"}
+
+    def render(self, dataset="kb", rankdir="TB", mappings=None, **kwargs):
+        (rdf_graph, _) = load_rdf_dataset(dataset)
+        gv = _graph2(rdf_graph, rankdir, mappings, **kwargs)
+        return gv
 
 class MapExtension(ContainerTag):
     tags = {"map"}
@@ -480,18 +537,19 @@ def query(dataset, file, outputroot, outputfile):
 
 @cli.command()
 @click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to be visualized (default "kb")')
+@click.option('--rankdir', '-r', default='TB', type=click.Choice(['TB', 'BT', 'LR', 'RL']), help='Direction of the graph (default TB): TB or BT or LR or RL')
 @click.option('--mappings', '-m', default=None, help='File of the mappings to shorten text (str): path of a JSON file, where the key is the original text and the value is the shorter text.')
 @click.option('--outputroot', '-oroot', default='./', type=str, help='Path of the directory to store the graph (default: current directory). If the given path (i.e., --outputfile) is a relative path, it will be ignored.')
 @click.option('--outputfile', '-ofile', default='res', type=str, help='Path of the file without extension to store the graph (default: res)')
 @click.option('outputformats', '--outputformat', '-oformat', default=['none'], type=click.Choice(['none', 'svg', 'png', 'gv']), multiple=True, help='Format of the graph (default: none): none or svg or png or gv')
-def graph(dataset, mappings, outputroot, outputfile, outputformats):
+def graph(dataset, rankdir, mappings, outputroot, outputfile, outputformats):
     """Visualize a dataset"""
     update_outputroot(outputroot)
 
     # Load a RDF dataset
     (rdf_graph, _) = load_rdf_dataset(dataset)
     # Convert a RDF graph object to a Graphviz graph object
-    G = _graph(rdf_graph, mappings)
+    G = _graph(rdf_graph, rankdir, mappings)
 
     # Save the graph
     outputfile = ensure_dir_exists(outputfile)
@@ -518,10 +576,11 @@ def report(file, outputroot, suppressoutput):
     environment = jinja2.Environment(
         loader=jinja2.FileSystemLoader("./"), 
         trim_blocks=True, 
-        extensions=[CreateExtension, LoadExtension, QueryExtension, DestroyExtension, GraphExtension, MapExtension, UseExtension, HtmlExtension, ImgExtension, TableExtension]
+        extensions=[CreateExtension, LoadExtension, QueryExtension, DestroyExtension, GraphExtension, Graph2Extension, MapExtension, UseExtension, HtmlExtension, ImgExtension, TableExtension]
     )
     environment.filters['json2df'] = json2df
     environment.filters['df2htmltable'] = df2htmltable
+    environment.filters['escape_quotes'] = escape_quotes
 
     # Define custom tags based on files with the "use" tag
     content = file.read()
