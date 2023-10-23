@@ -11,7 +11,7 @@ from rdflib.plugins.sparql.results.jsonresults import JSONResultSerializer
 
 DATA_DIR = ".geistdata/"
 PASTEL_COLORS = ["#b3e2cd", "#fdccac", "#cbd5e8", "#f4cae4", "#e6f5c9", "#fff2ae", "#f1e2cc", "#cccccc"]
-TAGS = ["use", "template", "create", "load", "query", "destroy", "graph", "map", "html", "img", "table", "include", "import", "macro", "block", "extends", "call", "filter", "set", "for", "if", "elif", "else"]
+TAGS = ["use", "template", "create", "load", "query", "destroy", "graph", "graph2", "component", "map", "html", "img", "table", "include", "import", "macro", "block", "extends", "call", "filter", "set", "for", "if", "elif", "else"]
 
 @click.group()
 def cli():
@@ -66,6 +66,22 @@ def json2df(json_str):
     :return df: a Pandas data frame
     """
     return pd.read_json(StringIO(json_str))
+
+def json2dict(json_str):
+    """
+    This function is to convert a JSON string to a dictionary
+    :param json_str: a JSON string
+    :return df: a dictionary
+    """
+    return json.loads(json_str)
+
+def dict2df(dict):
+    """
+    This function is to convert a dictionary to a Pandas data frame
+    :param json_str: a dictionary
+    :return df: a Pandas data frame
+    """
+    return pd.DataFrame(dict)
 
 def df2htmltable(df):
     """
@@ -194,6 +210,70 @@ def query2df(rdf_graph, query):
     else:
         res_df = pd.DataFrame(columns=colnames)
     return res_df[colnames]
+
+def connected_components(graph, edges):
+    """
+    This function is to find the connected components in a graph
+    :param graph: a Pandas data frame
+    :param edges: a list of list. [[start_node1, end_node1], [start_node2, end_node2], ...] or [[start_node1, end_node1, label1], [start_node2, end_node2, label2], ...] where these items are column names
+    :return components: a dict, where the key is the index of a component and the value is a connected component
+    """
+
+    # Transform the dataframe to two/three columns: start_node and end_node (and label if exists)
+    graph_transformed = pd.DataFrame()
+    for edge in edges:
+        if len(edge) != 2 and len(edge) != 3:
+            raise ValueError("Each edge should have two or three items, i.e., [start_node, end_node] or [start_node, end_node, label].")
+        if len(edge) == 2:
+            graph_per_edge = graph[edge].rename(columns={edge[0]: "start_node", edge[1]: "end_node"})
+        else: # len(edge) == 3
+            graph_per_edge = graph[edge].rename(columns={edge[0]: "start_node", edge[1]: "end_node", edge[2]: "label"})
+        graph_transformed = pd.concat([graph_transformed, graph_per_edge], axis=0)
+    graph_transformed.drop_duplicates(inplace=True)
+    start_nodes, end_nodes = set(graph_transformed["start_node"]), set(graph_transformed["end_node"])
+    nodes = start_nodes.union(end_nodes)
+    start2end, end2start = {}, {}
+    for start_node in start_nodes:
+        start2end[start_node] = set(graph_transformed[graph_transformed["start_node"] == start_node]["end_node"])
+    for end_node in end_nodes:
+        end2start[end_node] = set(graph_transformed[graph_transformed["end_node"] == end_node]["start_node"])
+
+    nodes_components = []
+    for node in nodes:
+        flag = False
+        connected_nodes = start2end.get(node, set()).union(end2start.get(node, set()))
+        connected_nodes.add(node)
+
+        for nodes_component in nodes_components:
+            if connected_nodes.intersection(nodes_component):
+                nodes_component.update(connected_nodes)
+                flag = True
+                break
+        if not flag:
+            nodes_components.append(connected_nodes)
+
+        # Merge connected components
+        flags = [False] * len(nodes_components)
+        for idx1, nodes_component_1 in enumerate(nodes_components):
+            for idx2, nodes_component_2 in enumerate(nodes_components):
+                if (idx1 == idx2) or flags[idx1] or flags[idx2]:
+                    continue
+                if nodes_component_1.intersection(nodes_component_2):
+                    nodes_components[idx1].update(nodes_component_2)
+                    flags[idx2] = True
+        merged_nodes_components = []
+        for idx, flag in enumerate(flags):
+            if not flag:
+                merged_nodes_components.append(nodes_components[idx])
+        nodes_components = merged_nodes_components
+    
+    components = {}
+    if len(nodes_components) == 1:
+        components[0]=graph_transformed.to_dict()
+    else:
+        for idx, nodes_component in enumerate(nodes_components):
+            components[idx] = graph_transformed[graph_transformed["start_node"].isin(nodes_component) | graph_transformed["end_node"].isin(nodes_component)].to_dict()
+    return components
 
 def visualize_query_results(query_res, edges, rankdir="TB", same_color=False):
     """
@@ -361,6 +441,14 @@ class Graph2Extension(StandaloneTag):
         (rdf_graph, _) = load_rdf_dataset(dataset)
         gv = _graph2(rdf_graph, rankdir, mappings, **kwargs)
         return gv
+
+class ComponentExtension(ContainerTag):
+    tags = {"component"}
+
+    def render(self, isfilepath=True, edges=[["s", "o", "p"]], caller=None):
+        graph = json2df(get_content(environment.from_string(str(caller())).render(), isfilepath))
+        components = connected_components(graph, edges)
+        return json.dumps(components)
 
 class MapExtension(ContainerTag):
     tags = {"map"}
@@ -576,9 +664,11 @@ def report(file, outputroot, suppressoutput):
     environment = jinja2.Environment(
         loader=jinja2.FileSystemLoader("./"), 
         trim_blocks=True, 
-        extensions=[CreateExtension, LoadExtension, QueryExtension, DestroyExtension, GraphExtension, Graph2Extension, MapExtension, UseExtension, HtmlExtension, ImgExtension, TableExtension]
+        extensions=[CreateExtension, LoadExtension, QueryExtension, DestroyExtension, GraphExtension, Graph2Extension, ComponentExtension, MapExtension, UseExtension, HtmlExtension, ImgExtension, TableExtension]
     )
     environment.filters['json2df'] = json2df
+    environment.filters['json2dict'] = json2dict
+    environment.filters['dict2df'] = dict2df
     environment.filters['df2htmltable'] = df2htmltable
     environment.filters['escape_quotes'] = escape_quotes
 
