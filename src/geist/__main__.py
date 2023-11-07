@@ -671,6 +671,7 @@ def report(file, outputroot, suppressoutput):
     environment.filters['dict2df'] = dict2df
     environment.filters['df2htmltable'] = df2htmltable
     environment.filters['escape_quotes'] = escape_quotes
+    environment.filters['process_str_for_html'] = process_str_for_html
 
     # Define custom tags based on files with the "use" tag
     content = file.read()

@@ -3,6 +3,7 @@
 ## v0.0.2
 
 - Add the component tag to extract connected components of a given graph
+- Add the process_str_for_html filter
 
 ## v0.0.1
 
