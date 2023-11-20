@@ -218,6 +218,7 @@ Options:
                                   path of a JSON file, where the key is the
                                   original text and the value is the shorter
                                   text.
+  -on, --on TEXT                  Column(s) to be mapped.
   -oroot, --outputroot TEXT       Path of the directory to store the graph
                                   (default: current directory). If the given
                                   path (i.e., --outputfile) is a relative
@@ -261,27 +262,27 @@ strict digraph "" {
 		shape=box,
 		style="filled, rounded"];
 	"<arrangement/1/locus/1>" -> "<composition/1/artifact/1>"	[label=<trov#hasArtifact>];
-	"\"filepath1\""	[fillcolor="#b3e2cd",
+	filepath1	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];
-	"<arrangement/1/locus/1>" -> "\"filepath1\""	[label=<trov#hasLocation>];
+	"<arrangement/1/locus/1>" -> filepath1	[label=<trov#hasLocation>];
 	"<arrangement/1/locus/2>" -> "<trov#ArtifactLocus>"	[label=<rdf#type>];
 	"<composition/1/artifact/100>"	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];
 	"<arrangement/1/locus/2>" -> "<composition/1/artifact/100>"	[label=<trov#hasArtifact>];
-	"\"filepath2\""	[fillcolor="#b3e2cd",
+	filepath2	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];
-	"<arrangement/1/locus/2>" -> "\"filepath2\""	[label=<trov#hasLocation>];
+	"<arrangement/1/locus/2>" -> filepath2	[label=<trov#hasLocation>];
 	"<trov#ResearchArtifact>"	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];
 	"<composition/1/artifact/1>" -> "<trov#ResearchArtifact>"	[label=<rdf#type>];
-	"\"art.sha256.1\""	[fillcolor="#b3e2cd",
+	"art.sha256.1"	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];
-	"<composition/1/artifact/1>" -> "\"art.sha256.1\""	[label=<trov#sha256>];
+	"<composition/1/artifact/1>" -> "art.sha256.1"	[label=<trov#sha256>];
 	"<composition/1>"	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];
@@ -298,10 +299,10 @@ strict digraph "" {
 		shape=box,
 		style="filled, rounded"];
 	"<fp1>" -> "<trov#CompositionFingerprint>"	[label=<rdf#type>];
-	"\"sha256.fp1\""	[fillcolor="#b3e2cd",
+	"sha256.fp1"	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];
-	"<fp1>" -> "\"sha256.fp1\""	[label=<trov#sha256>];
+	"<fp1>" -> "sha256.fp1"	[label=<trov#sha256>];
 	"<tro/1>"	[fillcolor="#b3e2cd",
 		shape=box,
 		style="filled, rounded"];
@@ -351,17 +352,17 @@ geist query --file data/query
 |  2 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1>            | <https://w3id.org/trace/2023/05/trov#hasLocus>       | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2>      |
 |  3 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1>    | <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    | <https://w3id.org/trace/2023/05/trov#ArtifactLocus>                                                                                          |
 |  4 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1>    | <https://w3id.org/trace/2023/05/trov#hasArtifact>    | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1>   |
-|  5 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1>    | <https://w3id.org/trace/2023/05/trov#hasLocation>    | "filepath1"                                                                                                                                  |
+|  5 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1>    | <https://w3id.org/trace/2023/05/trov#hasLocation>    | filepath1                                                                                                                                    |
 |  6 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2>    | <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    | <https://w3id.org/trace/2023/05/trov#ArtifactLocus>                                                                                          |
 |  7 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2>    | <https://w3id.org/trace/2023/05/trov#hasArtifact>    | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/100> |
-|  8 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2>    | <https://w3id.org/trace/2023/05/trov#hasLocation>    | "filepath2"                                                                                                                                  |
+|  8 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2>    | <https://w3id.org/trace/2023/05/trov#hasLocation>    | filepath2                                                                                                                                    |
 |  9 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1>            | <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    | <https://w3id.org/trace/2023/05/trov#ArtifactComposition>                                                                                    |
 | 10 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1>            | <https://w3id.org/trace/2023/05/trov#hasArtifact>    | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1>   |
 | 11 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1>            | <https://w3id.org/trace/2023/05/trov#hasFingerprint> | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1>                        |
 | 12 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1> | <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    | <https://w3id.org/trace/2023/05/trov#ResearchArtifact>                                                                                       |
-| 13 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1> | <https://w3id.org/trace/2023/05/trov#sha256>         | "art.sha256.1"                                                                                                                               |
+| 13 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1> | <https://w3id.org/trace/2023/05/trov#sha256>         | art.sha256.1                                                                                                                                 |
 | 14 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1>                      | <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    | <https://w3id.org/trace/2023/05/trov#CompositionFingerprint>                                                                                 |
-| 15 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1>                      | <https://w3id.org/trace/2023/05/trov#sha256>         | "sha256.fp1"                                                                                                                                 |
+| 15 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1>                      | <https://w3id.org/trace/2023/05/trov#sha256>         | sha256.fp1                                                                                                                                   |
 | 16 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/tro/1>                    | <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    | <https://w3id.org/trace/2023/05/trov#TransparentResearchObject>                                                                              |
 | 17 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/tro/1>                    | <https://w3id.org/trace/2023/05/trov#hasArrangement> | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1>              |
 | 18 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/tro/1>                    | <https://w3id.org/trace/2023/05/trov#hasComposition> | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1>              |
@@ -390,17 +391,17 @@ geist destroy -d kb
 |  2 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1>            | <https://w3id.org/trace/2023/05/trov#hasLocus>       | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2>      |
 |  3 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1>    | <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    | <https://w3id.org/trace/2023/05/trov#ArtifactLocus>                                                                                          |
 |  4 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1>    | <https://w3id.org/trace/2023/05/trov#hasArtifact>    | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1>   |
-|  5 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1>    | <https://w3id.org/trace/2023/05/trov#hasLocation>    | "filepath1"                                                                                                                                  |
+|  5 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/1>    | <https://w3id.org/trace/2023/05/trov#hasLocation>    | filepath1                                                                                                                                    |
 |  6 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2>    | <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    | <https://w3id.org/trace/2023/05/trov#ArtifactLocus>                                                                                          |
 |  7 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2>    | <https://w3id.org/trace/2023/05/trov#hasArtifact>    | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/100> |
-|  8 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2>    | <https://w3id.org/trace/2023/05/trov#hasLocation>    | "filepath2"                                                                                                                                  |
+|  8 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1/locus/2>    | <https://w3id.org/trace/2023/05/trov#hasLocation>    | filepath2                                                                                                                                    |
 |  9 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1>            | <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    | <https://w3id.org/trace/2023/05/trov#ArtifactComposition>                                                                                    |
 | 10 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1>            | <https://w3id.org/trace/2023/05/trov#hasArtifact>    | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1>   |
 | 11 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1>            | <https://w3id.org/trace/2023/05/trov#hasFingerprint> | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1>                        |
 | 12 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1> | <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    | <https://w3id.org/trace/2023/05/trov#ResearchArtifact>                                                                                       |
-| 13 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1> | <https://w3id.org/trace/2023/05/trov#sha256>         | "art.sha256.1"                                                                                                                               |
+| 13 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1> | <https://w3id.org/trace/2023/05/trov#sha256>         | art.sha256.1                                                                                                                                 |
 | 14 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1>                      | <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    | <https://w3id.org/trace/2023/05/trov#CompositionFingerprint>                                                                                 |
-| 15 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1>                      | <https://w3id.org/trace/2023/05/trov#sha256>         | "sha256.fp1"                                                                                                                                 |
+| 15 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1>                      | <https://w3id.org/trace/2023/05/trov#sha256>         | sha256.fp1                                                                                                                                   |
 | 16 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/tro/1>                    | <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>    | <https://w3id.org/trace/2023/05/trov#TransparentResearchObject>                                                                              |
 | 17 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/tro/1>                    | <https://w3id.org/trace/2023/05/trov#hasArrangement> | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/arrangement/1>              |
 | 18 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/tro/1>                    | <https://w3id.org/trace/2023/05/trov#hasComposition> | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1>              |
@@ -438,10 +439,10 @@ geist destroy -d newkb
 geist destroy -d kb
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
-|    | s                                                                                                                                          | p                                            | o              |
-|---:|:-------------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------------|:---------------|
-|  0 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1> | <https://w3id.org/trace/2023/05/trov#sha256> | "art.sha256.1" |
-|  1 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1>                      | <https://w3id.org/trace/2023/05/trov#sha256> | "sha256.fp1"   |
+|    | s                                                                                                                                          | p                                            | o            |
+|---:|:-------------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------------|:-------------|
+|  0 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/composition/1/artifact/1> | <https://w3id.org/trace/2023/05/trov#sha256> | art.sha256.1 |
+|  1 | <https://github.com/transparency-certified/trace-model/tree/master/demo/01-trov-examples/01-two-artifacts-no-trp/fp1>                      | <https://w3id.org/trace/2023/05/trov#sha256> | sha256.fp1   |
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
@@ -494,7 +495,7 @@ END_TEMPLATE
 
 
 
-    Subject: <http://example.com/drewp>, Predicate: <http://example.com/says>, Object: "Hello World".
+    Subject: <http://example.com/drewp>, Predicate: <http://example.com/says>, Object: Hello World.
     Subject: <http://example.com/drewp>, Predicate: <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>, Object: <http://xmlns.com/foaf/0.1/Person>.
 
 
@@ -532,7 +533,7 @@ END_TEMPLATE
 
 
 
-    Subject: <http://example.com/drewp>, Predicate: <http://example.com/says>, Object: "Hello World".
+    Subject: <http://example.com/drewp>, Predicate: <http://example.com/says>, Object: Hello World.
     Subject: <http://example.com/drewp>, Predicate: <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>, Object: <http://xmlns.com/foaf/0.1/Person>.
 
 
@@ -560,7 +561,7 @@ END_TEMPLATE
 
 
 
-    Subject: <http://example.com/drewp>, Predicate: <http://example.com/says>, Object: "Hello World".
+    Subject: <http://example.com/drewp>, Predicate: <http://example.com/says>, Object: Hello World.
     Subject: <http://example.com/drewp>, Predicate: <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>, Object: <http://xmlns.com/foaf/0.1/Person>.
 
 
@@ -614,13 +615,13 @@ END_TEMPLATE
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 
     
-    <http://example.com/drewp> says "Hello World".    
-    <http://example.com/drewp> says "What a Nice Day".
+    <http://example.com/drewp> says Hello World.    
+    <http://example.com/drewp> says What a Nice Day.
                     
-        <http://example.com/drewp> -- <http://example.com/says> --> "Hello World"
-        <http://example.com/drewp> -- <http://example.com/says> --> "What a Nice Day"
+        <http://example.com/drewp> -- <http://example.com/says> --> Hello World
+        <http://example.com/drewp> -- <http://example.com/says> --> What a Nice Day
                         
-        <http://example.com/drewp> -- <http://example.com/feels> --> "Happy"
+        <http://example.com/drewp> -- <http://example.com/feels> --> Happy
         
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
