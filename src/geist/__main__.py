@@ -101,17 +101,26 @@ def df2htmltable(df):
     '''.format(header=header, content=content)
     return html_table
 
-def map_df(df, mappings=None):
+def map_df(df, mappings=None, on=None):
     """
-    This function is to replace the original text in a Pandas data frame with the shorter ones based on the given mappings
+    This function is to replace the original text in a Pandas data frame on selected columns (if provides) with the shorter ones based on the given mappings
     :param df: a Pandas data frame
     :param mappings: file of the mappings to shorten text (str): path of a JSON file, where the key is the original text and the value is the shorter text.
+    :param on: a column or a list of selected columns. All columns will be selected by default (None)
     :return df: a Pandas data frame
     """
+    if on:
+        if isinstance(on, str):
+            on = [on]
+        elif not isinstance(on, list):
+            raise ValueError("on must be a string or a list of string")
     if mappings:
         with open(mappings, mode='r', encoding='utf-8') as fin:
             mappings = json.loads(fin.read())
-        df = df.replace(mappings, regex=True)
+        if not on: # None
+            df = df.replace(mappings, regex=True)
+        else:
+            df[on] = df[on].replace(mappings, regex=True)
     return df
 
 def format_cell(cell):
@@ -206,7 +215,7 @@ def query2df(rdf_graph, query):
     colnames = res_json["head"]["vars"]
     if bindings:
         # type: uri, literal, or bnode
-        res_df = pd.DataFrame(bindings).apply(lambda row: row.apply(lambda x: "<"+x["value"]+">" if x["type"] == "uri" else '"'+x["value"]+'"' if x["type"] == "literal" else "_:"+x["value"]), axis=1)
+        res_df = pd.DataFrame(bindings).apply(lambda row: row.apply(lambda x: "<"+x["value"]+">" if x["type"] == "uri" else x["value"] if x["type"] == "literal" else "_:"+x["value"]), axis=1)
     else:
         res_df = pd.DataFrame(columns=colnames)
     return res_df[colnames]
@@ -355,7 +364,7 @@ def _load(dataset, inputfile, inputformat, colnames):
         pickle.dump(geist_graph_object, f)
     return
 
-def _graph(rdf_graph, rankdir, mappings):
+def _graph(rdf_graph, rankdir, mappings, on):
     """Convert a RDF graph object to a Graphviz graph object"""
     query = """
             SELECT ?s ?p ?o
@@ -365,11 +374,11 @@ def _graph(rdf_graph, rankdir, mappings):
             ORDER BY ?s ?p ?o
         """
     res = query2df(rdf_graph, query)
-    res = map_df(res, mappings)
+    res = map_df(res, mappings, on)
     G = visualize_query_results(query_res=res, edges=[['s', 'o', 'p']], rankdir=rankdir, same_color=True)
     return G
 
-def _graph2(rdf_graph, rankdir, mappings, **kwargs):
+def _graph2(rdf_graph, rankdir, mappings, on, **kwargs):
     """Convert a RDF graph object to a Graphviz graph object"""
     query = """
             SELECT ?s ?p ?o
@@ -379,7 +388,7 @@ def _graph2(rdf_graph, rankdir, mappings, **kwargs):
             ORDER BY ?s ?p ?o
         """
     res = query2df(rdf_graph, query)
-    res = map_df(res, mappings)
+    res = map_df(res, mappings, on)
     gv = visualize_query_results_without_pygraphviz(query_res=res, edges=[['s', 'o', 'p']], rankdir=rankdir, same_color=True, **kwargs)
     return gv
 
@@ -429,17 +438,17 @@ class DestroyExtension(StandaloneTag):
 class GraphExtension(StandaloneTag):
     tags = {"graph"}
 
-    def render(self, dataset="kb", rankdir="TB", mappings=None):
+    def render(self, dataset="kb", rankdir="TB", mappings=None, on=None):
         (rdf_graph, _) = load_rdf_dataset(dataset)
-        G = _graph(rdf_graph, rankdir, mappings)
+        G = _graph(rdf_graph, rankdir, mappings, on)
         return G.string()
 
 class Graph2Extension(StandaloneTag):
     tags = {"graph2"}
 
-    def render(self, dataset="kb", rankdir="TB", mappings=None, **kwargs):
+    def render(self, dataset="kb", rankdir="TB", mappings=None, on=None, **kwargs):
         (rdf_graph, _) = load_rdf_dataset(dataset)
-        gv = _graph2(rdf_graph, rankdir, mappings, **kwargs)
+        gv = _graph2(rdf_graph, rankdir, mappings, on, **kwargs)
         return gv
 
 class ComponentExtension(ContainerTag):
@@ -453,9 +462,9 @@ class ComponentExtension(ContainerTag):
 class MapExtension(ContainerTag):
     tags = {"map"}
 
-    def render(self, isfilepath=True, mappings=None, caller=None):
+    def render(self, isfilepath=True, mappings=None, on=None, caller=None):
         df = json2df(get_content(environment.from_string(str(caller())).render(), isfilepath))
-        df = map_df(df, mappings)
+        df = map_df(df, mappings, on)
         return df.to_json()
 
 class UseExtension(StandaloneTag):
@@ -504,10 +513,10 @@ class ImgExtension(ContainerTag):
 class TableExtension(ContainerTag):
     tags = {"table"}
 
-    def render(self, mappings=None, caller=None):
+    def render(self, mappings=None, on=None, caller=None):
         json_str = environment.from_string(str(caller())).render()
         df = json2df(json_str)
-        df = map_df(df, mappings)
+        df = map_df(df, mappings, on)
         code = df2htmltable(df)
         return code
 
