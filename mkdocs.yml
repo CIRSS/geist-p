@@ -1,0 +1,67 @@
+site_name: Geist
+repo_name: 'CIRSS/geist-p'
+repo_url: 'https://github.com/CIRSS/geist-p'
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.copy
+  language: en
+  palette:
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default 
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+nav:
+  - Home: index.md
+  - Setup: setup.md
+  - Commands:
+    - Command report:
+      - Introduction: commands/report/introduction.md
+      - Tags: 
+        - Tag create: commands/report/tags/tag-create.md
+        - Tag destroy: commands/report/tags/tag-destroy.md
+        - Tag graph: commands/report/tags/tag-graph.md
+        - Tag graph2: commands/report/tags/tag-graph2.md
+        - Tag load: commands/report/tags/tag-load.md
+        - Tag query: commands/report/tags/tag-query.md
+        - Tag component: commands/report/tags/tag-component.md
+        - Tag map: commands/report/tags/tag-map.md
+        - Tag html: commands/report/tags/tag-html.md
+        - Tag img: commands/report/tags/tag-img.md
+        - Tag table: commands/report/tags/tag-table.md
+        - Tag use: commands/report/tags/tag-use.md
+    - Command create: commands/create.md
+    - Command destroy: commands/destroy.md
+    - Command export: commands/export.md
+    - Command graph: commands/graph.md
+    - Command load: commands/load.md
+    - Command query: commands/query.md
+  - Changelog: changelog.md
+markdown_extensions:
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - admonition
+extra:
+  version:
+    provider: mike

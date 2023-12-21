@@ -1,7 +1,8 @@
-# Change Log
+# Changelog
 
 ## v0.0.2
 
+- Add [documentation](https://cirss.github.io/geist-p)
 - Add the component tag to extract connected components of a given graph
 - Add the process_str_for_html filter
 - Make the map tag more flexible: make it possible to map selected columns
