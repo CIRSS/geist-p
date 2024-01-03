@@ -51,7 +51,7 @@
         ```
 
 === "Geist Template"
-    The `create` tag creates a dataset based on the given string. Please check the *report* command section for Geist template rendering. By default, the given string is a file path. However, it can be updated by setting the `isfilepath` field to False.
+    The `create` tag creates a dataset based on the given string. Please check the [*report*](report.md) command section for Geist template rendering. By default, the given string is a file path. However, it can be updated by setting the `isfilepath` field to False.
 
     Here are parameters of the `create` tag:
 

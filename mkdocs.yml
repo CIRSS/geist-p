@@ -33,13 +33,18 @@ nav:
   - Home: index.md
   - Setup: setup.md
   - Commands:
+    - report: commands/report.md
     - create: commands/create.md
     - destroy: commands/destroy.md
     - export: commands/export.md
     - graph: commands/graph.md
     - load: commands/load.md
     - query: commands/query.md
-    - report: commands/report.md
+  - Geist templates:
+    - What is a Geist template?: templates/what-is-a-geist-template.md
+    - Tags: templates/tags.md
+    - Filters: templates/filters.md
+  - Changelog: changelog.md
 markdown_extensions:
   - pymdownx.superfences
   - pymdownx.tabbed:

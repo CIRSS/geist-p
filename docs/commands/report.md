@@ -1,4 +1,39 @@
-*report* command can expand a report using a dataset.
+*report* command can expand a report (Geist template) using a dataset.
+
+# What is a Geist template?
+
+A Geist template is a text file without a specific extension requirement although adding a `.geist` extension is recommended. It is an extension of a [Jinja template](https://jinja.palletsprojects.com/en/3.1.x/templates/), therefore it follows the default Jinja delimiters:
+
+- `{% ... %}` for Statements
+- `{{ ... }}` for Expressions to print to the template output
+- `{# ... #}` for Comments not included in the template output
+
+# Tags
+Tags are used within the statements, i.e., `{% ... %}`. Besides the Jinja predefined tags (e.g., `for`), Geist supports more tags.
+
+## tag: create
+
+Check [create](create/#__tabbed_1_2)
+
+## tag: load
+
+## tag: query
+
+## tag: destroy
+
+## tag: graph
+
+## tag: graph2
+
+## tag: map
+
+## tag: use
+
+## tag: html
+
+## tag: img
+
+## tag: table
 
 === "CLI"
 

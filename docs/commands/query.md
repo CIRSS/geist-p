@@ -52,7 +52,7 @@
 
 === "Geist Template"
 
-    The `query` tag imports data into a dataset. Please check the *report* command section for Geist template rendering.
+    The `query` tag imports data into a dataset. Please check the [*report*](report.md) command section for Geist template rendering.
     
     Here are parameters of the `query` tag:
 

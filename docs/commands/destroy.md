@@ -28,7 +28,7 @@
         ```
 
 === "Geist Template"
-    The `destroy` tag deletes a dataset. Please check the *report* command section for Geist template rendering.
+    The `destroy` tag deletes a dataset. Please check the [*report*](report.md) command section for Geist template rendering.
 
     Here are parameters of the `destroy` tag:
 

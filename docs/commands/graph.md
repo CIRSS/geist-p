@@ -36,7 +36,7 @@
         ```
 
 === "Geist Template"
-    The `graph` tag visualizes a dataset. Please check the *report* command section for Geist template rendering.
+    The `graph` tag visualizes a dataset. Please check the [*report*](report.md) command section for Geist template rendering.
 
     Here are parameters of the `graph` tag:
 
