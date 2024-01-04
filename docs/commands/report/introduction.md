@@ -19,12 +19,14 @@ A Geist template relies on tags and filters.
 Tags are used within the statements, i.e., `{% ... %}`. There are two types of tags, `StandaloneTag` and `ContainerTag`. While the `StandaloneTag` does not require a closing tag, the `ContainerTag` does. Besides the Jinja predefined tags (e.g., `for`), Geist supports the following tags:
 
 `StandaloneTag`:
+
     - [destroy](tags/tag-destroy.md)
     - [graph](tags/tag-graph.md)
     - [graph2](tags/tag-graph2.md)
     - [use](tags/tag-use.md)
 
 `ContainerTag`:
+
     - [create](tags/tag-create.md)
     - [load](tags/tag-load.md)
     - [query](tags/tag-query.md)
