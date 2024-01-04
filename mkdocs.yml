@@ -35,7 +35,7 @@ nav:
   - Home: index.md
   - Setup: setup.md
   - Commands:
-    - report:
+    - Command report:
       - Introduction: commands/report/introduction.md
       - Tags: 
         - Tag create: commands/report/tags/tag-create.md
@@ -50,12 +50,12 @@ nav:
         - Tag img: commands/report/tags/tag-img.md
         - Tag table: commands/report/tags/tag-table.md
         - Tag use: commands/report/tags/tag-use.md
-    - create: commands/create.md
-    - destroy: commands/destroy.md
-    - export: commands/export.md
-    - graph: commands/graph.md
-    - load: commands/load.md
-    - query: commands/query.md
+    - Command create: commands/create.md
+    - Command destroy: commands/destroy.md
+    - Command export: commands/export.md
+    - Command graph: commands/graph.md
+    - Command load: commands/load.md
+    - Command query: commands/query.md
   - Changelog: changelog.md
 markdown_extensions:
   - pymdownx.superfences

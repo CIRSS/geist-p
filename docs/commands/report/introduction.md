@@ -20,21 +20,21 @@ Tags are used within the statements, i.e., `{% ... %}`. There are two types of t
 
 `StandaloneTag`:
 
-    - [destroy](tags/tag-destroy.md)
-    - [graph](tags/tag-graph.md)
-    - [graph2](tags/tag-graph2.md)
-    - [use](tags/tag-use.md)
+- [destroy](tags/tag-destroy.md)
+- [graph](tags/tag-graph.md)
+- [graph2](tags/tag-graph2.md)
+- [use](tags/tag-use.md)
 
 `ContainerTag`:
 
-    - [create](tags/tag-create.md)
-    - [load](tags/tag-load.md)
-    - [query](tags/tag-query.md)
-    - [component](tags/tag-component.md)
-    - [map](tags/tag-map.md)
-    - [html](tags/tag-html.md)
-    - [img](tags/tag-img.md)
-    - [table](tags/tag-table.md)
+- [create](tags/tag-create.md)
+- [load](tags/tag-load.md)
+- [query](tags/tag-query.md)
+- [component](tags/tag-component.md)
+- [map](tags/tag-map.md)
+- [html](tags/tag-html.md)
+- [img](tags/tag-img.md)
+- [table](tags/tag-table.md)
 
 Custom tags can be defined through files with the [use](tags/tag-use.md) tag.
 
