@@ -44,11 +44,11 @@ Filters are used to modify variables. Each filter can only take one variable as 
 
 Geist supports the following filters:
 
-- json2df: convert a JSON string to a Pandas data frame
-- json2dict: convert a JSON string to a dictionary
-- df2htmltable: convert a Pandas data frame to an HTML table
-- escape_quotes: escape both double and single quotation marks
-- process_str_for_html: preprocess a string to be displayed within an HTML document, e.g., replace `<` with `&lt`
+- **json2df**: convert a JSON string to a Pandas data frame
+- **json2dict**: convert a JSON string to a dictionary
+- **df2htmltable**: convert a Pandas data frame to an HTML table
+- **escape_quotes**: escape both double and single quotation marks
+- **process_str_for_html**: preprocess a string to be displayed within an HTML document, e.g., replace `<` with `&lt`
 
 ## How to execute (expand) a Geist template?
 
