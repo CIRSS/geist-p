@@ -6,12 +6,10 @@ The [geist-p](https://github.com/CIRSS/geist-p) GitHub repository is the Python 
 
 ## Commands
 
+* [`report`](commands/report/introduction.md) command: expand a report using a dataset
 * [`create`](commands/create.md) command: create a new RDF dataset
 * [`destroy`](commands/destroy.md) command: delete an RDF dataset
 * [`export`](commands/export.md) command: export an RDF graph
 * [`graph`](commands/graph.md) command: visualize a dataset
 * [`load`](commands/load.md) command: import data into an RDF dataset
 * [`query`](commands/query.md) command: perform a SPARQL query on a dataset
-* [`report`](commands/report.md) command: expand a report using a dataset
-
-

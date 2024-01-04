@@ -1,4 +1,6 @@
 site_name: Geist
+repo_name: 'CIRSS/geist-p'
+repo_url: 'https://github.com/CIRSS/geist-p'
 theme:
   name: material
   features:
@@ -34,20 +36,20 @@ nav:
   - Setup: setup.md
   - Commands:
     - report:
-      - Introduction: report/introduction.md
+      - Introduction: commands/report/introduction.md
       - Tags: 
-        - Tag create: report/tags/tag-create.md
-        - Tag destroy: report/tags/tag-destroy.md
-        - Tag graph: report/tags/tag-graph.md
-        - Tag graph2: report/tags/tag-graph2.md
-        - Tag load: report/tags/tag-load.md
-        - Tag query: report/tags/tag-query.md
-        - Tag component: report/tags/tag-component.md
-        - Tag map: report/tags/tag-map.md
-        - Tag html: report/tags/tag-html.md
-        - Tag img: report/tags/tag-img.md
-        - Tag table: report/tags/tag-table.md
-        - Tag use: report/tags/tag-use.md
+        - Tag create: commands/report/tags/tag-create.md
+        - Tag destroy: commands/report/tags/tag-destroy.md
+        - Tag graph: commands/report/tags/tag-graph.md
+        - Tag graph2: commands/report/tags/tag-graph2.md
+        - Tag load: commands/report/tags/tag-load.md
+        - Tag query: commands/report/tags/tag-query.md
+        - Tag component: commands/report/tags/tag-component.md
+        - Tag map: commands/report/tags/tag-map.md
+        - Tag html: commands/report/tags/tag-html.md
+        - Tag img: commands/report/tags/tag-img.md
+        - Tag table: commands/report/tags/tag-table.md
+        - Tag use: commands/report/tags/tag-use.md
     - create: commands/create.md
     - destroy: commands/destroy.md
     - export: commands/export.md
