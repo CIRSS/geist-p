@@ -33,17 +33,27 @@ nav:
   - Home: index.md
   - Setup: setup.md
   - Commands:
-    - report: commands/report.md
+    - report:
+      - Introduction: report/introduction.md
+      - Tags: 
+        - Tag create: report/tags/tag-create.md
+        - Tag destroy: report/tags/tag-destroy.md
+        - Tag graph: report/tags/tag-graph.md
+        - Tag graph2: report/tags/tag-graph2.md
+        - Tag load: report/tags/tag-load.md
+        - Tag query: report/tags/tag-query.md
+        - Tag component: report/tags/tag-component.md
+        - Tag map: report/tags/tag-map.md
+        - Tag html: report/tags/tag-html.md
+        - Tag img: report/tags/tag-img.md
+        - Tag table: report/tags/tag-table.md
+        - Tag use: report/tags/tag-use.md
     - create: commands/create.md
     - destroy: commands/destroy.md
     - export: commands/export.md
     - graph: commands/graph.md
     - load: commands/load.md
     - query: commands/query.md
-  - Geist templates:
-    - What is a Geist template?: templates/what-is-a-geist-template.md
-    - Tags: templates/tags.md
-    - Filters: templates/filters.md
   - Changelog: changelog.md
 markdown_extensions:
   - pymdownx.superfences
