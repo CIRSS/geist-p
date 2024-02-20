@@ -9,12 +9,12 @@ Options:
   --help  Show this message and exit.
 
 Commands:
-  create   Create a new RDF dataset
-  destroy  Delete an RDF dataset
-  export   Export an RDF graph
+  create   Create a new dataset
+  destroy  Delete a dataset
+  export   Export a dataset
   graph    Visualize a dataset
-  load     Import data into a RDF dataset
-  query    Perform a SPARQL query on a dataset
+  load     Import data into a dataset
+  query    Perform a query on a dataset
   report   Expand a report using a dataset
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -24,40 +24,31 @@ Commands:
 geist create --help
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
-Usage: geist create [OPTIONS]
+Usage: geist create [OPTIONS] COMMAND [ARGS]...
 
-  Create a new RDF dataset
+  Create a new dataset
 
 Options:
-  -d, --dataset TEXT              Name of RDF dataset to create (default "kb")
-  -ifile, --inputfile FILENAME    Path of the file to be loaded as triples
-                                  [required]
-  -iformat, --inputformat [xml|n3|turtle|nt|pretty-xml|trix|trig|nquads|json-ld|hext|csv]
-                                  Format of the file to be loaded as triples
-                                  (default json-ld)
-  --colnames TEXT                 Column names of triples with the format of
-                                  [[subject1, predicate1, object1], [subject2,
-                                  predicate2, object2], ...] when the input
-                                  format is csv
-  --infer [none|rdfs|owl|rdfs_owl]
-                                  Inference to perform on update [none, rdfs,
-                                  owl, rdfs_owl] (default "none")
-  --help                          Show this message and exit.
+  --help  Show this message and exit.
+
+Commands:
+  duckdb  Create a new SQL dataset using DuckDB
+  rdflib  Create a new RDF dataset
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 ===================================================== bash cell | create_stdin =====================================================
 
-geist create -d test -iformat nt << __END_INPUT__
+geist create rdflib -d test -iformat nt << __END_INPUT__
 
 <http://example.com/drewp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
 <http://example.com/drewp> <http://example.com/says> "Hello World" .
 
 __END_INPUT__
 
-geist export -d test | sort
+geist export rdflib -d test | sort
 
-geist destroy -d test
+geist destroy rdflib -d test
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 
@@ -68,11 +59,15 @@ geist destroy -d test
 
 ===================================================== bash cell | create_file ======================================================
 
-geist create -d test -ifile data/tro.jsonld
+geist create rdflib -d test -ifile data/tro.jsonld
 
-ls .geistdata
+ls -R .geistdata
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
+.geistdata:
+rdflib
+
+.geistdata/rdflib:
 test.pkl
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -82,28 +77,21 @@ test.pkl
 geist load --help
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
-Usage: geist load [OPTIONS]
+Usage: geist load [OPTIONS] COMMAND [ARGS]...
 
-  Import data into a RDF dataset
+  Import data into a dataset
 
 Options:
-  -d, --dataset TEXT              Name of RDF dataset to create (default "kb")
-  -ifile, --inputfile FILENAME    Path of the file to be loaded as triples
-                                  [required]
-  -iformat, --inputformat [xml|n3|turtle|nt|pretty-xml|trix|trig|nquads|json-ld|hext|csv]
-                                  Format of the file to be loaded as triples
-                                  (default json-ld)
-  --colnames TEXT                 Column names of triples with the format of
-                                  [[subject1, predicate1, object1], [subject2,
-                                  predicate2, object2], ...] when the input
-                                  format is csv
-  --help                          Show this message and exit.
+  --help  Show this message and exit.
+
+Commands:
+  rdflib  Import data into a RDF dataset
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 ================================================== bash cell | load_dataset_test ===================================================
 
-geist load -d test -ifile data/tro.jsonld
+geist load rdflib -d test -ifile data/tro.jsonld
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -114,35 +102,43 @@ geist load -d test -ifile data/tro.jsonld
 geist destroy --help
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
-Usage: geist destroy [OPTIONS]
+Usage: geist destroy [OPTIONS] COMMAND [ARGS]...
 
-  Delete an RDF dataset
+  Delete a dataset
 
 Options:
-  -d, --dataset TEXT  Name of RDF dataset to be removed (default "kb")
-  -q, --quiet         Suppress error messages if the provided dataset does not
-                      exist
-  --help              Show this message and exit.
+  --help  Show this message and exit.
+
+Commands:
+  rdflib  Delete an RDF dataset
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 ================================================= bash cell | destroy_dataset_test =================================================
 
-geist destroy -d test
+geist destroy rdflib -d test
 
-ls .geistdata
+ls -R .geistdata
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
+.geistdata:
+rdflib
+
+.geistdata/rdflib:
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 ================================================== bash cell | create_dataset_kb ===================================================
 
-geist create -ifile data/tro.jsonld
+geist create rdflib -ifile data/tro.jsonld
 
-ls .geistdata
+ls -R .geistdata
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
+.geistdata:
+rdflib
+
+.geistdata/rdflib:
 kb.pkl
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -152,29 +148,21 @@ kb.pkl
 geist export --help
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
-Usage: geist export [OPTIONS]
+Usage: geist export [OPTIONS] COMMAND [ARGS]...
 
-  Export an RDF graph
+  Export a dataset
 
 Options:
-  -d, --dataset TEXT              Name of RDF dataset to be exported (default
-                                  "kb")
-  -oroot, --outputroot TEXT       Path of the directory to store these
-                                  exported triples (default: current
-                                  directory). If the given path (i.e.,
-                                  --outputfile) is None or a relative path, it
-                                  will be ignored.
-  -ofile, --outputfile TEXT       Path of the file to store these exported
-                                  triples (default: None)
-  -oformat, --outputformat [json-ld|n3|nquads|nt|hext|pretty-xml|trig|trix|turtle|longturtle|xml]
-                                  Format of the exported triples (default nt)
-  --help                          Show this message and exit.
+  --help  Show this message and exit.
+
+Commands:
+  rdflib  Export an RDF dataset
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 ================================================== bash cell | export_dataset_kb ===================================================
 
-geist export | sort
+geist export rdflib | sort
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 
@@ -205,36 +193,21 @@ geist export | sort
 geist graph --help
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
-Usage: geist graph [OPTIONS]
+Usage: geist graph [OPTIONS] COMMAND [ARGS]...
 
   Visualize a dataset
 
 Options:
-  -d, --dataset TEXT              Name of RDF dataset to be visualized
-                                  (default "kb")
-  -r, --rankdir [TB|BT|LR|RL]     Direction of the graph (default TB): TB or
-                                  BT or LR or RL
-  -m, --mappings TEXT             File of the mappings to shorten text (str):
-                                  path of a JSON file, where the key is the
-                                  original text and the value is the shorter
-                                  text.
-  -on, --on TEXT                  Column(s) to be mapped.
-  -oroot, --outputroot TEXT       Path of the directory to store the graph
-                                  (default: current directory). If the given
-                                  path (i.e., --outputfile) is a relative
-                                  path, it will be ignored.
-  -ofile, --outputfile TEXT       Path of the file without extension to store
-                                  the graph (default: res)
-  -oformat, --outputformat [none|svg|png|gv]
-                                  Format of the graph (default: none): none or
-                                  svg or png or gv
-  --help                          Show this message and exit.
+  --help  Show this message and exit.
+
+Commands:
+  rdflib  Visualize an RDF dataset
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 =================================================== bash cell | graph_dataset_kb ===================================================
 
-geist graph -m data/mappings.json -ofile products/kb -oformat none -oformat png -oformat gv
+geist graph rdflib -m data/mappings.json -oroot products -ofile kb -oformat none -oformat png -oformat gv
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 strict digraph "" {
@@ -322,27 +295,21 @@ strict digraph "" {
 geist query --help
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
-Usage: geist query [OPTIONS]
+Usage: geist query [OPTIONS] COMMAND [ARGS]...
 
-  Perform a SPARQL query on a dataset
+  Perform a query on a dataset
 
 Options:
-  -d, --dataset TEXT         Name of RDF dataset to be queried (default "kb")
-  --file FILENAME            Path of the file containing the SPARQL query to
-                             execute  [required]
-  -oroot, --outputroot TEXT  Path of the directory to store the query results
-                             (default: current directory). If the given path
-                             (i.e., --outputfile) is None or a relative path,
-                             it will be ignored.
-  -ofile, --outputfile TEXT  Path of the file to store the query results
-                             (default: None)
-  --help                     Show this message and exit.
+  --help  Show this message and exit.
+
+Commands:
+  rdflib  Perform a SPARQL query on a dataset
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 ================================================ bash cell | file_query_dataset_kb =================================================
 
-geist query --file data/query
+geist query rdflib --file data/query
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 |    | s                                                                                                                                          | p                                                    | o                                                                                                                                            |
@@ -371,7 +338,7 @@ geist query --file data/query
 
 ================================================ bash cell | stdin_query_dataset_kb ================================================
 
-geist query << __END_QUERY__
+geist query rdflib << __END_QUERY__
 
 SELECT ?s ?p ?o
 WHERE {
@@ -381,7 +348,7 @@ ORDER BY ?s ?p ?o
 
 __END_QUERY__
 
-geist destroy -d kb
+geist destroy rdflib -d kb
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 |    | s                                                                                                                                          | p                                                    | o                                                                                                                                            |
@@ -410,9 +377,9 @@ geist destroy -d kb
 
 ================================================ bash cell | query_dataset_to_newkb ================================================
 
-geist create -d kb -ifile data/tro.jsonld
+geist create rdflib -d kb -ifile data/tro.jsonld
 
-geist query -d kb --outputfile products/qres.csv << __END_QUERY__
+geist query rdflib -d kb --outputfile products/qres.csv << __END_QUERY__
 
 SELECT ?s ?p ?o
 WHERE {
@@ -423,9 +390,9 @@ ORDER BY ?s ?p ?o
 
 __END_QUERY__
 
-geist create -d newkb -ifile products/qres.csv -iformat csv --colnames "[['s','p','o']]"
+geist create rdflib -d newkb -ifile products/qres.csv -iformat csv --colnames "[['s','p','o']]"
 
-geist query -d newkb << __END_QUERY__
+geist query rdflib -d newkb << __END_QUERY__
 
 SELECT ?s ?p ?o
 WHERE {
@@ -435,8 +402,8 @@ ORDER BY ?s ?p ?o
 
 __END_QUERY__
 
-geist destroy -d newkb
-geist destroy -d kb
+geist destroy rdflib -d newkb
+geist destroy rdflib -d kb
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 |    | s                                                                                                                                          | p                                            | o            |
@@ -469,12 +436,12 @@ Options:
 
 geist report << END_TEMPLATE
 
-{% create inputformat="nt", isfilepath=False %}
+{% create datastore="rdflib", inputformat="nt", isfilepath=False %}
     <http://example.com/drewp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
     <http://example.com/drewp> <http://example.com/says> "Hello World" .
 {% endcreate %}
 
-{% query isfilepath=False as res %}
+{% query datastore="rdflib", isfilepath=False as res %}
     SELECT ?s ?p ?o
     WHERE {
         ?s ?p ?o
@@ -487,7 +454,7 @@ geist report << END_TEMPLATE
     Subject: {{ row["s"] }}, Predicate: {{ row["p"] }}, Object: {{ row["o"] }}.
 {% endfor %}
 
-{% destroy %}
+{% destroy datastore="rdflib" %}
 
 END_TEMPLATE
 
@@ -506,13 +473,13 @@ END_TEMPLATE
 
 geist report << END_TEMPLATE
 
-{% create dataset="test", inputformat="csv", colnames="[['s', 'p', 'o']]", isfilepath=False %}
+{% create "test", datastore="rdflib", inputformat="csv", colnames="[['s', 'p', 'o']]", isfilepath=False %}
 s,p,o
 <http://example.com/drewp>,<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>,<http://xmlns.com/foaf/0.1/Person>
 <http://example.com/drewp>,<http://example.com/says>,"Hello World"
 {% endcreate %}
 
-{% query "test", isfilepath=False as res %}
+{% query "test", datastore="rdflib", isfilepath=False as res %}
     SELECT ?s ?p ?o
     WHERE {
         ?s ?p ?o
@@ -525,7 +492,7 @@ s,p,o
     Subject: {{ row["s"] }}, Predicate: {{ row["p"] }}, Object: {{ row["o"] }}.
 {% endfor %}
 
-{% destroy "test" %}
+{% destroy "test", datastore="rdflib" %}
 
 END_TEMPLATE
 
@@ -542,18 +509,30 @@ END_TEMPLATE
 
 ================================================ bash cell | report_create_kb_file =================================================
 
-geist report << END_TEMPLATE
+geist report -oroot products << END_TEMPLATE
 
-{% create inputformat="csv", colnames="[['s', 'p', 'o']]" %} data/kb.csv {% endcreate %}
+{% create datastore="rdflib", inputformat="csv", colnames="[['s', 'p', 'o']]" %} data/kb.csv {% endcreate %}
 
-{% query as res %} data/query {% endquery %}
+{% query datastore="rdflib" as res %} data/query {% endquery %}
 {% set all_triples = res | json2df %}
 
-{% for _, row in all_triples.iterrows() %}
-    Subject: {{ row["s"] }}, Predicate: {{ row["p"] }}, Object: {{ row["o"] }}.
-{% endfor %}
+{%- html "report.html" %}
+<body>
+    <u>List</u>
+    {% for _, row in all_triples.iterrows() %}
+        {%- set s = row["s"] | process_str_for_html %}
+        {%- set p = row["p"] | process_str_for_html %}
+        {%- set o = row["o"] | process_str_for_html %}
+        <li>Subject: {{ s }}, Predicate: {{ p }}, Object: {{ o }}.</li>
+    {% endfor -%}<br>
+    <u>Visualization</u><br>
+    {% img src="rdf.svg" %}
+        {% graph datastore="rdflib" %}
+    {% endimg %}
+</body>
+{%- endhtml %}
 
-{% destroy %}
+{% destroy datastore="rdflib" %}
 
 END_TEMPLATE
 
@@ -561,8 +540,16 @@ END_TEMPLATE
 
 
 
-    Subject: <http://example.com/drewp>, Predicate: <http://example.com/says>, Object: Hello World.
-    Subject: <http://example.com/drewp>, Predicate: <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>, Object: <http://xmlns.com/foaf/0.1/Person>.
+<!DOCTYPE html>
+<html>
+<body>
+    <u>List</u>
+            <li>Subject: &lthttp://example.com/drewp&gt, Predicate: &lthttp://example.com/says&gt, Object: Hello World.</li>
+            <li>Subject: &lthttp://example.com/drewp&gt, Predicate: &lthttp://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt, Object: &lthttp://xmlns.com/foaf/0.1/Person&gt.</li>
+    <br>
+    <u>Visualization</u><br>
+    <img src="rdf.svg" ></body>
+</html>
 
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -574,23 +561,23 @@ geist report << END_TEMPLATE
 
 {%- use "templates.geist" %}
 
-{%- create "kb1", inputformat="nt", isfilepath=False %}
+{%- create "kb1", datastore="rdflib", inputformat="nt", isfilepath=False %}
     <http://example.com/drewp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
     <http://example.com/drewp> <http://example.com/says> "Hello World" .
     <http://example.com/drewp> <http://example.com/says> "What a Nice Day" .
     <http://example.com/drewp> <http://example.com/feels> "Happy" .
 {% endcreate %}
 
-{%- create "kb2", inputformat="nt", isfilepath=False %}
+{%- create "kb2", datastore="rdflib", inputformat="nt", isfilepath=False %}
     <http://example.com/test> <http://example.com/p1> <http://example.com/says>.
     <http://example.com/test> <http://example.com/p2> <http://example.com/feels>.
 {% endcreate %}
 
-{%- query "kb1", isfilepath=False as res %}
+{%- query "kb1", datastore="rdflib", isfilepath=False as res %}
     SELECT ?s ?o
     WHERE {
         ?s ?p ?o
-        FILTER (?p IN ({% query "kb2", isfilepath=False as res %}
+        FILTER (?p IN ({% query "kb2", datastore="rdflib", isfilepath=False as res %}
                             SELECT ?p 
                             WHERE {?s <http://example.com/p1> ?p}
                         {% endquery %}
@@ -607,8 +594,8 @@ geist report << END_TEMPLATE
 
 {%- query_with_args %}
 
-{%- destroy "kb1" %}
-{%- destroy "kb2" %}
+{%- destroy "kb1", datastore="rdflib" %}
+{%- destroy "kb2", datastore="rdflib" %}
 
 END_TEMPLATE
 

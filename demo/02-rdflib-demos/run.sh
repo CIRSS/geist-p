@@ -20,16 +20,16 @@ END_CELL
 
 bash_cell create_stdin << END_CELL
 
-geist create -d test -iformat nt << __END_INPUT__
+geist create rdflib -d test -iformat nt << __END_INPUT__
 
 <http://example.com/drewp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
 <http://example.com/drewp> <http://example.com/says> "Hello World" .
 
 __END_INPUT__
 
-geist export -d test | sort
+geist export rdflib -d test | sort
 
-geist destroy -d test
+geist destroy rdflib -d test
 
 END_CELL
 
@@ -37,9 +37,9 @@ END_CELL
 
 bash_cell create_file << END_CELL
 
-geist create -d test -ifile data/tro.jsonld
+geist create rdflib -d test -ifile data/tro.jsonld
 
-ls .geistdata
+ls -R .geistdata
 
 END_CELL
 
@@ -55,7 +55,7 @@ END_CELL
 
 bash_cell load_dataset_test << END_CELL
 
-geist load -d test -ifile data/tro.jsonld
+geist load rdflib -d test -ifile data/tro.jsonld
 
 END_CELL
 
@@ -71,9 +71,9 @@ END_CELL
 
 bash_cell destroy_dataset_test << END_CELL
 
-geist destroy -d test
+geist destroy rdflib -d test
 
-ls .geistdata
+ls -R .geistdata
 
 END_CELL
 
@@ -81,9 +81,9 @@ END_CELL
 
 bash_cell create_dataset_kb << END_CELL
 
-geist create -ifile data/tro.jsonld
+geist create rdflib -ifile data/tro.jsonld
 
-ls .geistdata
+ls -R .geistdata
 
 END_CELL
 
@@ -99,7 +99,7 @@ END_CELL
 
 bash_cell export_dataset_kb << END_CELL
 
-geist export | sort
+geist export rdflib | sort
 
 END_CELL
 
@@ -115,7 +115,7 @@ END_CELL
 
 bash_cell graph_dataset_kb << END_CELL
 
-geist graph -m data/mappings.json -ofile products/kb -oformat none -oformat png -oformat gv
+geist graph rdflib -m data/mappings.json -oroot products -ofile kb -oformat none -oformat png -oformat gv
 
 END_CELL
 
@@ -131,7 +131,7 @@ END_CELL
 
 bash_cell file_query_dataset_kb << END_CELL
 
-geist query --file data/query
+geist query rdflib --file data/query
 
 END_CELL
 
@@ -139,7 +139,7 @@ END_CELL
 
 bash_cell stdin_query_dataset_kb << END_CELL
 
-geist query << __END_QUERY__
+geist query rdflib << __END_QUERY__
 
 SELECT ?s ?p ?o
 WHERE {
@@ -149,7 +149,7 @@ ORDER BY ?s ?p ?o
 
 __END_QUERY__
 
-geist destroy -d kb
+geist destroy rdflib -d kb
 
 END_CELL
 
@@ -157,9 +157,9 @@ END_CELL
 
 bash_cell query_dataset_to_newkb << END_CELL
 
-geist create -d kb -ifile data/tro.jsonld
+geist create rdflib -d kb -ifile data/tro.jsonld
 
-geist query -d kb --outputfile products/qres.csv << __END_QUERY__
+geist query rdflib -d kb --outputfile products/qres.csv << __END_QUERY__
 
 SELECT ?s ?p ?o
 WHERE {
@@ -170,9 +170,9 @@ ORDER BY ?s ?p ?o
 
 __END_QUERY__
 
-geist create -d newkb -ifile products/qres.csv -iformat csv --colnames "[['s','p','o']]"
+geist create rdflib -d newkb -ifile products/qres.csv -iformat csv --colnames "[['s','p','o']]"
 
-geist query -d newkb << __END_QUERY__
+geist query rdflib -d newkb << __END_QUERY__
 
 SELECT ?s ?p ?o
 WHERE {
@@ -182,8 +182,8 @@ ORDER BY ?s ?p ?o
 
 __END_QUERY__
 
-geist destroy -d newkb
-geist destroy -d kb
+geist destroy rdflib -d newkb
+geist destroy rdflib -d kb
 
 END_CELL
 
@@ -201,12 +201,12 @@ bash_cell report_create_kb << END_CELL
 
 geist report << END_TEMPLATE
 
-{% create inputformat="nt", isfilepath=False %}
+{% create datastore="rdflib", inputformat="nt", isfilepath=False %}
     <http://example.com/drewp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
     <http://example.com/drewp> <http://example.com/says> "Hello World" .
 {% endcreate %}
 
-{% query isfilepath=False as res %}
+{% query datastore="rdflib", isfilepath=False as res %}
     SELECT ?s ?p ?o
     WHERE {
         ?s ?p ?o
@@ -219,7 +219,7 @@ geist report << END_TEMPLATE
     Subject: {{ row["s"] }}, Predicate: {{ row["p"] }}, Object: {{ row["o"] }}.
 {% endfor %}
 
-{% destroy %}
+{% destroy datastore="rdflib" %}
 
 END_TEMPLATE
 
@@ -231,13 +231,13 @@ bash_cell report_create_test << END_CELL
 
 geist report << END_TEMPLATE
 
-{% create dataset="test", inputformat="csv", colnames="[['s', 'p', 'o']]", isfilepath=False %}
+{% create "test", datastore="rdflib", inputformat="csv", colnames="[['s', 'p', 'o']]", isfilepath=False %}
 s,p,o
 <http://example.com/drewp>,<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>,<http://xmlns.com/foaf/0.1/Person>
 <http://example.com/drewp>,<http://example.com/says>,"Hello World"
 {% endcreate %}
 
-{% query "test", isfilepath=False as res %}
+{% query "test", datastore="rdflib", isfilepath=False as res %}
     SELECT ?s ?p ?o
     WHERE {
         ?s ?p ?o
@@ -250,7 +250,7 @@ s,p,o
     Subject: {{ row["s"] }}, Predicate: {{ row["p"] }}, Object: {{ row["o"] }}.
 {% endfor %}
 
-{% destroy "test" %}
+{% destroy "test", datastore="rdflib" %}
 
 END_TEMPLATE
 
@@ -260,18 +260,30 @@ END_CELL
 
 bash_cell report_create_kb_file << END_CELL
 
-geist report << END_TEMPLATE
+geist report -oroot products << END_TEMPLATE
 
-{% create inputformat="csv", colnames="[['s', 'p', 'o']]" %} data/kb.csv {% endcreate %}
+{% create datastore="rdflib", inputformat="csv", colnames="[['s', 'p', 'o']]" %} data/kb.csv {% endcreate %}
 
-{% query as res %} data/query {% endquery %}
+{% query datastore="rdflib" as res %} data/query {% endquery %}
 {% set all_triples = res | json2df %}
 
-{% for _, row in all_triples.iterrows() %}
-    Subject: {{ row["s"] }}, Predicate: {{ row["p"] }}, Object: {{ row["o"] }}.
-{% endfor %}
+{%- html "report.html" %}
+<body>
+    <u>List</u>
+    {% for _, row in all_triples.iterrows() %}
+        {%- set s = row["s"] | process_str_for_html %}
+        {%- set p = row["p"] | process_str_for_html %}
+        {%- set o = row["o"] | process_str_for_html %}
+        <li>Subject: {{ s }}, Predicate: {{ p }}, Object: {{ o }}.</li>
+    {% endfor -%}<br>
+    <u>Visualization</u><br>
+    {% img src="rdf.svg" %}
+        {% graph datastore="rdflib" %}
+    {% endimg %}
+</body>
+{%- endhtml %}
 
-{% destroy %}
+{% destroy datastore="rdflib" %}
 
 END_TEMPLATE
 
@@ -285,23 +297,23 @@ geist report << END_TEMPLATE
 
 {%- use "templates.geist" %}
 
-{%- create "kb1", inputformat="nt", isfilepath=False %}
+{%- create "kb1", datastore="rdflib", inputformat="nt", isfilepath=False %}
     <http://example.com/drewp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
     <http://example.com/drewp> <http://example.com/says> "Hello World" .
     <http://example.com/drewp> <http://example.com/says> "What a Nice Day" .
     <http://example.com/drewp> <http://example.com/feels> "Happy" .
 {% endcreate %}
 
-{%- create "kb2", inputformat="nt", isfilepath=False %}
+{%- create "kb2", datastore="rdflib", inputformat="nt", isfilepath=False %}
     <http://example.com/test> <http://example.com/p1> <http://example.com/says>.
     <http://example.com/test> <http://example.com/p2> <http://example.com/feels>.
 {% endcreate %}
 
-{%- query "kb1", isfilepath=False as res %}
+{%- query "kb1", datastore="rdflib", isfilepath=False as res %}
     SELECT ?s ?o
     WHERE {
         ?s ?p ?o
-        FILTER (?p IN ({% query "kb2", isfilepath=False as res %}
+        FILTER (?p IN ({% query "kb2", datastore="rdflib", isfilepath=False as res %}
                             SELECT ?p 
                             WHERE {?s <http://example.com/p1> ?p}
                         {% endquery %}
@@ -318,8 +330,8 @@ geist report << END_TEMPLATE
 
 {%- query_with_args %}
 
-{%- destroy "kb1" %}
-{%- destroy "kb2" %}
+{%- destroy "kb1", datastore="rdflib" %}
+{%- destroy "kb2", datastore="rdflib" %}
 
 END_TEMPLATE
 

@@ -1,0 +1,174 @@
+import click, jinja2, json, sys
+from geist.commands.cli import cli
+from geist.tools.utils import ensure_dir_exists, get_content, update_outputroot, include_filepaths, generate_template_class, map_df
+from geist.tools.filters import json2df, json2dict, dict2df, df2htmltable, escape_quotes, process_str_for_html
+from jinja2_simple_tags import StandaloneTag, ContainerTag
+import pygraphviz as pgv
+
+class CreateExtension(ContainerTag):
+    tags = {"create"}
+    
+    def render(self, dataset="kb", datastore="rdflib", inputformat="json-ld", colnames=None, infer="none", isfilepath=True, caller=None):
+        if datastore == "rdflib":
+            from geist.datastore.rdflib import rdflib_create
+            rdflib_create(dataset, get_content(environment.from_string(str(caller())).render(), isfilepath), inputformat, colnames, infer)
+        return ""
+
+class LoadExtension(ContainerTag):
+    tags = {"load"}
+    
+    def render(self, dataset="kb", datastore="rdflib", inputformat="json-ld", colnames=None, isfilepath=True, caller=None):
+        if datastore == "rdflib":
+            from geist.datastore.rdflib import rdflib_load
+            rdflib_load(dataset, get_content(environment.from_string(str(caller())).render(), isfilepath), inputformat, colnames)
+        return ""
+
+class QueryExtension(ContainerTag):
+    tags = {"query"}
+
+    def render(self, dataset="kb", datastore="rdflib", isfilepath=True, caller=None):
+        res = '{}'
+        if datastore == "rdflib":
+            from geist.datastore.rdflib import load_rdf_dataset, query2df
+            (rdf_graph, _) = load_rdf_dataset(dataset)
+            res = query2df(rdf_graph, get_content(environment.from_string(str(caller())).render(), isfilepath)).to_json()
+        return res
+
+class DestroyExtension(StandaloneTag):
+    tags = {"destroy"}
+    
+    def render(self, dataset="kb", datastore="rdflib", quiet=False):
+        if datastore == "rdflib":
+            from geist.datastore.rdflib import rdflib_destroy
+            rdflib_destroy(dataset=dataset, quiet=quiet)
+        return ""
+
+class GraphExtension(StandaloneTag):
+    tags = {"graph"}
+
+    def render(self, dataset="kb", datastore="rdflib", rankdir="TB", mappings=None, on=None):
+        res = ""
+        if datastore == "rdflib":
+            from geist.datastore.rdflib import load_rdf_dataset, _graph
+            (rdf_graph, _) = load_rdf_dataset(dataset)
+            G = _graph(rdf_graph, rankdir, mappings, on)
+            res = G.string()
+        return res
+
+class Graph2Extension(StandaloneTag):
+    tags = {"graph2"}
+
+    def render(self, dataset="kb", datastore="rdflib", rankdir="TB", mappings=None, on=None, **kwargs):
+        gv = ""
+        if datastore == "rdflib":
+            from geist.datastore.rdflib import load_rdf_dataset, _graph2
+            (rdf_graph, _) = load_rdf_dataset(dataset)
+            gv = _graph2(rdf_graph, rankdir, mappings, on, **kwargs)
+        return gv
+
+class ComponentExtension(ContainerTag):
+    tags = {"component"}
+
+    def render(self, isfilepath=True, edges=[["s", "o", "p"]], caller=None):
+        from geist.tools.utils import connected_components
+        graph = json2df(get_content(environment.from_string(str(caller())).render(), isfilepath))
+        components = connected_components(graph, edges)
+        return json.dumps(components)
+
+class MapExtension(ContainerTag):
+    tags = {"map"}
+
+    def render(self, isfilepath=True, mappings=None, on=None, caller=None):
+        df = json2df(get_content(environment.from_string(str(caller())).render(), isfilepath))
+        df = map_df(df, mappings, on)
+        return df.to_json()
+
+class UseExtension(StandaloneTag):
+    tags = {"use"}
+
+    def render(self, filepath):
+        return ""
+
+class HtmlExtension(ContainerTag):
+    tags = {"html"}
+
+    def render(self, path="report.html", caller=None):
+        report = '''
+<!DOCTYPE html>
+<html>
+{content}
+</html>
+'''.format(content=environment.from_string(str(caller())).render())
+        path = ensure_dir_exists(path)
+        with open(path, 'w') as fout:
+            fout.write(report)
+        return report
+
+class ImgExtension(ContainerTag):
+    tags = {"img"}
+
+    def render(self, src, caller=None, **kwargs):
+        path = ensure_dir_exists(src)
+        report = environment.from_string(str(caller())).render()
+        # Extract extension from src
+        ext = src.split('.')[-1]
+        params_assign = " ".join(['{param_k}={param_v}'.format(param_k=param_k, param_v=param_v) for param_k, param_v in kwargs.items()])
+        if ext == 'gv' or ext == 'dot':
+            with open(path, 'w') as fout:
+                fout.write(report)
+            # Code to be embeded in an HTML file
+            code = '<pre><code {params_assign}>{report}</code></pre>'.format(params_assign=params_assign, report=report)
+        else:
+            # Save as an image
+            graph = pgv.AGraph(string=report)
+            graph.draw(path, format=ext, prog='dot')
+            # Code to be embeded in an HTML file
+            code = '<img src="{src}" {params_assign}>'.format(src=src, params_assign=params_assign)
+        return code
+
+class TableExtension(ContainerTag):
+    tags = {"table"}
+
+    def render(self, mappings=None, on=None, caller=None):
+        json_str = environment.from_string(str(caller())).render()
+        df = json2df(json_str)
+        df = map_df(df, mappings, on)
+        code = df2htmltable(df)
+        return code
+
+
+
+@cli.command()
+@click.option('--file', '-f', required=True, type=click.File('r'), default=sys.stdin, help='Path of the file containing the report template to expand')
+@click.option('--outputroot', '-oroot', default='./', type=str, help='Path of the directory to store the expanded report (default: current directory)')
+@click.option('--suppressoutput', '-so', default=False, help='Suppress output or not (default: False)')
+def report(file, outputroot, suppressoutput):
+    """Expand a report using a dataset"""
+    update_outputroot(outputroot)
+
+    global environment
+    environment = jinja2.Environment(
+        loader=jinja2.FileSystemLoader("./"), 
+        trim_blocks=True, 
+        extensions=[CreateExtension, LoadExtension, QueryExtension, DestroyExtension, GraphExtension, Graph2Extension, ComponentExtension, MapExtension, UseExtension, HtmlExtension, ImgExtension, TableExtension]
+    )
+    environment.filters['json2df'] = json2df
+    environment.filters['json2dict'] = json2dict
+    environment.filters['dict2df'] = dict2df
+    environment.filters['df2htmltable'] = df2htmltable
+    environment.filters['escape_quotes'] = escape_quotes
+    environment.filters['process_str_for_html'] = process_str_for_html
+
+    # Define custom tags based on files with the "use" tag
+    content = file.read()
+    file_paths = include_filepaths(content)
+    if file_paths:
+        templates = generate_template_class(file_paths)
+        exec(templates, globals())
+
+    # Render the report
+    template = environment.from_string(content)
+    report = template.render()
+
+    if not suppressoutput:
+        print(report)
