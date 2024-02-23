@@ -2,6 +2,22 @@ import json
 import pandas as pd
 from io import StringIO
 
+def head(df):
+    """
+    This function is to return the first 5 rows of a Pandas data frame
+    :param df: a Pandas data frame
+    :return : a Pandas data frame with the first 5 rows
+    """
+    return df.head()
+
+def csv2df(csv_str):
+    """
+    This function is to convert a CSV string to a Pandas data frame
+    :param csv_str: a CSV string
+    :return df: a Pandas data frame
+    """
+    return pd.read_csv(StringIO(csv_str))
+
 def json2df(json_str):
     """
     This function is to convert a JSON string to a Pandas data frame
@@ -50,6 +66,8 @@ def process_str_for_html(cell):
     :param cell: a string
     :return cell_prpcessed: a string
     """
+    if type(cell) != str:
+        return cell
     return cell.replace("<", "&lt").replace(">", "&gt")
 
 def escape_quotes(txt):

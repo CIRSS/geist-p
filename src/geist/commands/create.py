@@ -18,9 +18,14 @@ def rdflib(dataset, inputfile, inputformat, colnames, infer):
     rdflib_create(dataset, inputfile.read(), inputformat, colnames, infer)
 
 @create.command()
-def duckdb():
+@click.option('--dataset', '-d', default='kb', type=str, help='Name of SQL dataset to create (default "kb")')
+@click.option('--inputfile', '-ifile', required=True, type=click.File('r'), default=sys.stdin, help='Path of the file to be loaded as a Pandas DataFrame')
+@click.option('--inputformat', '-iformat', default='csv', type=click.Choice(['csv', 'json']), help='Format of the file to be loaded as a Pandas DataFrame (default csv)')
+@click.option('--table', '-t', default='df', type=str, help='Name of the table to be created (default "df")')
+def duckdb(dataset, inputfile, inputformat, table):
     """Create a new SQL dataset using DuckDB"""
-    print("Creating a new SQL dataset using DuckDB")
+    from geist.datastore.duckdb import duckdb_create
+    duckdb_create(dataset, inputfile.read(), inputformat, table)
     pass
 
 

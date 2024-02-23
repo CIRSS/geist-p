@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.2.0
+
+- SQL queries are supported by GEIST based on [duckdb](https://duckdb.org)
+
 ## v0.1.0
 
 - Add [documentation](https://cirss.github.io/geist-p)

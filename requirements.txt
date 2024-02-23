@@ -3,6 +3,8 @@ jinja2-simple-tags
 rdflib
 click
 owlrl
+pyarrow
 pandas
 tabulate
 pygraphviz
+duckdb

@@ -1,0 +1,151 @@
+================================================== bash cell | create duckdb fish ==================================================
+
+geist destroy duckdb -d fish --quiet
+geist destroy rdflib -d fish --quiet
+geist destroy rdflib -d subfish --quiet
+
+geist create duckdb -d fish -ifile data/fish.csv -t edges
+geist query duckdb -d fish << END_QUERY
+    SHOW tables;
+END_QUERY
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+|    | name   |
+|---:|:-------|
+|  0 | edges  |
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+===================================================== bash cell | report demo ======================================================
+
+geist report -oroot products << END_TEMPLATE
+
+{%- use "templates.geist" %}
+
+{% query "fish", datastore="duckdb", isfilepath=False as edges %}
+    {% query_duckdb_edges %}
+{% endquery %}
+{% set edgesdf = edges | json2df %}
+
+{% create "fish", datastore="rdflib", inputformat="nt", isfilepath=False %}
+    {%- for _, row in edgesdf.iterrows() %}
+        {% format_triples row.startnode, row.edge, row.endnode %}
+    {% endfor -%}
+{% endcreate %}
+
+{% query "fish", datastore="rdflib", isfilepath=False as res %}
+    {% query_rdflib_subfish %}
+{% endquery %}
+{% set subgraph = res | json2df %}
+{% create "subfish", datastore="rdflib", inputformat="nt", isfilepath=False %}
+    {% for _, row in subgraph.iterrows() %}
+        {% format_subfish row.node1, row.node2, row.node3 %}
+    {% endfor %}
+{% endcreate %}
+
+{%- html "report.html" %}
+{%- head "Geist" %}
+<body>
+    <h1>Geist Demo for SciPy 2024</h1>
+    Suppose we have a <strong>Hamming numbers</strong> (let's call it a <strong>Fish</strong> Graph) dataset stored in DuckDB, which contains a table named <i>edges</i>. The fish dataset was generated based on the following rules:
+    <li>The initial starting node is 1.</li>
+    <li>The edge can be either 2 or 3 or 5.</li>
+    <li>Start node times edge equals to the end node.</li>
+
+    Below shows the first 5 rows of the fish table:
+    {{ edgesdf | head | df2htmltable }}
+
+    <h4>1. Visualization of the Fish Graph</h4>
+    {% img src="fish.svg", width="80%%" %}
+        {% graph "fish", datastore="rdflib", rankdir="LR", mappings="data/mappings.json" %}
+    {% endimg %}
+
+    <h4>2. Visualization of the subgraph extracted from the Fish Graph</h4>
+    Find all nodes that can be reached from node 5 by following either edge 2 or 3.
+    {% img src="subfish.svg", width="80%" %}
+        {% graph "subfish", datastore="rdflib", rankdir="LR", mappings="data/mappings.json" %}
+    {% endimg %}
+</body>
+{%- style  %}
+{%- endhtml %}
+
+{% destroy "fish", datastore="duckdb" %}
+{% destroy "fish", datastore="rdflib" %}
+{% destroy "subfish", datastore="rdflib" %}
+
+END_TEMPLATE
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+
+
+
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body { margin: 3%; }
+            table, th, tr, td {
+                border:1px solid #69899F;
+                border-collapse: collapse;
+            }
+        </style>
+        <title>Geist</title>
+    </head><body>
+    <h1>Geist Demo for SciPy 2024</h1>
+    Suppose we have a <strong>Hamming numbers</strong> (let's call it a <strong>Fish</strong> Graph) dataset stored in DuckDB, which contains a table named <i>edges</i>. The fish dataset was generated based on the following rules:
+    <li>The initial starting node is 1.</li>
+    <li>The edge can be either 2 or 3 or 5.</li>
+    <li>Start node times edge equals to the end node.</li>
+
+    Below shows the first 5 rows of the fish table:
+    
+        <table>
+            <tr><th>startnode</th><th>edge</th><th>endnode</th></tr>
+        
+			<tr><td>1</td><td>3</td><td>3</td>
+			<tr><td>1</td><td>2</td><td>2</td>
+			<tr><td>1</td><td>5</td><td>5</td>
+			<tr><td>5</td><td>3</td><td>15</td>
+			<tr><td>2</td><td>3</td><td>6</td>
+        </table>
+    
+
+    <h4>1. Visualization of the Fish Graph</h4>
+    <img src="fish.svg" width=80%%>
+    <h4>2. Visualization of the subgraph extracted from the Fish Graph</h4>
+    Find all nodes that can be reached from node 5 by following either edge 2 or 3.
+    <img src="subfish.svg" width=80%></body>
+<style>
+    table {
+        border-collapse: collapse;
+        width: 50%;
+    }
+
+    th, td {
+        border-collapse: collapse;
+        padding: 8px;
+        text-align: left;
+    }
+
+    tr:nth-child(odd) {
+        background-color: #f2f2f2;
+    }
+
+    th {
+        background-color: #B3E2CD;
+    }
+
+    tr:hover {
+        background-color: #ddd;
+    }
+</style>
+</html>
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+

@@ -1,26 +1,38 @@
 import click, jinja2, json, sys
 from geist.commands.cli import cli
 from geist.tools.utils import ensure_dir_exists, get_content, update_outputroot, include_filepaths, generate_template_class, map_df
-from geist.tools.filters import json2df, json2dict, dict2df, df2htmltable, escape_quotes, process_str_for_html
+from geist.tools.filters import head, json2df, json2dict, dict2df, df2htmltable, escape_quotes, process_str_for_html
 from jinja2_simple_tags import StandaloneTag, ContainerTag
 import pygraphviz as pgv
 
 class CreateExtension(ContainerTag):
     tags = {"create"}
     
-    def render(self, dataset="kb", datastore="rdflib", inputformat="json-ld", colnames=None, infer="none", isfilepath=True, caller=None):
+    def render(self, dataset="kb", datastore="rdflib", inputformat="json-ld", colnames=None, infer="none", isfilepath=True, table="df", caller=None):
+        content = get_content(environment.from_string(str(caller())).render(), isfilepath)
         if datastore == "rdflib":
             from geist.datastore.rdflib import rdflib_create
-            rdflib_create(dataset, get_content(environment.from_string(str(caller())).render(), isfilepath), inputformat, colnames, infer)
+            rdflib_create(dataset, content, inputformat, colnames, infer)
+        elif datastore == "duckdb":
+            from geist.datastore.duckdb import duckdb_create
+            duckdb_create(dataset, content, inputformat, table)
+        else:
+            raise ValueError("Invalid datastore. Only rdflib and duckdb are supported for now.")
         return ""
 
 class LoadExtension(ContainerTag):
     tags = {"load"}
     
-    def render(self, dataset="kb", datastore="rdflib", inputformat="json-ld", colnames=None, isfilepath=True, caller=None):
+    def render(self, dataset="kb", datastore="rdflib", inputformat="json-ld", colnames=None, isfilepath=True, table="df", caller=None):
+        content = get_content(environment.from_string(str(caller())).render(), isfilepath)
         if datastore == "rdflib":
             from geist.datastore.rdflib import rdflib_load
-            rdflib_load(dataset, get_content(environment.from_string(str(caller())).render(), isfilepath), inputformat, colnames)
+            rdflib_load(dataset, content, inputformat, colnames)
+        elif datastore == "duckdb":
+            from geist.datastore.duckdb import duckdb_load
+            duckdb_load(dataset, content, inputformat, table)
+        else:
+            raise ValueError("Invalid datastore. Only rdflib and duckdb are supported for now.")
         return ""
 
 class QueryExtension(ContainerTag):
@@ -28,10 +40,18 @@ class QueryExtension(ContainerTag):
 
     def render(self, dataset="kb", datastore="rdflib", isfilepath=True, caller=None):
         res = '{}'
+        content = get_content(environment.from_string(str(caller())).render(), isfilepath)
         if datastore == "rdflib":
             from geist.datastore.rdflib import load_rdf_dataset, query2df
             (rdf_graph, _) = load_rdf_dataset(dataset)
-            res = query2df(rdf_graph, get_content(environment.from_string(str(caller())).render(), isfilepath)).to_json()
+            res = query2df(rdf_graph, content).to_json()
+        elif datastore == "duckdb":
+            from geist.datastore.duckdb import load_sql_dataset
+            conn = load_sql_dataset(dataset)
+            res = conn.sql(content).df().to_json()
+            conn.close()
+        else:
+            raise ValueError("Invalid datastore. Only rdflib and duckdb are supported for now.")
         return res
 
 class DestroyExtension(StandaloneTag):
@@ -41,18 +61,25 @@ class DestroyExtension(StandaloneTag):
         if datastore == "rdflib":
             from geist.datastore.rdflib import rdflib_destroy
             rdflib_destroy(dataset=dataset, quiet=quiet)
+        elif datastore == "duckdb":
+            from geist.datastore.duckdb import duckdb_destroy
+            duckdb_destroy(dataset=dataset, quiet=quiet)
+        else:
+            raise ValueError("Invalid datastore. Only rdflib and duckdb are supported for now.")
         return ""
 
 class GraphExtension(StandaloneTag):
     tags = {"graph"}
 
-    def render(self, dataset="kb", datastore="rdflib", rankdir="TB", mappings=None, on=None):
+    def render(self, dataset="kb", datastore="rdflib", rankdir="TB", mappings=None, on=None, samecolor=True):
         res = ""
         if datastore == "rdflib":
             from geist.datastore.rdflib import load_rdf_dataset, _graph
             (rdf_graph, _) = load_rdf_dataset(dataset)
-            G = _graph(rdf_graph, rankdir, mappings, on)
+            G = _graph(rdf_graph, rankdir, mappings, on, samecolor)
             res = G.string()
+        else:
+            raise ValueError("Invalid datastore. Only rdflib is supported for now.")
         return res
 
 class Graph2Extension(StandaloneTag):
@@ -64,6 +91,8 @@ class Graph2Extension(StandaloneTag):
             from geist.datastore.rdflib import load_rdf_dataset, _graph2
             (rdf_graph, _) = load_rdf_dataset(dataset)
             gv = _graph2(rdf_graph, rankdir, mappings, on, **kwargs)
+        else:
+            raise ValueError("Invalid datastore. Only rdflib is supported for now.")
         return gv
 
 class ComponentExtension(ContainerTag):
@@ -152,6 +181,7 @@ def report(file, outputroot, suppressoutput):
         trim_blocks=True, 
         extensions=[CreateExtension, LoadExtension, QueryExtension, DestroyExtension, GraphExtension, Graph2Extension, ComponentExtension, MapExtension, UseExtension, HtmlExtension, ImgExtension, TableExtension]
     )
+    environment.filters['head'] = head
     environment.filters['json2df'] = json2df
     environment.filters['json2dict'] = json2dict
     environment.filters['dict2df'] = dict2df

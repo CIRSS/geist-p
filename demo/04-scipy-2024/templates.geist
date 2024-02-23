@@ -1,0 +1,64 @@
+{% template head title %}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body { margin: 3%; }
+            table, th, tr, td {
+                border:1px solid #69899F;
+                border-collapse: collapse;
+            }
+        </style>
+        <title>{{ title }}</title>
+    </head>
+{% endtemplate %}
+
+{% template style %}
+<style>
+    table {
+        border-collapse: collapse;
+        width: 50%;
+    }
+
+    th, td {
+        border-collapse: collapse;
+        padding: 8px;
+        text-align: left;
+    }
+
+    tr:nth-child(odd) {
+        background-color: #f2f2f2;
+    }
+
+    th {
+        background-color: #B3E2CD;
+    }
+
+    tr:hover {
+        background-color: #ddd;
+    }
+</style>
+{% endtemplate %}
+
+{% template format_triples s p o %}
+    <http://demo.com/{{ s }}> <http://demo.com/times{{ p }}> <http://demo.com/{{ o }}>.
+{% endtemplate %}
+
+{% template format_subfish n1 n2 n3 %}
+    {{ n1 }} <http://demo.com/times2> {{ n2 }}.
+    {{ n1 }} <http://demo.com/times3> {{ n3 }}.
+{% endtemplate %}
+
+{% template query_duckdb_edges %}
+    SELECT startnode, edge, endnode FROM edges;
+{% endtemplate %}
+
+{% template query_rdflib_subfish %}
+    PREFIX : <http://demo.com/>
+    SELECT DISTINCT ?node1 ?node2 ?node3
+    WHERE {
+        <http://demo.com/5> (:times2|:times3)* ?node1 .
+        ?node1 :times2 ?node2 .
+        ?node1 :times3 ?node3 .
+    }
+{% endtemplate %}

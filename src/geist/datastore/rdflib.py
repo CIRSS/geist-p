@@ -1,5 +1,5 @@
 from geist.tools.utils import update_outputroot, ensure_dir_exists, map_df, df2nt
-from geist.tools.filters import escape_quotes
+from geist.tools.filters import csv2df, escape_quotes
 import click, jinja2, pickle, json, os, ast
 from io import StringIO
 import pandas as pd
@@ -48,7 +48,7 @@ def create_rdf_graph(input_file, input_format, colnames_of_triples, infer):
     if input_format == "csv":
         if not colnames_of_triples:
             raise ValueError("Please provide the column names of triples for the CSV file.")
-        nt = df2nt(pd.read_csv(StringIO(input_file)), ast.literal_eval(colnames_of_triples))
+        nt = df2nt(csv2df(input_file), ast.literal_eval(colnames_of_triples))
         rdf_graph.parse(data=nt, format="nt")
     else:
         rdf_graph.parse(data=input_file, format=input_format)
@@ -137,7 +137,7 @@ def visualize_query_results_without_pygraphviz(query_res, edges, rankdir="TB", s
                     pastel_colors=PASTEL_COLORS)
     return 'digraph "" {' + gv + '}'
 
-def _graph(rdf_graph, rankdir, mappings, on):
+def _graph(rdf_graph, rankdir, mappings, on, same_color):
     """Convert a RDF graph object to a Graphviz graph object"""
     query = """
             SELECT ?s ?p ?o
@@ -148,7 +148,7 @@ def _graph(rdf_graph, rankdir, mappings, on):
         """
     res = query2df(rdf_graph, query)
     res = map_df(res, mappings, on)
-    G = visualize_query_results(query_res=res, edges=[['s', 'o', 'p']], rankdir=rankdir, same_color=True)
+    G = visualize_query_results(query_res=res, edges=[['s', 'o', 'p']], rankdir=rankdir, same_color=same_color)
     return G
 
 def _graph2(rdf_graph, rankdir, mappings, on, **kwargs):
@@ -224,14 +224,14 @@ def rdflib_query(dataset, file, outputroot, outputfile):
         outputfile = ensure_dir_exists(outputfile)
         res.to_csv(outputfile, index=False)
 
-def rdflib_graph(dataset, rankdir, mappings, on, outputroot, outputfile, outputformats):
+def rdflib_graph(dataset, rankdir, mappings, on, samecolor, outputroot, outputfile, outputformats):
     """Visualize a dataset"""
     update_outputroot(outputroot)
 
     # Load a RDF dataset
     (rdf_graph, _) = load_rdf_dataset(dataset)
     # Convert a RDF graph object to a Graphviz graph object
-    G = _graph(rdf_graph, rankdir, mappings, on)
+    G = _graph(rdf_graph, rankdir, mappings, on, samecolor)
 
     # Save the graph
     outputfile = ensure_dir_exists(outputfile)
