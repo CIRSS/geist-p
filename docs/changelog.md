@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.0.2
+## v0.1.0
 
 - Add [documentation](https://cirss.github.io/geist-p)
 - Add the component tag to extract connected components of a given graph
