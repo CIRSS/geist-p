@@ -1,9 +1,48 @@
-import click, jinja2, json, sys
+import click, json, sys
 from geist.commands.cli import cli
 from geist.tools.utils import ensure_dir_exists, get_content, update_outputroot, include_filepaths, generate_template_class, map_df
 from geist.tools.filters import head, json2df, json2dict, dict2df, df2htmltable, escape_quotes, process_str_for_html
+from jinja2 import nodes, Environment, FileSystemLoader
+from jinja2.compiler import CodeGenerator, Frame
 from jinja2_simple_tags import StandaloneTag, ContainerTag
 import pygraphviz as pgv
+
+class CustomCodeGenerator(CodeGenerator):
+    def visit_AssignBlock(self, node: nodes.AssignBlock, frame: Frame) -> None:
+        self.push_assign_tracking()
+        block_frame = frame.inner()
+        # This is a special case.  Since a set block always captures we
+        # will disable output checks. This way one can use set blocks
+        # toplevel even in extended templates.
+        block_frame.require_output_check = False
+        block_frame.symbols.analyze_node(node)
+        self.enter_frame(block_frame)
+        self.buffer(block_frame)
+        self.blockvisit(node.body, block_frame)
+        self.newline(node)
+
+        # Ref: https://github.com/dldevinc/jinja2-simple-tags/issues/7
+        # This added block of code makes it possible to return any object instead of a string for a ContainerTag
+        self.writeline(f"if len({block_frame.buffer}) == 1 and not isinstance({block_frame.buffer}[0], str):")
+        self.indent()
+        self.newline()
+        self.visit(node.target, frame)
+        self.write(f" = {block_frame.buffer}[0]")
+        self.outdent()
+        self.writeline("else:")
+        self.indent()
+        self.newline()
+
+        self.visit(node.target, frame)
+        self.write(" = (Markup if context.eval_ctx.autoescape else identity)(")
+        if node.filter is not None:
+            self.visit_Filter(node.filter, block_frame)
+        else:
+            self.write(f"concat({block_frame.buffer})")
+        self.write(")")
+        self.outdent()
+        self.pop_assign_tracking(frame)
+        self.leave_frame(block_frame)
 
 class CreateExtension(ContainerTag):
     tags = {"create"}
@@ -44,11 +83,11 @@ class QueryExtension(ContainerTag):
         if datastore == "rdflib":
             from geist.datastore.rdflib import load_rdf_dataset, query2df
             (rdf_graph, _) = load_rdf_dataset(dataset)
-            res = query2df(rdf_graph, content).to_json()
+            res = query2df(rdf_graph, content)
         elif datastore == "duckdb":
             from geist.datastore.duckdb import load_sql_dataset
             conn = load_sql_dataset(dataset)
-            res = conn.sql(content).df().to_json()
+            res = conn.sql(content).df()
             conn.close()
         else:
             raise ValueError("Invalid datastore. Only rdflib and duckdb are supported for now.")
@@ -110,7 +149,7 @@ class MapExtension(ContainerTag):
     def render(self, isfilepath=True, mappings=None, on=None, caller=None):
         df = json2df(get_content(environment.from_string(str(caller())).render(), isfilepath))
         df = map_df(df, mappings, on)
-        return df.to_json()
+        return df
 
 class UseExtension(StandaloneTag):
     tags = {"use"}
@@ -176,8 +215,8 @@ def report(file, outputroot, suppressoutput):
     update_outputroot(outputroot)
 
     global environment
-    environment = jinja2.Environment(
-        loader=jinja2.FileSystemLoader("./"), 
+    environment = Environment(
+        loader=FileSystemLoader("./"), 
         trim_blocks=True, 
         extensions=[CreateExtension, LoadExtension, QueryExtension, DestroyExtension, GraphExtension, Graph2Extension, ComponentExtension, MapExtension, UseExtension, HtmlExtension, ImgExtension, TableExtension]
     )
@@ -188,6 +227,7 @@ def report(file, outputroot, suppressoutput):
     environment.filters['df2htmltable'] = df2htmltable
     environment.filters['escape_quotes'] = escape_quotes
     environment.filters['process_str_for_html'] = process_str_for_html
+    environment.code_generator_class = CustomCodeGenerator
 
     # Define custom tags based on files with the "use" tag
     content = file.read()

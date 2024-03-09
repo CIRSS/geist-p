@@ -1,6 +1,7 @@
 from geist.tools.utils import update_outputroot, ensure_dir_exists, map_df, df2nt
 from geist.tools.filters import csv2df, escape_quotes
-import click, jinja2, pickle, json, os, ast
+import click, pickle, json, os, ast
+from jinja2 import Environment
 from io import StringIO
 import pandas as pd
 import pygraphviz as pgv
@@ -114,7 +115,7 @@ def visualize_query_results_without_pygraphviz(query_res, edges, rankdir="TB", s
     :return g: a string of Graphviz DOT language
     """
 
-    graph2_env = jinja2.Environment()
+    graph2_env = Environment()
     graph2_env.globals['enumerate'] = enumerate
     graph2_env.filters['escape_quotes'] = escape_quotes
     gv = graph2_env.from_string("""

@@ -25,18 +25,16 @@ geist report -oroot products << END_TEMPLATE
 {% query "fish", datastore="duckdb", isfilepath=False as edges %}
     {% query_duckdb_edges %}
 {% endquery %}
-{% set edgesdf = edges | json2df %}
 
 {% create "fish", datastore="rdflib", inputformat="nt", isfilepath=False %}
-    {%- for _, row in edgesdf.iterrows() %}
+    {%- for _, row in edges.iterrows() %}
         {% format_triples row.startnode, row.edge, row.endnode %}
     {% endfor -%}
 {% endcreate %}
 
-{% query "fish", datastore="rdflib", isfilepath=False as res %}
+{% query "fish", datastore="rdflib", isfilepath=False as subgraph %}
     {% query_rdflib_subfish %}
 {% endquery %}
-{% set subgraph = res | json2df %}
 {% create "subfish", datastore="rdflib", inputformat="nt", isfilepath=False %}
     {% for _, row in subgraph.iterrows() %}
         {% format_subfish row.node1, row.node2, row.node3 %}
@@ -53,7 +51,7 @@ geist report -oroot products << END_TEMPLATE
     <li>Start node times edge equals to the end node.</li>
 
     Below shows the first 5 rows of the fish table:
-    {{ edgesdf | head | df2htmltable }}
+    {{ edges | head | df2htmltable }}
 
     <h4>1. Visualization of the Fish Graph</h4>
     {% img src="fish.svg", width="80%%" %}
