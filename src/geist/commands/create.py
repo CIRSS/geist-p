@@ -13,7 +13,7 @@ def create():
 @click.option('--colnames', default=None, type=str, help='Column names of triples with the format of [[subject1, predicate1, object1], [subject2, predicate2, object2], ...] when the input format is csv')
 @click.option('--infer', default='none', type=click.Choice(['none', 'rdfs', 'owl', 'rdfs_owl']), help='Inference to perform on update [none, rdfs, owl, rdfs_owl] (default "none")')
 def rdflib(dataset, inputfile, inputformat, colnames, infer):
-    """Create a new RDF dataset"""
+    """Create a new RDF dataset using RDFLib"""
     from geist.datastore.rdflib import rdflib_create
     rdflib_create(dataset, inputfile.read(), inputformat, colnames, infer)
 

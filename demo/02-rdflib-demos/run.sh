@@ -206,14 +206,13 @@ geist report << END_TEMPLATE
     <http://example.com/drewp> <http://example.com/says> "Hello World" .
 {% endcreate %}
 
-{% query datastore="rdflib", isfilepath=False as res %}
+{% query datastore="rdflib", isfilepath=False as all_triples %}
     SELECT ?s ?p ?o
     WHERE {
         ?s ?p ?o
     }
     ORDER BY ?s ?p ?o
 {% endquery %}
-{% set all_triples = res | json2df %}
 
 {% for _, row in all_triples.iterrows() %}
     Subject: {{ row["s"] }}, Predicate: {{ row["p"] }}, Object: {{ row["o"] }}.
@@ -237,14 +236,13 @@ s,p,o
 <http://example.com/drewp>,<http://example.com/says>,"Hello World"
 {% endcreate %}
 
-{% query "test", datastore="rdflib", isfilepath=False as res %}
+{% query "test", datastore="rdflib", isfilepath=False as all_triples %}
     SELECT ?s ?p ?o
     WHERE {
         ?s ?p ?o
     }
     ORDER BY ?s ?p ?o
 {% endquery %}
-{% set all_triples = res | json2df %}
 
 {% for _, row in all_triples.iterrows() %}
     Subject: {{ row["s"] }}, Predicate: {{ row["p"] }}, Object: {{ row["o"] }}.
@@ -264,8 +262,7 @@ geist report -oroot products << END_TEMPLATE
 
 {% create datastore="rdflib", inputformat="csv", colnames="[['s', 'p', 'o']]" %} data/kb.csv {% endcreate %}
 
-{% query datastore="rdflib" as res %} data/query {% endquery %}
-{% set all_triples = res | json2df %}
+{% query datastore="rdflib" as all_triples %} data/query {% endquery %}
 
 {%- html "report.html" %}
 <body>
@@ -309,7 +306,7 @@ geist report << END_TEMPLATE
     <http://example.com/test> <http://example.com/p2> <http://example.com/feels>.
 {% endcreate %}
 
-{%- query "kb1", datastore="rdflib", isfilepath=False as res %}
+{%- query "kb1", datastore="rdflib", isfilepath=False as all_triples %}
     SELECT ?s ?o
     WHERE {
         ?s ?p ?o
@@ -317,12 +314,10 @@ geist report << END_TEMPLATE
                             SELECT ?p 
                             WHERE {?s <http://example.com/p1> ?p}
                         {% endquery %}
-                        {% set p = res | json2df %}
-                        {{", ".join(p["p"])}}))
+                        {{", ".join(res["p"])}}))
     }
     ORDER BY ?s ?o
 {% endquery %}
-{% set all_triples = res | json2df %}
 
 {% for _, row in all_triples.iterrows() %}
     {% format_output row["s"], row["o"] %}.

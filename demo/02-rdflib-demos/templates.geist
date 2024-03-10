@@ -12,14 +12,13 @@
 
 {% template query_with_args %}
     {% for p in ["<http://example.com/says>", "<http://example.com/feels>"] %}
-        {% query "kb1", datastore="rdflib", isfilepath=False as res %}
+        {% query "kb1", datastore="rdflib", isfilepath=False as all_triples %}
             SELECT ?s ?o
             WHERE {
                 ?s {{ p }} ?o
             }
             ORDER BY ?s ?o
         {% endquery %}
-        {% set all_triples = res | json2df %}
 
         {% for _, row in all_triples.iterrows() -%}
             {{ row["s"] }} -- {{ p }} --> {{ row["o"] }}

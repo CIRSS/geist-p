@@ -46,6 +46,7 @@ Geist supports the following filters:
 
 - **json2df**: convert a JSON string to a Pandas data frame
 - **json2dict**: convert a JSON string to a dictionary
+- **df2json**: convert a Pandas data frame to a JSON string
 - **df2htmltable**: convert a Pandas data frame to an HTML table
 - **escape_quotes**: escape both double and single quotation marks
 - **process_str_for_html**: preprocess a string to be displayed within an HTML document, e.g., replace `<` with `&lt`
@@ -74,25 +75,24 @@ Geist supports the following filters:
         ```
         geist report << END_TEMPLATE
 
-        {% create inputformat="nt", isfilepath=False %}
+        {% create "test", datastore="rdflib", inputformat="nt", isfilepath=False %}
             <http://example.com/drewp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
             <http://example.com/drewp> <http://example.com/says> "Hello World" .
         {% endcreate %}
 
-        {% query isfilepath=False as res %}
+        {% query "test", datastore="rdflib", isfilepath=False as all_triples %}
             SELECT ?s ?p ?o
             WHERE {
                 ?s ?p ?o
             }
             ORDER BY ?s ?p ?o
         {% endquery %}
-        {% set all_triples = res | json2df %}
 
         {% for _, row in all_triples.iterrows() %}
             Subject: {{ row["s"] }}, Predicate: {{ row["p"] }}, Object: {{ row["o"] }}.
         {% endfor %}
 
-        {% destroy %}
+        {% destroy "test", datastore="rdflib" %}
 
         END_TEMPLATE
         ```
@@ -105,25 +105,24 @@ Geist supports the following filters:
 
         Here is the report.geist file:
         ```
-        {% create inputformat="nt", isfilepath=False %}
+        {% create "test", datastore="rdflib", inputformat="nt", isfilepath=False %}
             <http://example.com/drewp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
             <http://example.com/drewp> <http://example.com/says> "Hello World" .
         {% endcreate %}
 
-        {% query isfilepath=False as res %}
+        {% query "test", datastore="rdflib", isfilepath=False as all_triples %}
             SELECT ?s ?p ?o
             WHERE {
                 ?s ?p ?o
             }
             ORDER BY ?s ?p ?o
         {% endquery %}
-        {% set all_triples = res | json2df %}
 
         {% for _, row in all_triples.iterrows() %}
             Subject: {{ row["s"] }}, Predicate: {{ row["p"] }}, Object: {{ row["o"] }}.
         {% endfor %}
 
-        {% destroy %}
+        {% destroy "test", datastore="rdflib" %}
         ```
 
 

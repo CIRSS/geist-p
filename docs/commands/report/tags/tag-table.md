@@ -1,4 +1,4 @@
-The `table` tag embed query results to HTML as a table. Here are parameters of the `table` tag:
+The `table` tag embeds query results to HTML as a table. Please make sure the stdin is a JSON string. Here are parameters of the `table` tag:
 
 | Name      | Description                                                    |
 |-----------|----------------------------------------------------------------|
@@ -17,6 +17,18 @@ The `table` tag embed query results to HTML as a table. Here are parameters of t
             }
             ORDER BY ?s ?p ?o
         {% endquery %}
-        {{ query_results }}
+        {{ query_results | df2json }}
     {% endtable %}
+    ```
+
+    It can also be done with the *df2htmltable* filter:
+    ```
+    {%- query isfilepath=False as query_results %}
+        SELECT ?s ?p ?o
+        WHERE {
+            ?s ?p ?o
+        }
+        ORDER BY ?s ?p ?o
+    {% endquery %}
+    {{ query_results | df2htmltable }}
     ```

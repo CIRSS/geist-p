@@ -42,6 +42,14 @@ def dict2df(dict):
     """
     return pd.DataFrame(dict)
 
+def df2json(df):
+    """
+    This function is to convert a Pandas data frame to a JSON string
+    :param df: a Pandas data frame
+    :return json_str: a JSON string
+    """
+    return df.to_json()
+
 def df2htmltable(df):
     """
     This function is to convert a Pandas data frame to an HTML table

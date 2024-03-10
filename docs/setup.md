@@ -1,10 +1,10 @@
 # Setup
 
-Geist will be available on PyPI. You should be able to install it via `pip install geist` in the near future.
+Before installing Geist, please make sure [Graphviz](https://graphviz.org/download/) is installed.
 
-For now, the best way to get it is through GitHub:
+Install Geist:
 ```python
-pip install geist-p@git+https://github.com/CIRSS/geist-p
+pip install geist-p
 ```
 
 To check Geist is working, run `geist` in the command line. You should get the following output:
@@ -15,11 +15,11 @@ Options:
   --help  Show this message and exit.
 
 Commands:
-  create   Create a new RDF dataset
-  destroy  Delete an RDF dataset
-  export   Export an RDF graph
-  graph    Visualize an RDF dataset
-  load     Import data into an RDF dataset
-  query    Perform a SPARQL query on an RDF dataset
-  report   Expand a report using an RDF dataset
+  create   Create a new dataset
+  destroy  Delete a dataset
+  export   Export a dataset
+  graph    Visualize a dataset
+  load     Import data into a dataset
+  query    Perform a query on a dataset
+  report   Expand a report using a dataset
 ```

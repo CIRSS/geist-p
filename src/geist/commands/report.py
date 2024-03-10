@@ -1,7 +1,7 @@
 import click, json, sys
 from geist.commands.cli import cli
 from geist.tools.utils import ensure_dir_exists, get_content, update_outputroot, include_filepaths, generate_template_class, map_df
-from geist.tools.filters import head, json2df, json2dict, dict2df, df2htmltable, escape_quotes, process_str_for_html
+from geist.tools.filters import head, json2df, json2dict, dict2df, df2json, df2htmltable, escape_quotes, process_str_for_html
 from jinja2 import nodes, Environment, FileSystemLoader
 from jinja2.compiler import CodeGenerator, Frame
 from jinja2_simple_tags import StandaloneTag, ContainerTag
@@ -220,13 +220,8 @@ def report(file, outputroot, suppressoutput):
         trim_blocks=True, 
         extensions=[CreateExtension, LoadExtension, QueryExtension, DestroyExtension, GraphExtension, Graph2Extension, ComponentExtension, MapExtension, UseExtension, HtmlExtension, ImgExtension, TableExtension]
     )
-    environment.filters['head'] = head
-    environment.filters['json2df'] = json2df
-    environment.filters['json2dict'] = json2dict
-    environment.filters['dict2df'] = dict2df
-    environment.filters['df2htmltable'] = df2htmltable
-    environment.filters['escape_quotes'] = escape_quotes
-    environment.filters['process_str_for_html'] = process_str_for_html
+    for filter in ["head", "json2df", "json2dict", "dict2df", "df2json", "df2htmltable", "escape_quotes", "process_str_for_html"]:
+        environment.filters[filter] = globals()[filter]
     environment.code_generator_class = CustomCodeGenerator
 
     # Define custom tags based on files with the "use" tag

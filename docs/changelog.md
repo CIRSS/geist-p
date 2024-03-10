@@ -3,6 +3,7 @@
 ## v0.2.0
 
 - SQL queries are supported by GEIST based on [duckdb](https://duckdb.org)
+- Update ContainerTag: return objects of any type, not just strings
 
 ## v0.1.0
 
