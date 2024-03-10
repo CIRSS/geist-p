@@ -1000,17 +1000,52 @@
 
   <h1>Command load</h1>
 
-<p><em>load</em> command can import data into an existing RDF dataset.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">CLI</label><label for="__tabbed_1_2">Geist Template</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<p>Here are options of the <em>load</em> command:
-<div class="highlight"><pre><span></span><code>Usage: geist load [OPTIONS]
+<p><em>load</em> command can import data into an existing dataset.</p>
+<p>There are two subcommands for <em>load</em>:
+<div class="highlight"><pre><span></span><code>Usage: geist load [OPTIONS] COMMAND [ARGS]...
 
-Import data into an RDF dataset
+Import data into a dataset
 
 Options:
--d, --dataset TEXT              Name of RDF dataset to create (default &quot;kb&quot;)
+  --help  Show this message and exit.
+
+Commands:
+  duckdb  Import data into a SQL dataset
+  rdflib  Import data into a RDF dataset
+</code></pre></div></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">CLI: duckdb</label><label for="__tabbed_1_2">CLI: rdflib</label><label for="__tabbed_1_3">Geist Template</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>Usage: geist load duckdb [OPTIONS]
+
+Import data into a SQL dataset
+
+Options:
+-d, --dataset TEXT              Name of SQL dataset to load a file (default
+                                &quot;kb&quot;)
+-ifile, --inputfile FILENAME    Path of the file to be loaded as a table
+                                [required]
+-iformat, --inputformat [csv|json]
+                                Format of the file to be loaded as a table
+                                (default csv)
+-t, --table TEXT                Name of the table to be created  [required]
+--help                          Show this message and exit.
+</code></pre></div>
+<details class="example">
+<summary>Example: load a file into the <code>test</code> dataset</summary>
+<div class="highlight"><pre><span></span><code>geist load duckdb --dataset test --inputfile test_add.csv --inputformat csv --table df
+</code></pre></div>
+</details>
+</div>
+<div class="tabbed-block">
+<p>Here are options of the <em>load</em> command:
+<div class="highlight"><pre><span></span><code>Usage: geist load rdflib [OPTIONS]
+
+Import data into a RDF dataset
+
+Options:
+-d, --dataset TEXT              Name of RDF dataset to load a file (default
+                                &quot;kb&quot;)
 -ifile, --inputfile FILENAME    Path of the file to be loaded as triples
                                 [required]
 -iformat, --inputformat [xml|n3|turtle|nt|pretty-xml|trix|trig|nquads|json-ld|hext|csv]
@@ -1024,7 +1059,7 @@ Options:
 </code></pre></div></p>
 <details class="example">
 <summary>Example: load a file into the <code>test</code> dataset</summary>
-<div class="highlight"><pre><span></span><code>geist load --dataset test --inputfile test_add.jsonld
+<div class="highlight"><pre><span></span><code>geist load rdflib --dataset test --inputfile test_add.jsonld
 </code></pre></div>
 </details>
 </div>

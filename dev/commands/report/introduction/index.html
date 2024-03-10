@@ -1187,6 +1187,7 @@
 <ul>
 <li><strong>json2df</strong>: convert a JSON string to a Pandas data frame</li>
 <li><strong>json2dict</strong>: convert a JSON string to a dictionary</li>
+<li><strong>df2json</strong>: convert a Pandas data frame to a JSON string</li>
 <li><strong>df2htmltable</strong>: convert a Pandas data frame to an HTML table</li>
 <li><strong>escape_quotes</strong>: escape both double and single quotation marks</li>
 <li><strong>process_str_for_html</strong>: preprocess a string to be displayed within an HTML document, e.g., replace <code>&lt;</code> with <code>&amp;lt</code></li>
@@ -1212,25 +1213,24 @@ Options:
 <summary>Example 1: expand a report from stdin</summary>
 <div class="highlight"><pre><span></span><code>geist report &lt;&lt; END_TEMPLATE
 
-{% create inputformat=&quot;nt&quot;, isfilepath=False %}
+{% create &quot;test&quot;, datastore=&quot;rdflib&quot;, inputformat=&quot;nt&quot;, isfilepath=False %}
     &lt;http://example.com/drewp&gt; &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://xmlns.com/foaf/0.1/Person&gt; .
     &lt;http://example.com/drewp&gt; &lt;http://example.com/says&gt; &quot;Hello World&quot; .
 {% endcreate %}
 
-{% query isfilepath=False as res %}
+{% query &quot;test&quot;, datastore=&quot;rdflib&quot;, isfilepath=False as all_triples %}
     SELECT ?s ?p ?o
     WHERE {
         ?s ?p ?o
     }
     ORDER BY ?s ?p ?o
 {% endquery %}
-{% set all_triples = res | json2df %}
 
 {% for _, row in all_triples.iterrows() %}
     Subject: {{ row[&quot;s&quot;] }}, Predicate: {{ row[&quot;p&quot;] }}, Object: {{ row[&quot;o&quot;] }}.
 {% endfor %}
 
-{% destroy %}
+{% destroy &quot;test&quot;, datastore=&quot;rdflib&quot; %}
 
 END_TEMPLATE
 </code></pre></div>
@@ -1240,25 +1240,24 @@ END_TEMPLATE
 <div class="highlight"><pre><span></span><code>geist report --file report.geist
 </code></pre></div>
 <p>Here is the report.geist file:
-<div class="highlight"><pre><span></span><code>{% create inputformat=&quot;nt&quot;, isfilepath=False %}
+<div class="highlight"><pre><span></span><code>{% create &quot;test&quot;, datastore=&quot;rdflib&quot;, inputformat=&quot;nt&quot;, isfilepath=False %}
     &lt;http://example.com/drewp&gt; &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://xmlns.com/foaf/0.1/Person&gt; .
     &lt;http://example.com/drewp&gt; &lt;http://example.com/says&gt; &quot;Hello World&quot; .
 {% endcreate %}
 
-{% query isfilepath=False as res %}
+{% query &quot;test&quot;, datastore=&quot;rdflib&quot;, isfilepath=False as all_triples %}
     SELECT ?s ?p ?o
     WHERE {
         ?s ?p ?o
     }
     ORDER BY ?s ?p ?o
 {% endquery %}
-{% set all_triples = res | json2df %}
 
 {% for _, row in all_triples.iterrows() %}
     Subject: {{ row[&quot;s&quot;] }}, Predicate: {{ row[&quot;p&quot;] }}, Object: {{ row[&quot;o&quot;] }}.
 {% endfor %}
 
-{% destroy %}
+{% destroy &quot;test&quot;, datastore=&quot;rdflib&quot; %}
 </code></pre></div></p>
 </details>
 </div>

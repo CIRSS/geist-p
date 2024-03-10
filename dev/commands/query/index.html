@@ -1000,19 +1000,31 @@
 
   <h1>Command query</h1>
 
-<p><em>query</em> command can perform a SPARQL query on a dataset.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">CLI</label><label for="__tabbed_1_2">Geist Template</label></div>
+<p><em>query</em> command can perform a query on a dataset.</p>
+<p>There are two subcommands for <em>query</em>:
+<div class="highlight"><pre><span></span><code>Usage: geist query [OPTIONS] COMMAND [ARGS]...
+
+  Perform a query on a dataset
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  duckdb  Perform a SQL query on a dataset
+  rdflib  Perform a SPARQL query on a dataset
+</code></pre></div></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">CLI: duckdb</label><label for="__tabbed_1_2">CLI: rdflib</label><label for="__tabbed_1_3">Geist Template</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<p>Here are options of the <em>query</em> command:
-<div class="highlight"><pre><span></span><code>Usage: geist query [OPTIONS]
+<div class="highlight"><pre><span></span><code>Usage: geist query duckdb [OPTIONS]
 
-Perform a SPARQL query on a dataset
+Perform a SQL query on a dataset
 
 Options:
 -d, --dataset TEXT         Name of RDF dataset to be queried (default &quot;kb&quot;)
---file FILENAME            Path of the file containing the SPARQL query to
-                            execute  [required]
+--file FILENAME            Specify either the path of the file containing
+                            the SQL query to execute or provide the SQL query
+                            itself via stdin  [required]
 -oroot, --outputroot TEXT  Path of the directory to store the query results
                             (default: current directory). If the given path
                             (i.e., --outputfile) is None or a relative path,
@@ -1020,10 +1032,46 @@ Options:
 -ofile, --outputfile TEXT  Path of the file to store the query results
                             (default: None)
 --help                     Show this message and exit.
+</code></pre></div>
+<details class="example">
+<summary>Example 1: all rows of the <code>df</code> table in <code>test</code> dataset from stdin</summary>
+<div class="highlight"><pre><span></span><code>geist query duckdb --dataset test &lt;&lt; __END_QUERY__
+
+SELECT * FROM df
+
+__END_QUERY__
+</code></pre></div>
+</details>
+<details class="example">
+<summary>Example 2: all rows of the <code>test</code> dataset from a query file</summary>
+<div class="highlight"><pre><span></span><code>geist query duckdb --dataset test --file query_file
+</code></pre></div>
+<p>Here is the query_file's content:
+<div class="highlight"><pre><span></span><code>SELECT * FROM df
 </code></pre></div></p>
+</details>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>Usage: geist query rdflib [OPTIONS]
+
+Perform a SPARQL query on a dataset
+
+Options:
+-d, --dataset TEXT         Name of RDF dataset to be queried (default &quot;kb&quot;)
+--file FILENAME            Specify either the path of the file containing
+                            the SPARQL query to execute or provide the SPARQL
+                            query itself via stdin  [required]
+-oroot, --outputroot TEXT  Path of the directory to store the query results
+                            (default: current directory). If the given path
+                            (i.e., --outputfile) is None or a relative path,
+                            it will be ignored.
+-ofile, --outputfile TEXT  Path of the file to store the query results
+                            (default: None)
+--help                     Show this message and exit.
+</code></pre></div>
 <details class="example">
 <summary>Example 1: all triples of the <code>test</code> dataset from stdin</summary>
-<div class="highlight"><pre><span></span><code>geist query &lt;&lt; __END_QUERY__
+<div class="highlight"><pre><span></span><code>geist query rdflib --dataset test &lt;&lt; __END_QUERY__
 
 SELECT ?s ?p ?o
 WHERE {
@@ -1036,7 +1084,7 @@ __END_QUERY__
 </details>
 <details class="example">
 <summary>Example 2: all triples of the <code>test</code> dataset from a query file</summary>
-<div class="highlight"><pre><span></span><code>geist query --file query_file
+<div class="highlight"><pre><span></span><code>geist query rdflib --dataset test --file query_file
 </code></pre></div>
 <p>Here is the query_file's content:
 <div class="highlight"><pre><span></span><code>SELECT ?s ?p ?o

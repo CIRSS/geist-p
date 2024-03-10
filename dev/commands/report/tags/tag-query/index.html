@@ -1004,7 +1004,7 @@
 
   <h1>Tag query</h1>
 
-<p>The <code>query</code> tag imports data into a dataset. Here are parameters of the <code>query</code> tag:</p>
+<p>The <code>query</code> tag performs a query on a dataset and returns a Pandas DataFrame. Here are parameters of the <code>query</code> tag:</p>
 <table>
 <thead>
 <tr>
@@ -1015,7 +1015,11 @@
 <tbody>
 <tr>
 <td><code>dataset</code></td>
-<td>Name of RDF dataset to be removed (default "kb")</td>
+<td>Name of a dataset to query (default "kb")</td>
+</tr>
+<tr>
+<td><code>datastore</code></td>
+<td>Data backend. <code>duckdb</code> and <code>rdflib</code> are available for now. (by default, "rdflib")</td>
 </tr>
 <tr>
 <td><code>isfilepath</code></td>
@@ -1025,7 +1029,7 @@
 </table>
 <details class="example">
 <summary>Example 1: the given string is not a file path</summary>
-<div class="highlight"><pre><span></span><code>{% query dataset=&quot;test&quot;, isfilepath=False %}
+<div class="highlight"><pre><span></span><code>{% query &quot;test&quot;, datastore=&quot;rdflib&quot;, isfilepath=False %}
     SELECT ?s ?p ?o
     WHERE {
         ?s ?p ?o
@@ -1036,7 +1040,7 @@
 </details>
 <details class="example">
 <summary>Example 2: the given string is a file path</summary>
-<p><div class="highlight"><pre><span></span><code>{% query dataset=&quot;test&quot;, isfilepath=True %} query_file {% endquery %}
+<p><div class="highlight"><pre><span></span><code>{% query &quot;test&quot;, datastore=&quot;rdflib&quot;, isfilepath=True %} query_file {% endquery %}
 </code></pre></div>
 Here is the query_file's content:
 <div class="highlight"><pre><span></span><code>SELECT ?s ?p ?o

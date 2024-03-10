@@ -1000,14 +1000,52 @@
 
   <h1>Command export</h1>
 
-<p><em>export</em> command can export an RDF dataset.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">CLI</label></div>
+<p><em>export</em> command can export a dataset.</p>
+<p>There are two subcommands for <em>export</em>:
+<div class="highlight"><pre><span></span><code>Usage: geist export [OPTIONS] COMMAND [ARGS]...
+
+  Export a dataset
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  duckdb  Export a SQL dataset
+  rdflib  Export an RDF dataset
+</code></pre></div></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">CLI: duckdb</label><label for="__tabbed_1_2">CLI: rdflib</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<p>Here are options of the <em>export</em> command:
-<div class="highlight"><pre><span></span><code>Usage: geist export [OPTIONS]
+<div class="highlight"><pre><span></span><code>Usage: geist export duckdb [OPTIONS]
 
-    Export an RDF graph
+Export a SQL dataset
+
+Options:
+-d, --dataset TEXT              Name of SQL dataset to be exported (default
+                                &quot;kb&quot;)
+-oroot, --outputroot TEXT       Path of the directory to store the exported
+                                table (default: current directory). If the
+                                given path (i.e., --outputfile) is None or a
+                                relative path, it will be ignored.
+-ofile, --outputfile TEXT       Path of the file to store the exported table
+                                (default: None)
+-oformat, --outputformat [csv|json]
+                                Format of the exported table (default csv)
+-t, --table TEXT                Name of the table to be exported (default
+                                &quot;df&quot;)
+--help                          Show this message and exit.
+</code></pre></div>
+<details class="example">
+<summary>Example: export the <code>df</code> table in <code>test</code> dataset</summary>
+<p>By default, the exported table will be printed in terminal:
+<div class="highlight"><pre><span></span><code>geist export duckdb --dataset test --table df
+</code></pre></div></p>
+</details>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>Usage: geist export rdflib [OPTIONS]
+
+Export an RDF dataset
 
 Options:
 -d, --dataset TEXT              Name of RDF dataset to be exported (default
@@ -1022,11 +1060,11 @@ Options:
 -oformat, --outputformat [json-ld|n3|nquads|nt|hext|pretty-xml|trig|trix|turtle|longturtle|xml]
                                 Format of the exported triples (default nt)
 --help                          Show this message and exit.
-</code></pre></div></p>
+</code></pre></div>
 <details class="example">
 <summary>Example: export the <code>test</code> dataset</summary>
 <p>By default, the exported triples will be printed in terminal:
-<div class="highlight"><pre><span></span><code>geist export --dataset test
+<div class="highlight"><pre><span></span><code>geist export rdflib --dataset test
 </code></pre></div></p>
 </details>
 </div>

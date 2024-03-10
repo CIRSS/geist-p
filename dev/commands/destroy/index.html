@@ -1000,27 +1000,58 @@
 
   <h1>Command destroy</h1>
 
-<p><em>destroy</em> command can delete an RDF dataset. The PKL file of the corresponding dataset will be discarded.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">CLI</label><label for="__tabbed_1_2">Geist Template</label></div>
+<p><em>destroy</em> command can delete a dataset. The <code>.duckdb</code> or the <code>.pkl</code> file of the corresponding dataset will be discarded.</p>
+<p>There are two subcommands for <em>destroy</em>:
+<div class="highlight"><pre><span></span><code>Usage: geist destroy [OPTIONS] COMMAND [ARGS]...
+
+  Delete a dataset
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  duckdb  Delete a SQL dataset
+  rdflib  Delete an RDF dataset
+</code></pre></div></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">CLI: duckdb</label><label for="__tabbed_1_2">CLI: rdflib</label><label for="__tabbed_1_3">Geist Template</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<p>Here are options of the <em>destroy</em> command:
-<div class="highlight"><pre><span></span><code>Usage: geist destroy [OPTIONS]
+<div class="highlight"><pre><span></span><code>Usage: geist destroy duckdb [OPTIONS]
 
-    Delete an RDF dataset
+Delete a SQL dataset
+
+Options:
+-d, --dataset TEXT  Name of SQL dataset to be removed (default &quot;kb&quot;)
+-q, --quiet         Suppress error messages if the provided dataset does not
+                    exist
+--help              Show this message and exit.
+</code></pre></div>
+<details class="example">
+<summary>Example: delete the <code>test</code> dataset</summary>
+<div class="highlight"><pre><span></span><code>geist destroy duckdb --dataset test
+</code></pre></div>
+<p>The <code>.geistdata/duckdb/test.duckdb</code> file will be removed after this operation. By default, you will get an error message if the provided dataset (in this case, it is the <code>test</code> dataset) does not exist. To suppress this error message, you can add <code>--quiet</code>:</p>
+<div class="highlight"><pre><span></span><code>geist destroy duckdb --dataset test --quiet
+</code></pre></div>
+</details>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>Usage: geist destroy rdflib [OPTIONS]
+
+Delete an RDF dataset
 
 Options:
 -d, --dataset TEXT  Name of RDF dataset to be removed (default &quot;kb&quot;)
 -q, --quiet         Suppress error messages if the provided dataset does not
                     exist
 --help              Show this message and exit.
-</code></pre></div></p>
+</code></pre></div>
 <details class="example">
 <summary>Example: delete the <code>test</code> dataset</summary>
-<div class="highlight"><pre><span></span><code>geist destroy --dataset test
+<div class="highlight"><pre><span></span><code>geist destroy rdflib --dataset test
 </code></pre></div>
-<p>The <code>.geistdata/test.pkl</code> file will be removed after this operation. By default, you will get an error message if the provided dataset (in this case, it is the <code>test</code> dataset) does not exist. To suppress this error message, you can add <code>--quiet</code>:</p>
-<div class="highlight"><pre><span></span><code>geist destroy --dataset test --quiet
+<p>The <code>.geistdata/rdflib/test.pkl</code> file will be removed after this operation. By default, you will get an error message if the provided dataset (in this case, it is the <code>test</code> dataset) does not exist. To suppress this error message, you can add <code>--quiet</code>:</p>
+<div class="highlight"><pre><span></span><code>geist destroy rdflib --dataset test --quiet
 </code></pre></div>
 </details>
 </div>

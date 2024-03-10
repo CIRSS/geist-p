@@ -1018,12 +1018,12 @@
 <td>Name of RDF dataset to create (by default, "kb")</td>
 </tr>
 <tr>
-<td><code>inputformat</code></td>
-<td>Format of the file to be loaded as triples (by default, "json-ld"). It has to be one of {"xml", "n3", "turtle", "nt", "pretty-xml", "trix", "trig", "nquads", "json-ld", "hext", "csv"}</td>
+<td><code>datastore</code></td>
+<td>Data backend. <code>duckdb</code> and <code>rdflib</code> are available for now. (by default, "rdflib")</td>
 </tr>
 <tr>
-<td><code>colnames</code></td>
-<td>Column names of triples with the format of [[subject1, predicate1, object1], [subject2, predicate2, object2], ...] when the input format is csv (by default, None)</td>
+<td><code>inputformat</code></td>
+<td>Format of the file to be loaded as triples (by default, "json-ld"). It has to be one of {"xml", "n3", "turtle", "nt", "pretty-xml", "trix", "trig", "nquads", "json-ld", "hext", "csv"}</td>
 </tr>
 <tr>
 <td><code>infer</code></td>
@@ -1033,11 +1033,19 @@
 <td><code>isfilepath</code></td>
 <td>A bool value to denote if the given data is a file path or not (by default: True, which denotes the given data is a file path)</td>
 </tr>
+<tr>
+<td><code>table</code></td>
+<td>Table name. Available for <code>duckdb</code> data backend only.</td>
+</tr>
+<tr>
+<td><code>colnames</code></td>
+<td>Column names of triples with the format of [[subject1, predicate1, object1], [subject2, predicate2, object2], ...] when the input format is csv (by default, None). Available for <code>rdflib</code> data backend only.</td>
+</tr>
 </tbody>
 </table>
 <details class="example">
 <summary>Example 1: the given string is not a file path</summary>
-<div class="highlight"><pre><span></span><code>{% create &quot;test&quot;, inputformat=&quot;nt&quot;, isfilepath=False %}
+<div class="highlight"><pre><span></span><code>{% create &quot;test&quot;, datastore=&quot;rdflib&quot;, inputformat=&quot;nt&quot;, isfilepath=False %}
     &lt;http://example.com/drewp&gt; &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://xmlns.com/foaf/0.1/Person&gt; .
     &lt;http://example.com/drewp&gt; &lt;http://example.com/says&gt; &quot;Hello World&quot; .
 {% endcreate %}
@@ -1050,7 +1058,7 @@
 &lt;http://example.com/drewp&gt; &lt;http://example.com/says&gt; &quot;Hello World&quot; .
 </code></pre></div>
 <p>Code:
-<div class="highlight"><pre><span></span><code>{% create &quot;test&quot;, inputformat=&quot;nt&quot;, isfilepath=True %} test.nt {% endcreate %}
+<div class="highlight"><pre><span></span><code>{% create &quot;test&quot;, datastore=&quot;rdflib&quot;, inputformat=&quot;nt&quot;, isfilepath=True %} test.nt {% endcreate %}
 </code></pre></div></p>
 </details>
 

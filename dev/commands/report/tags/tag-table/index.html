@@ -1004,7 +1004,7 @@
 
   <h1>Tag table</h1>
 
-<p>The <code>table</code> tag embed query results to HTML as a table. Here are parameters of the <code>table</code> tag:</p>
+<p>The <code>table</code> tag embeds query results to HTML as a table. Please make sure the stdin is a JSON string. Here are parameters of the <code>table</code> tag:</p>
 <table>
 <thead>
 <tr>
@@ -1033,9 +1033,19 @@
         }
         ORDER BY ?s ?p ?o
     {% endquery %}
-    {{ query_results }}
+    {{ query_results | df2json }}
 {% endtable %}
 </code></pre></div>
+<p>It can also be done with the <em>df2htmltable</em> filter:
+<div class="highlight"><pre><span></span><code>{%- query isfilepath=False as query_results %}
+    SELECT ?s ?p ?o
+    WHERE {
+        ?s ?p ?o
+    }
+    ORDER BY ?s ?p ?o
+{% endquery %}
+{{ query_results | df2htmltable }}
+</code></pre></div></p>
 </details>
 
 

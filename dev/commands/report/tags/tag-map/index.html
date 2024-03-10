@@ -1004,7 +1004,7 @@
 
   <h1>Tag map</h1>
 
-<p>The <code>map</code> replaces the original text in a Pandas data frame on selected columns (if provides) with the shorter ones based on the given mappings. By default, the given string is a file path. However, it can be updated by setting the <code>isfilepath</code> field to False. Here are parameters of the <code>map</code> tag:</p>
+<p>The <code>map</code> replaces the original string (JSON string) on selected columns (if provides) with the shorter ones based on the given mappings. By default, the given string is a file path. However, it can be updated by setting the <code>isfilepath</code> field to False. A Pandas DataFrame will be returned. Here are parameters of the <code>map</code> tag:</p>
 <table>
 <thead>
 <tr>
@@ -1028,10 +1028,12 @@
 </tbody>
 </table>
 <details class="example">
-<summary>data.csv</summary>
-<div class="highlight"><pre><span></span><code>v1,v2,v3
-test_a1,test_a2,test_a3
-test_b1,test_b2,test_b3
+<summary>data.json</summary>
+<div class="highlight"><pre><span></span><code>{
+    &quot;v1&quot;: {&quot;0&quot;:&quot;test_a1&quot;,&quot;1&quot;:&quot;test_b1&quot;,&quot;2&quot;:&quot;test_c1&quot;}, 
+    &quot;v2&quot;: {&quot;0&quot;:&quot;test_a2&quot;,&quot;1&quot;:&quot;test_b2&quot;,&quot;2&quot;:&quot;test_c2&quot;},
+    &quot;v3&quot;: {&quot;0&quot;:&quot;test_a3&quot;,&quot;1&quot;:&quot;test_b3&quot;,&quot;3&quot;:&quot;test_c3&quot;}
+}
 </code></pre></div>
 </details>
 <details class="example">
@@ -1041,22 +1043,26 @@ test_b1,test_b2,test_b3
 </details>
 <details class="example">
 <summary>Example 1: replace all columns</summary>
-<div class="highlight"><pre><span></span><code>{% map mappings=&quot;mappings.json&quot; %} data.csv {% endmap %}
+<div class="highlight"><pre><span></span><code>{%- map mappings=&quot;mappings.json&quot; as res %} data.json {% endmap %}
+{{ res }}
 </code></pre></div>
 <p>Expected output:
 <div class="highlight"><pre><span></span><code>v1,v2,v3
 a1,a2,a3
 b1,b2,b3
+c1,c2,c3
 </code></pre></div></p>
 </details>
 <details class="example">
 <summary>Example 2: replace selected columns</summary>
-<div class="highlight"><pre><span></span><code>{% map mappings=&quot;mappings.json&quot; on=[&quot;v1&quot;,&quot;v2&quot;] %} data.csv {% endmap %}
+<div class="highlight"><pre><span></span><code>{% map mappings=&quot;mappings.json&quot;, on=[&quot;v1&quot;,&quot;v2&quot;] as res %} data.json {% endmap %}
+{{ res }}
 </code></pre></div>
 <p>Expected output:
 <div class="highlight"><pre><span></span><code>v1,v2,v3
-test_a1,test_a2,a3
-test_b1,test_b2,b3
+a1,a2,test_a3
+b1,b2,test_b3
+c1,c2,test_c3
 </code></pre></div></p>
 <p>If only "v1" column need to be replaced, you can replace <code>on=["v1","v2"]</code> with <code>on="v1"</code>.</p>
 </details>
