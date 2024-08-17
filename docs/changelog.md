@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.1
+
+- Add the Geist Poster for [SciPy 2024](https://www.scipy2024.scipy.org)
+- Update the documentation: add descriptions for the demo of SciPy 2024
+
 ## v0.2.0
 
 - SQL queries are supported by GEIST based on [duckdb](https://duckdb.org)
