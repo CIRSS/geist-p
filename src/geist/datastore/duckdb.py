@@ -20,6 +20,13 @@ def inputfile2df(inputfile, inputformat):
         raise ValueError("Invalid input format. Only csv and json are supported for now.")
     return df
 
+def table2df(dataset, table='df'):
+    """Export a table from a SQL dataset as a Pandas data frame"""
+    conn = load_sql_dataset(dataset)
+    df = conn.sql(f"SELECT * FROM {table}").df()
+    conn.close()
+    return df
+
 @click.group()
 def cli():
     pass
@@ -48,18 +55,19 @@ def duckdb_load(dataset, inputfile, inputformat, table):
     conn.close()
     return
 
-def duckdb_query(dataset, file, outputroot, outputfile):
+def duckdb_query(dataset, inputfile, hasoutput, outputroot, outputfile):
     """Perform a SQL query on a dataset"""
     update_outputroot(outputroot)
     conn = load_sql_dataset(dataset)
-    res = conn.sql(file.read()).df()
-    if outputfile is None:
-        print(res.to_markdown())
-    else:
-        outputfile = ensure_dir_exists(outputfile)
-        res.to_csv(outputfile, index=False)
+    res = conn.sql(inputfile).df()
     conn.close()
-    return
+    if hasoutput:
+        if outputfile is None:
+            print(res.to_markdown())
+        else:
+            outputfile = ensure_dir_exists(outputfile)
+            res.to_csv(outputfile, index=False)
+    return res
 
 def duckdb_destroy(**kwargs):
     """Delete a SQL dataset"""
@@ -72,21 +80,20 @@ def duckdb_destroy(**kwargs):
     os.remove(data_path)
     return
 
-def duckdb_export(dataset, outputroot, outputfile, outputformat, table):
-    """Export a table from a SQL dataset"""
+def duckdb_export(dataset, table, hasoutput, outputroot, outputfile, outputformat):
+    """Export a data frame"""
     update_outputroot(outputroot)
-    conn = load_sql_dataset(dataset)
-    res = conn.sql(f"SELECT * FROM {table}").df()
-    if outputfile is None:
-        print(res.to_markdown())
-    else:
-        outputfile = ensure_dir_exists(outputfile)
-        if outputformat == 'csv':
-            res.to_csv(outputfile, index=False)
-        elif outputformat == 'json':
-            res.to_json(outputfile, orient='records')
-    conn.close()
-    return
+    df = table2df(dataset=dataset, table=table)
+    if hasoutput:
+        if outputfile is None:
+            print(df.to_markdown())
+        else:
+            outputfile = ensure_dir_exists(outputfile)
+            if outputformat == 'csv':
+                df.to_csv(outputfile, index=False)
+            elif outputformat == 'json':
+                df.to_json(outputfile, orient='records')
+    return df
 
 
 

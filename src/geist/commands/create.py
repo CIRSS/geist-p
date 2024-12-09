@@ -1,5 +1,6 @@
 import click, sys
 from geist.commands.cli import cli
+from geist.api.create import geist_create
 
 @cli.group()
 def create():
@@ -14,8 +15,7 @@ def create():
 @click.option('--infer', default='none', type=click.Choice(['none', 'rdfs', 'owl', 'rdfs_owl']), help='Inference to perform on update [none, rdfs, owl, rdfs_owl] (default "none")')
 def rdflib(dataset, inputfile, inputformat, colnames, infer):
     """Create a new RDF dataset using RDFLib"""
-    from geist.datastore.rdflib import rdflib_create
-    rdflib_create(dataset, inputfile.read(), inputformat, colnames, infer)
+    geist_create(datastore='rdflib', dataset=dataset, inputfile=inputfile.read(), inputformat=inputformat, isinputpath=False, config={'colnames': colnames, 'infer': infer})
 
 @create.command()
 @click.option('--dataset', '-d', default='kb', type=str, help='Name of SQL dataset to create (default "kb")')
@@ -24,8 +24,6 @@ def rdflib(dataset, inputfile, inputformat, colnames, infer):
 @click.option('--table', '-t', default='df', type=str, help='Name of the table to be created (default "df")')
 def duckdb(dataset, inputfile, inputformat, table):
     """Create a new SQL dataset using DuckDB"""
-    from geist.datastore.duckdb import duckdb_create
-    duckdb_create(dataset, inputfile.read(), inputformat, table)
-    pass
+    geist_create(datastore='duckdb', dataset=dataset, inputfile=inputfile.read(), inputformat=inputformat, isinputpath=False, config={'table': table})
 
 

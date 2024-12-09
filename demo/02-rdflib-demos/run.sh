@@ -131,7 +131,7 @@ END_CELL
 
 bash_cell file_query_dataset_kb << END_CELL
 
-geist query rdflib --file data/query
+geist query rdflib --inputfile data/query
 
 END_CELL
 

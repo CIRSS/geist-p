@@ -35,7 +35,7 @@ def infer_rdf_graph(rdf_graph, infer):
 def create_rdf_graph(input_file, input_format, colnames_of_triples, infer):
     """
     This function is to load a file with a given format as a RDF Graph object supported by RDFLib
-    :param input_file: String. Path of the file
+    :param input_file: String. Content of the file
     :param input_format: Defaults to json-ld. It must be one of [xml, n3, turtle, nt, pretty-xml, trix, trig, nquads, json-ld, hext, csv]
     :param infer: Inference to perform on update [none, rdfs, owl, rdfs_owl] (default "none")
     :return rdf_graph: a RDF Graph object supported by RDFLib
@@ -166,6 +166,13 @@ def _graph2(rdf_graph, rankdir, mappings, on, **kwargs):
     gv = visualize_query_results_without_pygraphviz(query_res=res, edges=[['s', 'o', 'p']], rankdir=rankdir, same_color=True, **kwargs)
     return gv
 
+def dataset2graph(dataset, rankdir, mappings, on, samecolor):
+    # Load a RDF dataset
+    (rdf_graph, _) = load_rdf_dataset(dataset)
+    # Convert a RDF graph object to a Graphviz graph object
+    G = _graph(rdf_graph, rankdir, mappings, on, samecolor)
+    return G
+
 def rdflib_create(dataset, inputfile, inputformat, colnames, infer):
     """Create a new RDF dataset"""
     data_path = DATA_DIR + dataset + ".pkl"
@@ -203,48 +210,52 @@ def rdflib_destroy(**kwargs):
     os.remove(data_path)
     return
 
-def rdflib_export(dataset, outputroot, outputfile, outputformat):
+def rdflib_export(dataset, hasoutput, outputroot, outputfile, outputformat):
     """Export an RDF dataset"""
     update_outputroot(outputroot)
-    (rdf_graph, _) = load_rdf_dataset(dataset)
-    if outputfile is None:
-        print(rdf_graph.serialize(format=outputformat))
-    else:
-        outputfile = ensure_dir_exists(outputfile)
-        rdf_graph.serialize(destination=outputfile, format=outputformat)
-    return
+    (rdf_graph, _) = load_rdf_dataset(dataset=dataset)
+    if hasoutput:
+        if outputfile is None:
+            print(rdf_graph.serialize(format=outputformat))
+        else:
+            outputfile = ensure_dir_exists(outputfile)
+            rdf_graph.serialize(destination=outputfile, format=outputformat)
+    return rdf_graph
 
-def rdflib_query(dataset, file, outputroot, outputfile):
+def rdflib_query(dataset, inputfile, hasoutput, outputroot, outputfile):
     """Perform a SPARQL query on a dataset"""
     update_outputroot(outputroot)
     (rdf_graph, _) = load_rdf_dataset(dataset)
-    res = query2df(rdf_graph, file.read())
-    if outputfile is None:
-        print(res.to_markdown())
-    else:
-        outputfile = ensure_dir_exists(outputfile)
-        res.to_csv(outputfile, index=False)
+    res = query2df(rdf_graph, inputfile)
+    if hasoutput:
+        if outputfile is None:
+            print(res.to_markdown())
+        else:
+            outputfile = ensure_dir_exists(outputfile)
+            res.to_csv(outputfile, index=False)
+    return res
 
-def rdflib_graph(dataset, rankdir, mappings, on, samecolor, outputroot, outputfile, outputformats):
+def rdflib_graph(dataset, rankdir, mappings, on, samecolor, hasoutput, outputroot, outputfile, outputformats):
     """Visualize a dataset"""
     update_outputroot(outputroot)
 
-    # Load a RDF dataset
-    (rdf_graph, _) = load_rdf_dataset(dataset)
-    # Convert a RDF graph object to a Graphviz graph object
-    G = _graph(rdf_graph, rankdir, mappings, on, samecolor)
+    G = dataset2graph(dataset, rankdir, mappings, on, samecolor)
 
     # Save the graph
-    outputfile = ensure_dir_exists(outputfile)
-    for outputformat in set(outputformats):
-        if outputformat == 'none':
-            print(G.string())
-        else:
-            output_path = outputfile + '.' + outputformat
-            if outputformat == 'gv' or outputformat == 'dot':
-                G.write(output_path)
-            else: # svg, png
-                G.draw(output_path, prog='dot')
+    if hasoutput:
+        outputfile = ensure_dir_exists(outputfile)
+        for outputformat in set(outputformats):
+            if outputformat == 'none':
+                print(G.string())
+            else:
+                output_path = outputfile + '.' + outputformat
+                if outputformat == 'gv' or outputformat == 'dot':
+                    G.write(output_path)
+                elif outputformat == 'svg' or outputformat == 'png':
+                    G.draw(output_path, prog='dot')
+                else:
+                    raise ValueError("outputformat is required to be 'none' or 'svg' or 'png' or 'gv'")
+    return G
 
 
 

@@ -313,7 +313,7 @@ Commands:
 
 ================================================ bash cell | file_query_dataset_kb =================================================
 
-geist query rdflib --file data/query
+geist query rdflib --inputfile data/query
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 |    | s                                                                                                                                          | p                                                    | o                                                                                                                                            |
@@ -427,7 +427,7 @@ Usage: geist report [OPTIONS]
   Expand a report using a dataset
 
 Options:
-  -f, --file FILENAME            Path of the file containing the report
+  -ifile, --inputfile FILENAME   Path of the file containing the report
                                  template to expand  [required]
   -oroot, --outputroot TEXT      Path of the directory to store the expanded
                                  report (default: current directory)

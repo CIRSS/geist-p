@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from geist.tools.globals import set_global_var
 from geist.commands.cli import cli
 from geist.commands.create import create
 from geist.commands.load import load
@@ -19,4 +20,5 @@ cli.add_command(graph)
 cli.add_command(report)
 
 if __name__ == '__main__':
+    set_global_var()
     cli()

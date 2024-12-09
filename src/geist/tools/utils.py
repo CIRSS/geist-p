@@ -165,7 +165,7 @@ def get_content(data, isfilepath):
         with open(data.strip(), mode='r', encoding='utf-8') as fin:
             content = fin.read()
     else:
-        content = data.strip()
+        content = data
     return content
 
 def generate_template_class(file_paths):

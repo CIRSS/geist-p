@@ -1,5 +1,6 @@
 import click
 from geist.commands.cli import cli
+from geist.api.graph import geist_graph
 
 @cli.group()
 def graph():
@@ -16,6 +17,5 @@ def graph():
 @click.option('--outputfile', '-ofile', default='res', type=str, help='Path of the file without extension to store the graph (default: res)')
 @click.option('outputformats', '--outputformat', '-oformat', default=['none'], type=click.Choice(['none', 'svg', 'png', 'gv']), multiple=True, help='Format of the graph (default: none): none or svg or png or gv')
 def rdflib(dataset, rankdir, mappings, on, samecolor, outputroot, outputfile, outputformats):
-    """Visualize an RDF dataset"""    
-    from geist.datastore.rdflib import rdflib_graph
-    rdflib_graph(dataset, rankdir, mappings, on, samecolor, outputroot, outputfile, outputformats)
+    """Visualize an RDF dataset"""
+    geist_graph(datastore='rdflib', dataset=dataset, hasoutput=True, config={'rankdir': rankdir, 'mappings': mappings, 'on': on, 'samecolor': samecolor, 'outputroot': outputroot, 'outputfile': outputfile, 'outputformats': outputformats})

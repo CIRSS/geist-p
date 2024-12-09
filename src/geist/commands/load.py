@@ -1,5 +1,6 @@
 import click, sys
 from geist.commands.cli import cli
+from geist.api.load import geist_load
 
 @cli.group()
 def load():
@@ -13,8 +14,7 @@ def load():
 @click.option('--colnames', default=None, type=str, help='Column names of triples with the format of [[subject1, predicate1, object1], [subject2, predicate2, object2], ...] when the input format is csv')
 def rdflib(dataset, inputfile, inputformat, colnames):
     """Import data into a RDF dataset"""
-    from geist.datastore.rdflib import rdflib_load
-    rdflib_load(dataset, inputfile.read(), inputformat, colnames)
+    geist_load(datastore='rdflib', dataset=dataset, inputfile=inputfile.read(), inputformat=inputformat, isinputpath=False, config={'colnames': colnames})
 
 @load.command()
 @click.option('--dataset', '-d', default='kb', type=str, help='Name of SQL dataset to load a file (default "kb")')
@@ -23,7 +23,5 @@ def rdflib(dataset, inputfile, inputformat, colnames):
 @click.option('--table', '-t', required=True, type=str, help='Name of the table to be created')
 def duckdb(dataset, inputfile, inputformat, table):
     """Import data into a SQL dataset"""
-    from geist.datastore.duckdb import duckdb_load
-    duckdb_load(dataset, inputfile.read(), inputformat, table)
-    return
+    geist_load(datastore='duckdb', dataset=dataset, inputfile=inputfile.read(), inputformat=inputformat, isinputpath=False, config={'table': table})
 
