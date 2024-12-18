@@ -40,6 +40,8 @@ def create_rdf_graph(input_file, input_format, colnames_of_triples, infer):
     :param infer: Inference to perform on update [none, rdfs, owl, rdfs_owl] (default "none")
     :return rdf_graph: a RDF Graph object supported by RDFLib
     """
+    if input_format == "csv" and (not colnames_of_triples):
+        raise ValueError("Please provide the column names of triples for the CSV file, e.g., --colnames for CLI ")
     if input_format not in ["xml", "n3", "turtle", "nt", "pretty-xml", "trix", "trig", "nquads", "json-ld", "hext", "csv"]:
         raise ValueError("Only supports [xml, n3, turtle, nt, pretty-xml, trix, trig, nquads, json-ld, hext, csv], but '" + str(input_format) + "' was given.")
     if infer not in ["none", "rdfs", "owl", "rdfs_owl"]:
@@ -57,11 +59,14 @@ def create_rdf_graph(input_file, input_format, colnames_of_triples, infer):
     return rdf_graph
 
 def load_rdf_dataset(dataset):
-    data_path = DATA_DIR + dataset + ".pkl"
-    if not os.path.isfile(data_path):
-        raise ValueError("Please create the RDF dataset ({dataset}) before loading it. Run `geist create rdflib --help` for detailed information".format(dataset=dataset))
-    with open(data_path, mode='rb') as f:
-        geist_graph_object = pickle.load(f)
+    if isinstance(dataset, str):
+        data_path = DATA_DIR + dataset + ".pkl"
+        if not os.path.isfile(data_path):
+            raise ValueError("Please create the RDF dataset ({dataset}) before loading it. Run `geist create rdflib --help` for detailed information".format(dataset=dataset))
+        with open(data_path, mode='rb') as f:
+            geist_graph_object = pickle.load(f)
+    else: # For Python API Connection class
+        geist_graph_object = dataset
     rdf_graph, infer = geist_graph_object["rdf_graph"], geist_graph_object["infer"]
     return rdf_graph, infer
 
@@ -166,38 +171,31 @@ def _graph2(rdf_graph, rankdir, mappings, on, **kwargs):
     gv = visualize_query_results_without_pygraphviz(query_res=res, edges=[['s', 'o', 'p']], rankdir=rankdir, same_color=True, **kwargs)
     return gv
 
-def dataset2graph(dataset, rankdir, mappings, on, samecolor):
-    # Load a RDF dataset
-    (rdf_graph, _) = load_rdf_dataset(dataset)
-    # Convert a RDF graph object to a Graphviz graph object
-    G = _graph(rdf_graph, rankdir, mappings, on, samecolor)
-    return G
-
 def rdflib_create(dataset, inputfile, inputformat, colnames, infer):
     """Create a new RDF dataset"""
-    data_path = DATA_DIR + dataset + ".pkl"
-    if os.path.isfile(data_path):
-        raise ValueError("Please remove the existing RDF dataset ({dataset}) before loading the new one. Run `geist destroy --help` for detailed information".format(dataset=dataset))
-    if inputformat == "csv" and (not colnames):
-        raise ValueError("Please provide the column names of triples for the CSV file, i.e., --colnames")
     rdf_graph = create_rdf_graph(inputfile, inputformat, colnames, infer)
-    # Save as a Gesit graph object
     geist_graph_object = {"rdf_graph": rdf_graph, "infer": infer}
-    ensure_dir_exists(data_path, output=False)
-    with open(data_path, "wb") as f:
-        pickle.dump(geist_graph_object, f)
-    return
+    if dataset != ':memory:':
+        data_path = DATA_DIR + dataset + ".pkl"
+        if os.path.isfile(data_path):
+            raise ValueError("Please remove the existing RDF dataset ({dataset}) before loading the new one. Run `geist destroy --help` for detailed information".format(dataset=dataset))
+        # Save as a Gesit graph object
+        ensure_dir_exists(data_path, output=False)
+        with open(data_path, "wb") as f:
+            pickle.dump(geist_graph_object, f)
+    return geist_graph_object
 
-def rdflib_load(dataset, inputfile, inputformat, colnames):
+def rdflib_load(dataset, inputfile, inputformat, colnames, inmemory):
     """Import data into a RDF dataset"""
     if inputformat == "csv" and (not colnames):
         raise ValueError("Please provide the column names of triples for the CSV file, i.e., --colnames")
     (rdf_graph, infer) = load_rdf_dataset(dataset)
     rdf_graph = rdf_graph + create_rdf_graph(inputfile, inputformat, colnames, infer)
     geist_graph_object = {"rdf_graph": rdf_graph, "infer": infer}
-    with open(DATA_DIR + dataset + ".pkl", "wb") as f:
-        pickle.dump(geist_graph_object, f)
-    return
+    if not inmemory:
+        with open(DATA_DIR + dataset + ".pkl", "wb") as f:
+            pickle.dump(geist_graph_object, f)
+    return geist_graph_object
 
 def rdflib_destroy(**kwargs):
     """Delete an RDF dataset"""
@@ -214,13 +212,14 @@ def rdflib_export(dataset, hasoutput, outputroot, outputfile, outputformat):
     """Export an RDF dataset"""
     update_outputroot(outputroot)
     (rdf_graph, _) = load_rdf_dataset(dataset=dataset)
+    res = rdf_graph.serialize(format=outputformat)
     if hasoutput:
         if outputfile is None:
-            print(rdf_graph.serialize(format=outputformat))
+            print(res)
         else:
             outputfile = ensure_dir_exists(outputfile)
             rdf_graph.serialize(destination=outputfile, format=outputformat)
-    return rdf_graph
+    return res
 
 def rdflib_query(dataset, inputfile, hasoutput, outputroot, outputfile):
     """Perform a SPARQL query on a dataset"""
@@ -239,7 +238,10 @@ def rdflib_graph(dataset, rankdir, mappings, on, samecolor, hasoutput, outputroo
     """Visualize a dataset"""
     update_outputroot(outputroot)
 
-    G = dataset2graph(dataset, rankdir, mappings, on, samecolor)
+    # Load a RDF dataset
+    (rdf_graph, _) = load_rdf_dataset(dataset)
+    # Convert a RDF graph object to a Graphviz graph object
+    G = _graph(rdf_graph, rankdir, mappings, on, samecolor)
 
     # Save the graph
     if hasoutput:

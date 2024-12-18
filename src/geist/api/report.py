@@ -53,7 +53,8 @@ class CreateExtension(ContainerTag):
             rdflib_create(dataset, content, inputformat, colnames, infer)
         elif datastore == "duckdb":
             from geist.datastore.duckdb import duckdb_create
-            duckdb_create(dataset, content, inputformat, table)
+            conn = duckdb_create(dataset, content, inputformat, table)
+            conn.close()
         else:
             raise ValueError("Invalid datastore. Only rdflib and duckdb are supported for now.")
         return ""
@@ -68,7 +69,8 @@ class LoadExtension(ContainerTag):
             rdflib_load(dataset, content, inputformat, colnames)
         elif datastore == "duckdb":
             from geist.datastore.duckdb import duckdb_load
-            duckdb_load(dataset, content, inputformat, table)
+            conn = duckdb_load(dataset, content, inputformat, table)
+            conn.close()
         else:
             raise ValueError("Invalid datastore. Only rdflib and duckdb are supported for now.")
         return ""
@@ -205,12 +207,12 @@ class TableExtension(ContainerTag):
 
 def geist_report(inputfile, isinputpath=False, outputroot='./', suppressoutput=True):
     """
-    Expand a report using datasets.
+    Expand a report using dataset(s).
     :param inputfile: a string. Report to be expanded
     :param isinputpath: bool. True if the inputfile is the file path, otherwise the inputfile is the content (default: False)
     :param outputroot: a string. Path of the directory to store the expanded report (default: current directory)
     :param suppressoutput: bool. True to suppress output (default: True)
-    :return report: a string. Expanded report.
+    :return report: a string. The expanded report
     """
     update_outputroot(outputroot)
     content = get_content(inputfile, isinputpath)

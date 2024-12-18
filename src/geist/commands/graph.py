@@ -1,6 +1,7 @@
 import click
 from geist.commands.cli import cli
 from geist.api.graph import geist_graph
+from geist.tools.utils import validate_dataset
 
 @cli.group()
 def graph():
@@ -8,7 +9,7 @@ def graph():
     pass
 
 @graph.command()
-@click.option('--dataset', '-d', default='kb', type=str, help='Name of RDF dataset to be visualized (default "kb")')
+@click.option('--dataset', '-d', default='kb', type=str, callback=validate_dataset, help='Name of RDF dataset to be visualized (default "kb")')
 @click.option('--rankdir', '-r', default='TB', type=click.Choice(['TB', 'BT', 'LR', 'RL']), help='Direction of the graph (default TB): TB or BT or LR or RL')
 @click.option('--mappings', '-m', default=None, help='File of the mappings to shorten text (str): path of a JSON file, where the key is the original text and the value is the shorter text.')
 @click.option('--on', '-on', default=None, help='Column(s) to be mapped.')

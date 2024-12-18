@@ -13,9 +13,9 @@ mv data/student.duckdb .geistdata/duckdb/
 mkdir .geistdata/rdflib
 mv data/citation.pkl .geistdata/rdflib/
 
-# fish.duckdb contains table named edges with startnode, edge, endnode columns
-# student.duckdb contains table named student with sid, sname, advisor columns
-# citation.pkl contains two predicates, i.e., :writtenBy and :cites
+# fish.duckdb is a dataset for Hamming numbers containing the "edges" table with "startnode", "label", and "endnode" columns
+# student.duckdb is a dataset for student records containing the "student" table with "sid", "sname", and "advisor" columns
+# citation.pkl is a dataset for papers and citations containing two predicates, i.e., :writtenBy and :cites
 
 END_CELL
 
@@ -28,19 +28,19 @@ python3 << END_PYTHON
 import duckdb
 
 # create a connection to a file called fish.duckdb
-conn = duckdb.connect(".geistdata/duckdb/fish.duckdb")
+fish_graph = duckdb.connect(".geistdata/duckdb/fish.duckdb")
 
 # query the database
-res = conn.sql("""
-SELECT startnode, edge, endnode FROM edges LIMIT 5;
+edges = fish_graph.sql("""
+SELECT startnode, label, endnode FROM edges LIMIT 5;
 """).df()
 
-# Print all edges in the format of "startnode -- edge --> endnode"
-for _, row in res.iterrows():
-    print("{startnode} -- {edge} --> {endnode}".format(startnode=row["startnode"], edge=row["edge"], endnode=row["endnode"]))
+# print all edges in the format of "startnode -- label --> endnode"
+for _, edge in edges.iterrows():
+    print("{startnode} -- {label} --> {endnode}".format(startnode=edge["startnode"], label=edge["label"], endnode=edge["endnode"]))
 
 # close the connection
-conn.close()
+fish_graph.close()
 
 END_PYTHON
 
@@ -48,19 +48,74 @@ END_CELL
 
 # ------------------------------------------------------------------------------
 
-bash_cell 'ex1: with geist' << END_CELL
+bash_cell 'ex1: with geist CLI' << END_CELL
 
 geist report << __END_TEMPLATE__
 
 {% query "fish", datastore="duckdb", isfilepath=False as edges %}
-    SELECT startnode, edge, endnode FROM edges LIMIT 5;
+    SELECT startnode, label, endnode FROM edges LIMIT 5;
 {% endquery %}
 
-{%- for _, row in edges.iterrows() %}
-    {{ row["startnode"] }} -- {{ row["edge"] }} --> {{ row["endnode"] }}
+{%- for _, edge in edges.iterrows() %}
+    {{ edge["startnode"] }} -- {{ edge["label"] }} --> {{ edge["endnode"] }}
 {% endfor -%}
 
 __END_TEMPLATE__
+
+END_CELL
+
+# ------------------------------------------------------------------------------
+
+bash_cell 'ex1: with geist report Python API' << END_CELL
+
+python3 << END_PYTHON
+
+from geist import report
+
+template = """
+{% query "fish", datastore="duckdb", isfilepath=False as edges %}
+    SELECT startnode, label, endnode FROM edges LIMIT 5;
+{% endquery %}
+
+{%- for _, edge in edges.iterrows() %}
+    {{ edge["startnode"] }} -- {{ edge["label"] }} --> {{ edge["endnode"] }}
+{% endfor -%}
+
+"""
+
+print(report(inputfile=template, isinputpath=False))
+
+
+END_PYTHON
+
+END_CELL
+
+# ------------------------------------------------------------------------------
+
+bash_cell 'ex1: with geist Python API' << END_CELL
+
+python3 << END_PYTHON
+
+import geist
+
+# connect to the fish dataset in DuckDB and create a Connection object
+fish_graph = geist.Connection.connect(datastore="duckdb", dataset="fish")
+
+# query the dataset
+edges = fish_graph.query(
+    inputfile="SELECT startnode, label, endnode FROM edges LIMIT 5;",
+    isinputpath=False,
+    hasoutput=False
+)
+
+# print all edges in the format of "startnode -- label --> endnode"
+for _, edge in edges.iterrows():
+    print("{startnode} -- {label} --> {endnode}".format(startnode=edge["startnode"], label=edge["label"], endnode=edge["endnode"]))
+
+# close the connection
+fish_graph.close()
+
+END_PYTHON
 
 END_CELL
 
@@ -101,25 +156,24 @@ print("""
 """)
 
 # create a connection to a file called student.duckdb
-conn = duckdb.connect(".geistdata/duckdb/student.duckdb")
+students = duckdb.connect(".geistdata/duckdb/student.duckdb")
 
 # query the database
-res1 = conn.sql("""
+adams_students = students.sql("""
 SELECT sid, sname FROM student WHERE advisor = 'Dr. Adams';
 """).df()
 
 # close the duckdb connection
-conn.close()
+students.close()
 
 with open(".geistdata/rdflib/citation.pkl", mode='rb') as f:
-    graph_object = pickle.load(f)
-rdf_graph, infer = graph_object["rdf_graph"], graph_object["infer"]
+    citations = pickle.load(f)["rdf_graph"]
 
-# Print all edges in the format of "sid: sname"
-for _, row in res1.iterrows():
-    print("{sname} (student ID is {sid}) has published the following papers:".format(sid=row["sid"], sname=row["sname"]))
+# print all edges in the format of "sid: sname"
+for _, student in adams_students.iterrows():
+    print("{sname} (student ID is {sid}) has published the following papers:".format(sid=student["sid"], sname=student["sname"]))
 
-    res2 = query2df(rdf_graph, """
+    papers_and_citation_counts = query2df(citations, """
         PREFIX : <http://demo.com/>
         PREFIX student: <http://demo.com/student#>
         PREFIX paper: <http://demo.com/paper#>
@@ -132,14 +186,14 @@ for _, row in res1.iterrows():
         }} 
         GROUP BY ?pid
         ORDER BY ?pid
-    """.format(sid=str(row["sid"])))
+    """.format(sid=str(student["sid"])))
     
-    for _, row in res2.iterrows():
-        print("- {pid} has {count} citations.".format(pid=row["pid"].replace("http://demo.com/paper#", ""), count=row["num_of_citations"]))
+    for _, paper in papers_and_citation_counts.iterrows():
+        print("- {pid} has {count} citations.".format(pid=paper["pid"].replace("http://demo.com/paper#", ""), count=paper["num_of_citations"]))
 
     print()
 
-rdf_graph.close()
+citations.close()
 
 END_PYTHON
 
@@ -147,7 +201,7 @@ END_CELL
 
 # ------------------------------------------------------------------------------
 
-bash_cell 'ex2: with geist' << END_CELL
+bash_cell 'ex2: with geist CLI' << END_CELL
 
 geist report << __END_TEMPLATE__
 
@@ -155,34 +209,93 @@ geist report << __END_TEMPLATE__
 *                    Dr. Adams's students                    *
 **************************************************************
 
-{% query "student", datastore="duckdb", isfilepath=False as students %}
+{% query "student", datastore="duckdb", isfilepath=False as adams_students %}
     SELECT sid, sname FROM student WHERE advisor = 'Dr. Adams';
 {% endquery %}
 
-{%- for _, row1 in students.iterrows() %}
-{{ row1["sname"] }} (student ID is {{ row1["sid"] }}) has published the following papers:
-{% query "citation", datastore="rdflib", isfilepath=False as citations %}
+{%- for _, student in adams_students.iterrows() %}
+{{ student["sname"] }} (student ID is {{ student["sid"] }}) has published the following papers:
+{% query "citation", datastore="rdflib", isfilepath=False as papers_and_citation_counts %}
     PREFIX : <http://demo.com/>
     PREFIX student: <http://demo.com/student#>
     PREFIX paper: <http://demo.com/paper#>
 
     SELECT ?pid (COUNT(DISTINCT ?pid1) AS ?num_of_citations)
     WHERE {
-        ?pid :writtenBy student:{{ row1["sid"] }} .
+        ?pid :writtenBy student:{{ student["sid"] }} .
 
         OPTIONAL { ?pid1 :cites ?pid . }
     }
     GROUP BY ?pid
     ORDER BY ?pid
 {% endquery %}
-{%- map mappings="data/mappings.json", isfilepath=False as mapped_citations %} {{ citations | df2json }} {% endmap %}
-{% for _, row2 in mapped_citations.iterrows() %}
-    - {{ row2["pid"] }} has {{ row2["num_of_citations"] }} citations.
+{%- map mappings="data/mappings.json", isfilepath=False as mapped_papers_and_citation_counts %} {{ papers_and_citation_counts | df2json }} {% endmap %}
+{% for _, paper in mapped_papers_and_citation_counts.iterrows() %}
+    - {{ paper["pid"] }} has {{ paper["num_of_citations"] }} citations.
 {% endfor %}
 
 {% endfor %}
 
 __END_TEMPLATE__
+
+END_CELL
+
+# ------------------------------------------------------------------------------
+
+bash_cell 'ex2: with geist Python API' << END_CELL
+
+python3 << END_PYTHON
+
+import geist
+
+print("""
+**************************************************************
+*                    Dr. Adams's students                    *
+**************************************************************
+""")
+
+# connect to datasets and create Connection objects
+students = geist.Connection.connect(datastore="duckdb", dataset="student")
+citations = geist.Connection.connect(datastore="rdflib", dataset="citation")
+
+# query the student dataset
+adams_students = students.query(
+    inputfile="SELECT sid, sname FROM student WHERE advisor = 'Dr. Adams';",
+    isinputpath=False,
+    hasoutput=False
+)
+# print all edges in the format of "sid: sname"
+for _, student in adams_students.iterrows():
+    print("{sname} (student ID is {sid}) has published the following papers:".format(sid=student["sid"], sname=student["sname"]))
+
+    papers_and_citation_counts = citations.query(
+        inputfile="""
+            PREFIX : <http://demo.com/>
+            PREFIX student: <http://demo.com/student#>
+            PREFIX paper: <http://demo.com/paper#>
+
+            SELECT ?pid (COUNT(DISTINCT ?pid1) AS ?num_of_citations)
+            WHERE {{
+                ?pid :writtenBy student:{sid} .
+
+                OPTIONAL {{ ?pid1 :cites ?pid . }}
+            }} 
+            GROUP BY ?pid
+            ORDER BY ?pid
+        """.format(sid=str(student["sid"])),
+        isinputpath=False,
+        hasoutput=False)
+    
+    for _, paper in papers_and_citation_counts.iterrows():
+        print("- {pid} has {count} citations.".format(pid=paper["pid"].replace("http://demo.com/paper#", ""), count=paper["num_of_citations"]))
+
+    print()
+
+# close the connections
+students.close()
+citations.close()
+
+END_PYTHON
 
 END_CELL
 

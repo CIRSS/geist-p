@@ -15,7 +15,7 @@ def geist_create(datastore, dataset, inputfile, inputformat, isinputpath, config
     if datastore == 'rdflib':
         # Create a new RDF dataset using RDFLib
         from geist.datastore.rdflib import rdflib_create
-        rdflib_create(
+        conn = rdflib_create(
             dataset=dataset, 
             inputfile=content, 
             inputformat=inputformat, 
@@ -25,7 +25,7 @@ def geist_create(datastore, dataset, inputfile, inputformat, isinputpath, config
     elif datastore == 'duckdb':
         # Create a new SQL dataset using DuckDB
         from geist.datastore.duckdb import duckdb_create
-        duckdb_create(
+        conn = duckdb_create(
             dataset=dataset, 
             inputfile=content, 
             inputformat=inputformat, 
@@ -33,5 +33,5 @@ def geist_create(datastore, dataset, inputfile, inputformat, isinputpath, config
         )
     else:
         raise ValueError("Invalid datastore. Only rdflib and duckdb are supported for now.")
-    return
+    return conn
 

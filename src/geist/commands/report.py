@@ -7,5 +7,5 @@ from geist.api.report import geist_report
 @click.option('--outputroot', '-oroot', default='./', type=str, help='Path of the directory to store the expanded report (default: current directory)')
 @click.option('--suppressoutput', '-so', default=False, help='Suppress output or not (default: False)')
 def report(inputfile, outputroot, suppressoutput):
-    """Expand a report using a dataset"""
+    """Expand a report using dataset(s)"""
     geist_report(inputfile=inputfile.read(), isinputpath=False, outputroot=outputroot, suppressoutput=suppressoutput)

@@ -20,10 +20,11 @@ def geist_query(datastore, dataset, inputfile, isinputpath, hasoutput, config={}
         # Perform a SPARQL query on a dataset
         from geist.datastore.rdflib import rdflib_query
         res = rdflib_query(dataset=dataset, inputfile=content, hasoutput=hasoutput, outputroot=outputroot, outputfile=outputfile)
+        conn = None # This field is a placeholder only
     elif datastore == 'duckdb':
         # Perform a SQL query on a dataset
         from geist.datastore.duckdb import duckdb_query
-        res = duckdb_query(dataset=dataset, inputfile=content, hasoutput=hasoutput, outputroot=outputroot, outputfile=outputfile)
+        (res, conn) = duckdb_query(dataset=dataset, inputfile=content, hasoutput=hasoutput, outputroot=outputroot, outputfile=outputfile)
     else:
         raise ValueError("Invalid datastore. Only rdflib and duckdb are supported for now.")
-    return res
+    return res, conn

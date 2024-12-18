@@ -15,7 +15,7 @@ Commands:
   graph    Visualize a dataset
   load     Import data into a dataset
   query    Perform a query on a dataset
-  report   Expand a report using a dataset
+  report   Expand a report using dataset(s)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
@@ -424,7 +424,7 @@ geist report --help
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 Usage: geist report [OPTIONS]
 
-  Expand a report using a dataset
+  Expand a report using dataset(s)
 
 Options:
   -ifile, --inputfile FILENAME   Path of the file containing the report

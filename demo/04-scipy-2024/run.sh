@@ -28,8 +28,8 @@ geist report -oroot products << END_TEMPLATE
 {% endquery %}
 
 {% create "fish", datastore="rdflib", inputformat="nt", isfilepath=False %}
-    {%- for _, row in edges.iterrows() %}
-        {% format_triples row.startnode, row.edge, row.endnode %}
+    {%- for _, edge in edges.iterrows() %}
+        {% format_triples edge.startnode, edge.label, edge.endnode %}
     {% endfor -%}
 {% endcreate %}
 
@@ -37,8 +37,8 @@ geist report -oroot products << END_TEMPLATE
     {% query_rdflib_subfish %}
 {% endquery %}
 {% create "subfish", datastore="rdflib", inputformat="nt", isfilepath=False %}
-    {% for _, row in subgraph.iterrows() %}
-        {% format_subfish row.node1, row.node2, row.node3 %}
+    {% for _, reachable_nodes in subgraph.iterrows() %}
+        {% format_subfish reachable_nodes.node1, reachable_nodes.node2, reachable_nodes.node3 %}
     {% endfor %}
 {% endcreate %}
 
