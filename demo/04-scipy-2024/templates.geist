@@ -50,7 +50,7 @@
 {% endtemplate %}
 
 {% template query_duckdb_edges %}
-    SELECT startnode, edge, endnode FROM edges;
+    SELECT startnode, label, endnode FROM edges;
 {% endtemplate %}
 
 {% template query_rdflib_subfish %}

@@ -1,7 +1,13 @@
 import json, re, os
 import pandas as pd
+from click import BadParameter
 
 TAGS = ["use", "template", "create", "load", "query", "destroy", "graph", "graph2", "component", "map", "html", "img", "table", "include", "import", "macro", "block", "extends", "call", "filter", "set", "for", "if", "elif", "else"]
+
+def validate_dataset(ctx, param, value):
+    if value == ':memory:':
+        raise BadParameter("Please use another dataset name as ':memory:' is a reserved field for dataset existing in memory only")
+    return value
 
 def get_full_path(dir, file):
     # If file is an absolute path
