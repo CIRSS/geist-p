@@ -14,7 +14,7 @@ Commands:
   rdflib  Import data into a RDF dataset
 ```
 
-=== "CLI: duckdb"
+??? info "geist load duckdb [OPTIONS]"
 
     ```
     Usage: geist load duckdb [OPTIONS]
@@ -39,7 +39,7 @@ Commands:
         geist load duckdb --dataset test --inputfile test_add.csv --inputformat csv --table df
         ```
 
-=== "CLI: rdflib"
+??? info "geist load rdflib [OPTIONS]"
 
     Here are options of the *load* command:
     ```
@@ -67,7 +67,3 @@ Commands:
         ```
         geist load rdflib --dataset test --inputfile test_add.jsonld
         ```
-
-=== "Geist Template"
-
-    Check the [load](report/tags/tag-load.md) tag.

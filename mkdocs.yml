@@ -33,28 +33,39 @@ theme:
 nav:
   - Home: index.md
   - Setup: setup.md
-  - Commands:
-    - Command report:
-      - Introduction: commands/report/introduction.md
-      - Tags: 
-        - Tag create: commands/report/tags/tag-create.md
-        - Tag destroy: commands/report/tags/tag-destroy.md
-        - Tag graph: commands/report/tags/tag-graph.md
-        - Tag graph2: commands/report/tags/tag-graph2.md
-        - Tag load: commands/report/tags/tag-load.md
-        - Tag query: commands/report/tags/tag-query.md
-        - Tag component: commands/report/tags/tag-component.md
-        - Tag map: commands/report/tags/tag-map.md
-        - Tag html: commands/report/tags/tag-html.md
-        - Tag img: commands/report/tags/tag-img.md
-        - Tag table: commands/report/tags/tag-table.md
-        - Tag use: commands/report/tags/tag-use.md
-    - Command create: commands/create.md
-    - Command destroy: commands/destroy.md
-    - Command export: commands/export.md
-    - Command graph: commands/graph.md
-    - Command load: commands/load.md
-    - Command query: commands/query.md
+  - Geist Templates: 
+    - Introduction: geist-templates/introduction.md
+    - Tags:
+      - Tag create: geist-templates/tags/tag-create.md
+      - Tag destroy: geist-templates/tags/tag-destroy.md
+      - Tag graph: geist-templates/tags/tag-graph.md
+      - Tag graph2: geist-templates/tags/tag-graph2.md
+      - Tag load: geist-templates/tags/tag-load.md
+      - Tag query: geist-templates/tags/tag-query.md
+      - Tag component: geist-templates/tags/tag-component.md
+      - Tag map: geist-templates/tags/tag-map.md
+      - Tag html: geist-templates/tags/tag-html.md
+      - Tag img: geist-templates/tags/tag-img.md
+      - Tag table: geist-templates/tags/tag-table.md
+      - Tag use: geist-templates/tags/tag-use.md
+  - CLI:
+    - Command report: cli/report.md
+    - Command create: cli/create.md
+    - Command destroy: cli/destroy.md
+    - Command export: cli/export.md
+    - Command graph: cli/graph.md
+    - Command load: cli/load.md
+    - Command query: cli/query.md
+  - Python API:
+    - Class Connection: python-api/connect/Connection.md
+    - Functions:
+      - Function report: python-api/report.md
+      - Function create: python-api/create.md
+      - Function destroy: python-api/destroy.md
+      - Function export: python-api/export.md
+      - Function graph: python-api/graph.md
+      - Function load: python-api/load.md
+      - Function query: python-api/query.md
   - Changelog: changelog.md
 markdown_extensions:
   - pymdownx.superfences
@@ -62,6 +73,8 @@ markdown_extensions:
       alternate_style: true
   - pymdownx.details
   - admonition
+  - pymdownx.snippets:
+      base_path: ["docs"]
 extra:
   version:
     provider: mike

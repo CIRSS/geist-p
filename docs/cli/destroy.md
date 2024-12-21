@@ -14,7 +14,7 @@ Commands:
   rdflib  Delete an RDF dataset
 ```
 
-=== "CLI: duckdb"
+??? info "geist destroy duckdb [OPTIONS]"
 
     ```
     Usage: geist destroy duckdb [OPTIONS]
@@ -40,7 +40,7 @@ Commands:
         geist destroy duckdb --dataset test --quiet
         ```
 
-=== "CLI: rdflib"
+??? info "geist destroy rdflib [OPTIONS]"
 
     ```
     Usage: geist destroy rdflib [OPTIONS]
@@ -65,7 +65,3 @@ Commands:
         ```
         geist destroy rdflib --dataset test --quiet
         ```
-
-=== "Geist Template"
-    
-    Check the [destroy](report/tags/tag-destroy.md) tag.

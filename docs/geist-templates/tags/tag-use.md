@@ -26,7 +26,7 @@ You need to update `TAG_NAME`, `PARAM1`, `PARAM2`, and `CONTENT` based on your u
         {% endtemplate %}
         ```
 
-    3. Use custom tags in the Geist template as other predefined tags (e.g., create)
+    3. Use custom tags in the Geist template as other predefined tags (e.g., `create`)
 
         ```
         {% use "templates.geist" %}

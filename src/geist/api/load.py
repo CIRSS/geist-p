@@ -4,7 +4,7 @@ def geist_load(datastore, dataset, inputfile, inputformat, isinputpath, config={
     """
     Import data into a dataset
     :param datastore: a string. Backend datastores, i.e., rdflib, duckdb
-    :param dataset: a string. Name of the dataset to load an object, e.g., a Pandas data frame
+    :param dataset: a string. Dataset to load an object: (1) A string indicates the name of the dataset stored on disk OR (2) a DuckPyConnection object OR a GeistGraph object for dataset in memory
     :param inputfile: a string. File to be loaded
     :param inputformat: a string. Format of the file to be loaded
     :param isinputpath: bool. True if the inputfile is the file path, otherwise the inputfile is the content

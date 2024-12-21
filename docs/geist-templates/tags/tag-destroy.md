@@ -2,8 +2,8 @@ The `destroy` tag deletes a dataset. Here are parameters of the `destroy` tag:
 
 | Name          | Description                                                    |
 |---------------|----------------------------------------------------------------|
-|`dataset`      | Name of RDF dataset to be removed (default "kb")               |
-|`datastore`    | Data backend. `duckdb` and `rdflib` are available for now. (by default, "rdflib") |
+|`dataset`      | Name of RDF dataset to be removed (default `kb`)               |
+|`datastore`    | Data backend. `duckdb` and `rdflib` are available for now. (by default, `rdflib`) |
 |`quiet`        | Suppress error messages if the provided dataset does not exist |
 
 ??? example "Example: delete the `test` dataset"

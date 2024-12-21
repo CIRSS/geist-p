@@ -1,6 +1,5 @@
-*create* command can create a new dataset. A `.duckdb` or a `.pkl` file will be created under the `.geistdata/duckdb` or the `.geistdata/rdflib` folder with the same name of this dataset.
+The *create* command has two subcommands, both of which create a new dataset on disk. The dataset name `:memory:` is a reserved value for datasets that exist only in memory and is not allowed in the CLI.
 
-There are two subcommands for *create*:
 ```
 Usage: geist create [OPTIONS] COMMAND [ARGS]...
 
@@ -14,7 +13,7 @@ duckdb  Create a new SQL dataset using DuckDB
 rdflib  Create a new RDF dataset using RDFLib
 ```
 
-=== "CLI: duckdb"
+??? info "geist create duckdb [OPTIONS]"
 
     ```
     Usage: geist create duckdb [OPTIONS]
@@ -60,7 +59,7 @@ rdflib  Create a new RDF dataset using RDFLib
         geist create duckdb --dataset test --inputfile test.csv --inputformat csv --table df
         ```
 
-=== "CLI: rdflib"
+??? info "geist create rdflib [OPTIONS]"
 
     ```
     Usage: geist create rdflib [OPTIONS]
@@ -108,7 +107,3 @@ rdflib  Create a new RDF dataset using RDFLib
         ```
         geist create rdflib --dataset test --inputfile test.nt --inputformat nt --infer none
         ```
-
-=== "Geist Template"
-    
-    Check the [create](report/tags/tag-create.md) tag.

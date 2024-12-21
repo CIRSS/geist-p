@@ -1,6 +1,17 @@
 # Setup
 
-Before installing Geist, please make sure [Graphviz](https://graphviz.org/download/) is installed.
+Before installing Geist, please make sure [Graphviz](https://graphviz.org/download/) is installed. 
+??? example "Example: GitHub Codespaces"
+
+    ```bash
+    sudo apt-get update && sudo apt-get install -y graphviz graphviz-dev
+    ```
+
+??? example "Example: Google Colab (Jupyter Notebook)"
+
+    ```
+    apt install libgraphviz-dev
+    ```
 
 Install Geist:
 ```python
@@ -21,5 +32,5 @@ Commands:
   graph    Visualize a dataset
   load     Import data into a dataset
   query    Perform a query on a dataset
-  report   Expand a report using a dataset
+  report   Expand a report using dataset(s)
 ```

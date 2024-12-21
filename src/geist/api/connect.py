@@ -13,7 +13,7 @@ class Connection:
         # Initialize the connection to the dataset
         self.datastore = datastore
         self.dataset = dataset
-        self.conn = conn
+        self.conn = conn # a DuckPyConnection object or a GeistGraph object
     
     @classmethod
     def connect(cls, datastore, dataset):
@@ -73,6 +73,8 @@ class Connection:
         return
     
     def export(self, hasoutput, config={}):
+        if not self.conn:
+            raise ValueError('You have not connected to any dataset yet. Please use the connect method first.')
         (data, _) = geist_export(
             datastore=self.datastore,
             dataset=self.conn,
@@ -82,6 +84,8 @@ class Connection:
         return data
 
     def graph(self, hasoutput, config={}):
+        if not self.conn:
+            raise ValueError('You have not connected to any dataset yet')
         G = geist_graph(
             datastore=self.datastore, 
             dataset=self.conn, 
@@ -91,6 +95,8 @@ class Connection:
         return G
 
     def load(self, inputfile, inputformat, isinputpath, config={}):
+        if not self.conn:
+            raise ValueError('You have not connected to any dataset yet. Please use the connect method first.')
         config['inmemory'] = True if self.dataset == ':memory:' else False
         self.conn = geist_load(
             datastore=self.datastore, 
@@ -102,6 +108,8 @@ class Connection:
         return
     
     def query(self, inputfile, isinputpath, hasoutput, config={}):
+        if not self.conn:
+            raise ValueError('You have not connected to any dataset yet. Please use the connect method first.')
         (res, _) = geist_query(
             datastore=self.datastore, 
             dataset=self.conn, 

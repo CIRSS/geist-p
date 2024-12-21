@@ -3,7 +3,7 @@ The `table` tag embeds query results to HTML as a table. Please make sure the st
 | Name      | Description                                                    |
 |-----------|----------------------------------------------------------------|
 |`mappings` |File of the mappings to shorten text (str): path of a JSON file, where the key is the original text and the value is the shorter text. |
-|`on`       |A column or a list of selected columns. All columns will be selected by default (None) |
+|`on`       |A column or a list of selected columns. All columns will be selected by default (`None`) |
 
 
 ??? example "Example: embed query results as a table"
