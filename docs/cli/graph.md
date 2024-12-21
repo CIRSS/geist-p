@@ -9,7 +9,7 @@ Options:
   --help  Show this message and exit.
 ```
 
-=== "CLI: rdflib"
+??? info "geist graph rdflib [OPTIONS]"
 
     ```
     Usage: geist graph rdflib [OPTIONS]
@@ -44,7 +44,3 @@ Options:
         ```
         geist graph rdflib --dataset test --outputformat svg 
         ```
-
-=== "Geist Template"
-
-    Check the [graph](report/tags/tag-graph.md) tag.

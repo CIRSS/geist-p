@@ -14,7 +14,7 @@ Commands:
   rdflib  Export an RDF dataset
 ```
 
-=== "CLI: duckdb"
+??? info "geist export duckdb [OPTIONS]"
 
     ```
     Usage: geist export duckdb [OPTIONS]
@@ -45,7 +45,7 @@ Commands:
         ```
 
 
-=== "CLI: rdflib"
+??? info "geist export rdflib [OPTIONS]"
 
     ```
     Usage: geist export rdflib [OPTIONS]

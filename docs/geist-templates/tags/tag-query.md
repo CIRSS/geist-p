@@ -2,9 +2,9 @@ The `query` tag performs a query on a dataset and returns a Pandas DataFrame. He
 
 | Name          | Description                                                    |
 |---------------|----------------------------------------------------------------|
-|`dataset`      | Name of a dataset to query (default "kb")               |
-|`datastore`    | Data backend. `duckdb` and `rdflib` are available for now. (by default, "rdflib") |
-|`isfilepath`   | A bool value to denote if the given data is a file path or not (default True, which denotes the given data is a file path) |
+|`dataset`      | Name of a dataset to query (default `kb`)               |
+|`datastore`    | Data backend. `duckdb` and `rdflib` are available for now. (by default, `rdflib`) |
+|`isfilepath`   | A bool value to denote if the given data is a file path or not (default `True`, which denotes the given data is a file path) |
 
 ??? example "Example 1: the given string is not a file path"
 

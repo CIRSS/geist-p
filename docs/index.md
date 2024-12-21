@@ -4,16 +4,18 @@ Geist is a new templating language for declarative data manipulation, query, and
 
 At the moment, Geist supports [DuckDB](https://duckdb.org) and [RDFLib](https://rdflib.readthedocs.io). More types of data backends will be available in the near future.
 
-## Commands
+## Features
 
-* [`report`](commands/report/introduction.md) command: expand a report using a dataset
-* [`create`](commands/create.md) command: create a new dataset
-* [`destroy`](commands/destroy.md) command: delete a dataset
-* [`export`](commands/export.md) command: export a graph
-* [`graph`](commands/graph.md) command: visualize a dataset
-* [`load`](commands/load.md) command: import data into a dataset
-* [`query`](commands/query.md) command: perform a query on a dataset
+Both CLI and Python API provide the following features:
+
+* [report](features/report.md) feature: expand a report using dataset(s)
+* [create](features/create.md) feature: create a new dataset
+* [destroy](features/destroy.md) feature: delete a dataset
+* [export](features/export.md) feature: export a graph
+* [graph](features/graph.md) feature: visualize a dataset
+* [load](features/load.md) feature: import data into a dataset
+* [query](features/query.md) feature: perform a query on a dataset
 
 ## Demo for SciPy 2024
 
-**A Geist report that employs two different query languages**. We demonstrate how Geist can be used to extract triples from a relational database, store them as a RDF dataset, and perform SPARQL queries on it. Instead of purely in-memory operations, Geist can be used to migrate data. With the hamming numbers dataset stored in DuckDB as an input, we generate a [report](commands/report/scipy-2024-demo/report.html) to describe the original dataset and the subgraph extracted via SQL and SPARQL queries using a single [Geist script](https://github.com/CIRSS/geist-p/blob/main/demo/04-scipy-2024/run.sh).
+**A Geist report that employs two different query languages**. We demonstrate how Geist can be used to extract triples from a relational database, store them as a RDF dataset, and perform SPARQL queries on it. Instead of purely in-memory operations, Geist can be used to migrate data. With the hamming numbers dataset stored in DuckDB as an input, we generate a [report](scipy-2024-demo/report.html) to describe the original dataset and the subgraph extracted via SQL and SPARQL queries using a single [Geist script](https://github.com/CIRSS/geist-p/blob/main/demo/04-scipy-2024/run.sh).

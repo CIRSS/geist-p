@@ -3,6 +3,7 @@ def geist_graph(datastore, dataset, hasoutput, config={}):
     Visualize a dataset
     :param datastore: a string. Backend datastores, only rdflib is supported for now
     :param dataset: a string. Name of the dataset to be visualized
+    :param hasoutput: bool. True to export as a file or print it out
     :param config: a dictionary with 'rankdir', 'mappings', 'on', 'samecolor', 'outputroot', 'outputfile', and 'outputformat' keys
     :return G: a Graphviz graph object
     """

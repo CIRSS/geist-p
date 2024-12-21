@@ -2,7 +2,7 @@ def geist_export(datastore, dataset, hasoutput, config={}):
     """
     Export a dataset.
     :param datastore: a string. Backend datastores, i.e., rdflib, duckdb
-    :param dataset: a string represents the name of the dataset to be exported OR a Geist graph object OR a DuckDB connection
+    :param dataset: a string represents the name of the dataset to be exported OR a GeistGraph object OR a DuckPyConnection object
     :param hasoutput: bool. True to export as a file or print it out
     :param config: a dictionary with 'outputroot', 'outputfile', 'outputformat', and 'table' keys
                    the 'table' key is required when datastore=duckdb

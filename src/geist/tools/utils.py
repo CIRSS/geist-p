@@ -6,7 +6,7 @@ TAGS = ["use", "template", "create", "load", "query", "destroy", "graph", "graph
 
 def validate_dataset(ctx, param, value):
     if value == ':memory:':
-        raise BadParameter("Please use another dataset name as ':memory:' is a reserved field for dataset existing in memory only")
+        raise BadParameter("Please use another dataset name as ':memory:' is a reserved value for dataset existing in memory only")
     return value
 
 def get_full_path(dir, file):

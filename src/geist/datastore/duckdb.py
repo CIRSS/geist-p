@@ -12,6 +12,8 @@ def create_sql_dataset(data_path, inputfile, inputformat, table):
 
 def load_sql_dataset(dataset):
     if isinstance(dataset, str):
+        if dataset == ':memory:':
+            raise ValueError(":memory: is a reserved value for data stored in memory. Please specify another dataset name OR pass the DuckDBPyConnection object directly.")
         data_path = DATA_DIR + dataset + ".duckdb"
         if not os.path.isfile(data_path):
             raise ValueError("Please create the SQL dataset ({dataset}) before loading it. Run `geist create duckdb --help` for detailed information".format(dataset=dataset))
@@ -54,8 +56,8 @@ def duckdb_create(dataset, inputfile, inputformat, table):
 def duckdb_load(dataset, inputfile, inputformat, table):
     """Import data into a SQL dataset"""    
     conn = load_sql_dataset(dataset)
-    df = inputfile2df(inputfile, inputformat)
-    conn.sql(f'INSERT INTO {table} SELECT * FROM df')
+    locals()[table+"2add"] = inputfile2df(inputfile, inputformat)
+    conn.sql(f'INSERT INTO {table} SELECT * FROM {table}2add;')
     return conn
 
 def duckdb_query(dataset, inputfile, hasoutput, outputroot, outputfile):

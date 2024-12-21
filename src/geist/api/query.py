@@ -10,7 +10,6 @@ def geist_query(datastore, dataset, inputfile, isinputpath, hasoutput, config={}
     :param hasoutput: bool. True to store the query results as a CSV file or print them out
     :param config: a dictionary with 'outputroot' and 'outputfile' keys
                    by default, outputroot='./', outputfile=None
-    :param outputfile: a string. Path of the file to store the query results
     :return res: a Pandas data frame containing the query results
     """
     outputroot = './' if 'outputroot' not in config else config['outputroot']

@@ -2,11 +2,11 @@ The `map` replaces the original string (JSON string) on selected columns (if pro
 
 |Name           | Description |
 |---------------|-------------|
-|`isfilepath`   |A bool value to denote if the given data is a file path or not (by default: True, which denotes the given data is a file path) |
+|`isfilepath`   |A bool value to denote if the given data is a file path or not (by default: `True`, which denotes the given data is a file path) |
 |`mappings`     |File of the mappings to shorten text (str): path of a JSON file, where the key is the original text and the value is the shorter text. |
-|`on`           |A column or a list of selected columns. All columns will be selected by default (None) |
+|`on`           |A column or a list of selected columns. All columns will be selected by default (`None`) |
 
-??? example "data.json"
+??? info "data.json"
     ```
     {
         "v1": {"0":"test_a1","1":"test_b1","2":"test_c1"}, 
@@ -15,7 +15,7 @@ The `map` replaces the original string (JSON string) on selected columns (if pro
     }
     ```
 
-??? example "mapping.json"
+??? info "mapping.json"
     ```
     {"test_": ""}
     ```

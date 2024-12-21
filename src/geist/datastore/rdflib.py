@@ -60,6 +60,8 @@ def create_rdf_graph(input_file, input_format, colnames_of_triples, infer):
 
 def load_rdf_dataset(dataset):
     if isinstance(dataset, str):
+        if dataset == ':memory:':
+            raise ValueError(":memory: is a reserved value for data stored in memory. Please specify another dataset name OR pass a GeistGraph object (a dictionary with rdf_graph and infer keys).")
         data_path = DATA_DIR + dataset + ".pkl"
         if not os.path.isfile(data_path):
             raise ValueError("Please create the RDF dataset ({dataset}) before loading it. Run `geist create rdflib --help` for detailed information".format(dataset=dataset))

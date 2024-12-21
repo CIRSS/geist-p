@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.3.0
+
+- Code refactoring: datastores -> api -> commands (e.g., code under the api folder is based on code under the datastore folder)
+- Add Python API: (1) Connection class with create, close, destroy, export, graph, load, and query methods; and (2) create, destroy, export, graph, load, query, and report functions
+- Update CLI of report and query commands: replace --file with --inputfile
+- Update the documentation
+
 ## v0.2.1
 
 - Add the Geist Poster for [SciPy 2024](https://www.scipy2024.scipy.org)
