@@ -1080,7 +1080,40 @@ Options:
 </details>
 </div>
 <div class="tabbed-block">
-<p>Check the <a href="report/tags/tag-destroy.md">destroy</a> tag.</p>
+<p>The <code>destroy</code> tag deletes a dataset. Here are parameters of the <code>destroy</code> tag:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dataset</code></td>
+<td>Name of RDF dataset to be removed (default "kb")</td>
+</tr>
+<tr>
+<td><code>datastore</code></td>
+<td>Data backend. <code>duckdb</code> and <code>rdflib</code> are available for now. (by default, "rdflib")</td>
+</tr>
+<tr>
+<td><code>quiet</code></td>
+<td>Suppress error messages if the provided dataset does not exist</td>
+</tr>
+</tbody>
+</table>
+<details class="example">
+<summary>Example: delete the <code>test</code> dataset</summary>
+<p><div class="highlight"><pre><span></span><code>{% destroy dataset=&quot;test&quot; %}
+</code></pre></div>
+OR
+<div class="highlight"><pre><span></span><code>{% destroy &quot;test&quot; %}
+</code></pre></div></p>
+<p>The <code>.geistdata/test.pkl</code> file will be removed after this operation. By default, you will get an error message if the provided dataset (in this case, it is the <code>test</code> dataset) does not exist. To suppress this error message, you can add the <code>quiet</code> parameter:</p>
+<div class="highlight"><pre><span></span><code>{% destroy &quot;test&quot;, quiet=True %}
+</code></pre></div>
+</details>
 </div>
 </div>
 </div>

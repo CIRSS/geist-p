@@ -1068,7 +1068,46 @@ Options:
 </details>
 </div>
 <div class="tabbed-block">
-<p>Check the <a href="report/tags/tag-graph.md">graph</a> tag.</p>
+<p>The <code>graph</code> tag visualizes a dataset. Here are parameters of the <code>graph</code> tag:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dataset</code></td>
+<td>Name of RDF dataset to be visualized (default "kb")</td>
+</tr>
+<tr>
+<td><code>datastore</code></td>
+<td>Data backend. <code>duckdb</code> and <code>rdflib</code> are available for now. (by default, "rdflib")</td>
+</tr>
+<tr>
+<td><code>rankdir</code></td>
+<td>Direction of the graph (default TB): TB or BT or LR or RL</td>
+</tr>
+<tr>
+<td><code>mappings</code></td>
+<td>File of the mappings to shorten text (str): path of a JSON file, where the key is the original text and the value is the shorter text.</td>
+</tr>
+<tr>
+<td><code>on</code></td>
+<td>Column(s) to be mapped (default None, which means all columns will be mapped)</td>
+</tr>
+<tr>
+<td><code>samecolor</code></td>
+<td>A bool value to denote if all edges are filled with the same color (default: True)</td>
+</tr>
+</tbody>
+</table>
+<details class="example">
+<summary>Example: visualize the <code>test</code> dataset</summary>
+<div class="highlight"><pre><span></span><code>{% graph &quot;test&quot;, datastore=&quot;rdflib&quot; %}
+</code></pre></div>
+</details>
 </div>
 </div>
 </div>

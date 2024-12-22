@@ -1088,7 +1088,46 @@ Options:
 </details>
 </div>
 <div class="tabbed-block">
-<p>Check the <a href="report/tags/tag-load.md">load</a> tag.</p>
+<p>The <code>load</code> tag imports data into a dataset. Here are parameters of the <code>load</code> tag:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dataset</code></td>
+<td>Name of RDF dataset to be removed (default "kb")</td>
+</tr>
+<tr>
+<td><code>datastore</code></td>
+<td>Data backend. <code>duckdb</code> and <code>rdflib</code> are available for now. (by default, "rdflib")</td>
+</tr>
+<tr>
+<td><code>inputformat</code></td>
+<td>Format of the file to be loaded as triples (default json-ld)</td>
+</tr>
+<tr>
+<td><code>isfilepath</code></td>
+<td>A bool value to denote if the given data is a file path or not (default True, which denotes the given data is a file path)</td>
+</tr>
+<tr>
+<td><code>table</code></td>
+<td>Table name to be loaded. Available for <code>duckdb</code> data backend only.</td>
+</tr>
+<tr>
+<td><code>colnames</code></td>
+<td>Column names of triples with the format of [[subject1, predicate1, object1], [subject2, predicate2, object2], ...] when the input format is csv. Available for <code>rdflib</code> data backend only.</td>
+</tr>
+</tbody>
+</table>
+<details class="example">
+<summary>Example: load a file into the <code>test</code> dataset</summary>
+<div class="highlight"><pre><span></span><code>{% load &quot;test&quot;, datastore=&quot;rdflib&quot; %} test_add.jsonld {% endload %}
+</code></pre></div>
+</details>
 </div>
 </div>
 </div>

@@ -1122,7 +1122,52 @@ ORDER BY ?s ?p ?o
 </details>
 </div>
 <div class="tabbed-block">
-<p>Check the <a href="report/tags/tag-query.md">query</a> tag.</p>
+<p>The <code>query</code> tag performs a query on a dataset and returns a Pandas DataFrame. Here are parameters of the <code>query</code> tag:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dataset</code></td>
+<td>Name of a dataset to query (default "kb")</td>
+</tr>
+<tr>
+<td><code>datastore</code></td>
+<td>Data backend. <code>duckdb</code> and <code>rdflib</code> are available for now. (by default, "rdflib")</td>
+</tr>
+<tr>
+<td><code>isfilepath</code></td>
+<td>A bool value to denote if the given data is a file path or not (default True, which denotes the given data is a file path)</td>
+</tr>
+</tbody>
+</table>
+<details class="example">
+<summary>Example 1: the given string is not a file path</summary>
+<div class="highlight"><pre><span></span><code>{% query &quot;test&quot;, datastore=&quot;rdflib&quot;, isfilepath=False %}
+    SELECT ?s ?p ?o
+    WHERE {
+        ?s ?p ?o
+    }
+    ORDER BY ?s ?p ?o
+{% endquery %}
+</code></pre></div>
+</details>
+<details class="example">
+<summary>Example 2: the given string is a file path</summary>
+<p><div class="highlight"><pre><span></span><code>{% query &quot;test&quot;, datastore=&quot;rdflib&quot;, isfilepath=True %} query_file {% endquery %}
+</code></pre></div>
+Here is the query_file's content:
+<div class="highlight"><pre><span></span><code>SELECT ?s ?p ?o
+WHERE {
+    ?s ?p ?o
+}
+ORDER BY ?s ?p ?o
+</code></pre></div></p>
+</details>
 </div>
 </div>
 </div>
