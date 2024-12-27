@@ -432,6 +432,10 @@ Options:
   -oroot, --outputroot TEXT      Path of the directory to store the expanded
                                  report (default: current directory)
   -so, --suppressoutput BOOLEAN  Suppress output or not (default: False)
+  -a, --args <TEXT TEXT>...      Arguments to be passed to the report
+                                 template, e.g., (arg, value) indicates that
+                                 {{ arg }} in the report template will be
+                                 replaced by value
   --help                         Show this message and exit.
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

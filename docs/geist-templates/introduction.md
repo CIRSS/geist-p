@@ -14,7 +14,7 @@ A Geist template relies on tags and filters.
 
 ### Tags
 
-Tags are used within the statements, i.e., `{% ... %}`. There are two types of tags, `StandaloneTag` and `ContainerTag`. While the `StandaloneTag` does not require a closing tag, the `ContainerTag` does. Besides the Jinja predefined tags (e.g., `for`), Geist supports the following tags:
+Tags are used within the statements, i.e., `{% ... %}`. There are two types of tags, `StandaloneTag` and `ContainerTag`. While the `StandaloneTag` does not require a closing tag, the `ContainerTag` does. Besides the Jinja [predefined tags](https://jinja.palletsprojects.com/en/stable/templates/#list-of-control-structures) (e.g., `for`), Geist supports the following tags:
 
 `StandaloneTag`:
 
@@ -40,7 +40,7 @@ Custom tags can be defined through files with the [use](tags/tag-use.md) tag.
 
 Filters are used to modify variables. Each filter can only take one variable as input. Multiple filters can be applied to a single variable in sequence. For example, `{{ var|filter1|filter2|filter3 }}` denotes the variable `var` will be processed through `filter1` first, then `filter2`, and `filter3` at the end.
 
-Geist supports the following filters:
+Besides the Jinja [predefined filters](https://jinja.palletsprojects.com/en/stable/templates/#list-of-builtin-filters), Geist supports the following filters:
 
 - **head**: extract the first 5 rows of a Pandas data frame
 - **csv2df**: convert a CSV string to a Pandas data frame

@@ -1,4 +1,4 @@
-import json, sys
+import json, re
 from geist.tools.utils import set_tags, ensure_dir_exists, get_content, update_outputroot, include_filepaths, generate_template_class, map_df
 from geist.tools.filters import head, csv2df, dict2df, json2df, json2dict, df2json, df2htmltable, escape_quotes, process_str_for_html
 from jinja2 import nodes, Environment, FileSystemLoader
@@ -205,7 +205,7 @@ class TableExtension(ContainerTag):
         code = df2htmltable(df)
         return code    
 
-def geist_report(inputfile, isinputpath=False, outputroot='./', suppressoutput=True):
+def geist_report(inputfile, isinputpath=False, outputroot='./', suppressoutput=True, args={}):
     """
     Expand a report using dataset(s).
     :param inputfile: a string. Report to be expanded
@@ -214,9 +214,9 @@ def geist_report(inputfile, isinputpath=False, outputroot='./', suppressoutput=T
     :param suppressoutput: bool. True to suppress output (default: True)
     :return report: a string. The expanded report
     """
+    TAGS = set_tags()
     update_outputroot(outputroot)
     content = get_content(inputfile, isinputpath)
-    TAGS = set_tags()
 
     # Create a new global environment
     global environment
@@ -238,7 +238,7 @@ def geist_report(inputfile, isinputpath=False, outputroot='./', suppressoutput=T
 
     # Render the report
     template = environment.from_string(content)
-    report = template.render()
+    report = template.render(args)
 
     if not suppressoutput:
         print(report)

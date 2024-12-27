@@ -12,6 +12,10 @@ Options:
 -oroot, --outputroot TEXT      Path of the directory to store the expanded
                                 report (default: current directory)
 -so, --suppressoutput BOOLEAN  Suppress output or not (default: False)
+-a, --args <TEXT TEXT>...      Arguments to be passed to the report
+                                 template, e.g., (arg, value) indicates that
+                                 {{ arg }} in the report template will be
+                                 replaced by value
 --help                         Show this message and exit.
 ```
 
@@ -53,6 +57,35 @@ Options:
     {% create "test", datastore="rdflib", inputformat="nt", isfilepath=False %}
         <http://example.com/drewp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
         <http://example.com/drewp> <http://example.com/says> "Hello World" .
+    {% endcreate %}
+
+    {% query "test", datastore="rdflib", isfilepath=False as all_triples %}
+        SELECT ?s ?p ?o
+        WHERE {
+            ?s ?p ?o
+        }
+        ORDER BY ?s ?p ?o
+    {% endquery %}
+
+    {% for _, row in all_triples.iterrows() %}
+        Subject: {{ row["s"] }}, Predicate: {{ row["p"] }}, Object: {{ row["o"] }}.
+    {% endfor %}
+
+    {% destroy "test", datastore="rdflib" %}
+    ```
+
+??? example "Example 3: expand a report from a file with external arguments"
+
+    ```
+    geist report --inputfile report.geist --args sentence "Hello World" --args feeling Happy
+    ```
+
+    Here is the report.geist file:
+    ```
+    {% create "test", datastore="rdflib", inputformat="nt", isfilepath=False %}
+        <http://example.com/drewp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+        <http://example.com/drewp> <http://example.com/says> "{{ sentence }}" .
+        <http://example.com/drewp> <http://example.com/feels> "{{ feeling }}" .
     {% endcreate %}
 
     {% query "test", datastore="rdflib", isfilepath=False as all_triples %}
