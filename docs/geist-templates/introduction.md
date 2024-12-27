@@ -44,8 +44,8 @@ Geist supports the following filters:
 
 - **head**: extract the first 5 rows of a Pandas data frame
 - **csv2df**: convert a CSV string to a Pandas data frame
-- **json2df**: convert a JSON string to a Pandas data frame
 - **dict2df**: convert a dictionary to a Pandas data frame
+- **json2df**: convert a JSON string to a Pandas data frame
 - **json2dict**: convert a JSON string to a dictionary
 - **df2json**: convert a Pandas data frame to a JSON string
 - **df2htmltable**: convert a Pandas data frame to an HTML table

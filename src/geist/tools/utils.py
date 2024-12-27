@@ -2,7 +2,9 @@ import json, re, os
 import pandas as pd
 from click import BadParameter
 
-TAGS = ["use", "template", "create", "load", "query", "destroy", "graph", "graph2", "component", "map", "html", "img", "table", "include", "import", "macro", "block", "extends", "call", "filter", "set", "for", "if", "elif", "else"]
+def set_tags():
+    tags = ["use", "template", "create", "load", "query", "destroy", "graph", "graph2", "component", "map", "html", "img", "table", "include", "import", "macro", "block", "extends", "call", "filter", "set", "for", "if", "elif", "else"]
+    return tags
 
 def validate_dataset(ctx, param, value):
     if value == ':memory:':
@@ -174,7 +176,7 @@ def get_content(data, isfilepath):
         content = data
     return content
 
-def generate_template_class(file_paths):
+def generate_template_class(file_paths, TAGS):
     """
     This function is to generate {Tag}Extension class based on the give file paths
     :param file_paths: a list of file paths
@@ -215,4 +217,3 @@ class {tag_cap}Extension(StandaloneTag):
 {render_func}
 globals()["environment"].add_extension({tag_cap}Extension)'''.format(tag_cap=tag_cap, tag_low=tag_low, render_func=render_func)
         return templates
-

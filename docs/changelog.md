@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.1
+
+- Fix minor bug of the report feature: update TAGS and filters
+
 ## v0.3.0
 
 - Code refactoring: datastores -> api -> commands (e.g., code under the api folder is based on code under the datastore folder)

@@ -1,6 +1,6 @@
 import json, sys
-from geist.tools.utils import ensure_dir_exists, get_content, update_outputroot, include_filepaths, generate_template_class, map_df
-from geist.tools.filters import head, json2df, json2dict, dict2df, df2json, df2htmltable, escape_quotes, process_str_for_html
+from geist.tools.utils import set_tags, ensure_dir_exists, get_content, update_outputroot, include_filepaths, generate_template_class, map_df
+from geist.tools.filters import head, csv2df, dict2df, json2df, json2dict, df2json, df2htmltable, escape_quotes, process_str_for_html
 from jinja2 import nodes, Environment, FileSystemLoader
 from jinja2.compiler import CodeGenerator, Frame
 from jinja2_simple_tags import StandaloneTag, ContainerTag
@@ -66,7 +66,7 @@ class LoadExtension(ContainerTag):
         content = get_content(environment.from_string(str(caller())).render(), isfilepath)
         if datastore == "rdflib":
             from geist.datastore.rdflib import rdflib_load
-            rdflib_load(dataset, content, inputformat, colnames)
+            rdflib_load(dataset, content, inputformat, colnames, False)
         elif datastore == "duckdb":
             from geist.datastore.duckdb import duckdb_load
             conn = duckdb_load(dataset, content, inputformat, table)
@@ -216,6 +216,7 @@ def geist_report(inputfile, isinputpath=False, outputroot='./', suppressoutput=T
     """
     update_outputroot(outputroot)
     content = get_content(inputfile, isinputpath)
+    TAGS = set_tags()
 
     # Create a new global environment
     global environment
@@ -225,14 +226,14 @@ def geist_report(inputfile, isinputpath=False, outputroot='./', suppressoutput=T
         extensions=[CreateExtension, LoadExtension, QueryExtension, DestroyExtension, GraphExtension, Graph2Extension, ComponentExtension, MapExtension, UseExtension, HtmlExtension, ImgExtension, TableExtension],
         cache_size=0 # recompile templates all the time
     )
-    for filter in ["head", "json2df", "json2dict", "dict2df", "df2json", "df2htmltable", "escape_quotes", "process_str_for_html"]:
+    for filter in ["head", "csv2df", "dict2df", "json2df", "json2dict", "df2json", "df2htmltable", "escape_quotes", "process_str_for_html"]:
         environment.filters[filter] = globals()[filter]
     environment.code_generator_class = CustomCodeGenerator
 
     # Define custom tags based on files with the "use" tag
     file_paths = include_filepaths(content)
     if file_paths:
-        templates = generate_template_class(file_paths)
+        templates = generate_template_class(file_paths, TAGS)
         exec(templates, globals())
 
     # Render the report
