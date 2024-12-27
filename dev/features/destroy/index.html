@@ -1286,9 +1286,9 @@
 
   <h1>Destroy</h1>
 
-<p><em>destroy</em> feature can delete a dataset stored on disk or close a connection in memory.</p>
-<p>You can write a <a href="geist-templates/introduction.md">Geist template</a> with the <a href="geist-templates/tags/tag-destroy.md">destroy</a> tag. You can also use CLI or Python API step by step as follows:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:4"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">CLI: destroy command</label><label for="__tabbed_1_2">Python API: destroy() function</label><label for="__tabbed_1_3">Python API: destroy method of the Connection Class</label><label for="__tabbed_1_4">Python API: close method of the Connection Class</label></div>
+<p><strong>destroy</strong> feature can delete a dataset stored on disk or close a connection in memory.</p>
+<p>You can write a <a href="geist-templates/introduction.md">Geist template</a> with the <a href="geist-templates/tags/tag-destroy.md">destroy</a> tag. You can also use <strong>CLI</strong> or <strong>Python API</strong> step by step as follows:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:4"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">CLI: destroy command</label><label for="__tabbed_1_2">Python API: destroy function</label><label for="__tabbed_1_3">Python API: destroy method of the Connection Class</label><label for="__tabbed_1_4">Python API: close method of the Connection Class</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><em>destroy</em> command can delete a dataset. The <code>.duckdb</code> or the <code>.pkl</code> file of the corresponding dataset will be discarded.</p>
@@ -1348,7 +1348,7 @@ Options:
 </details>
 </div>
 <div class="tabbed-block">
-<p><em>destroy</em> function can delete a dataset.</p>
+<p><strong>destroy</strong> function can delete a dataset.</p>
 <p>Parameters description for <em>destroy()</em>:</p>
 <table>
 <thead>
@@ -1363,20 +1363,20 @@ Options:
 <tr>
 <td>datastore</td>
 <td>string</td>
-<td>A backend datastore, i.e., rdflib or duckdb</td>
-<td>[required]</td>
+<td>A backend datastore, i.e., <code>rdflib</code> or <code>duckdb</code></td>
+<td><code>[required]</code></td>
 </tr>
 <tr>
 <td>dataset</td>
 <td>string</td>
 <td>Name of the dataset to be removed.</td>
-<td>[required]</td>
+<td><code>[required]</code></td>
 </tr>
 <tr>
 <td>quiet</td>
 <td>bool</td>
 <td>True to suppress error messages if the provided dataset does not exist</td>
-<td>False</td>
+<td><code>False</code></td>
 </tr>
 </tbody>
 </table>
@@ -1392,7 +1392,7 @@ geist.destroy(datastore=&#39;rdflib&#39;, dataset=&#39;test&#39;, quiet=True)
 </details>
 </div>
 <div class="tabbed-block">
-<p><em>destroy</em><em> method of the </em>Connection* class is to delete the dataset and close the dataset connection.</p>
+<p><strong>destroy</strong> method of the <em>Connection</em> class is to delete the dataset and close the dataset connection.</p>
 <details class="example">
 <summary>Example: delete the dataset and close the connection</summary>
 <p>Suppose <code>connection</code> is the instance of the <em>Connection</em> class for a DuckDB dataset named <code>test</code> stored on disk. The following code will delete the <code>.geistdata/duckdb/test.duckdb</code> file.</p>
@@ -1402,7 +1402,7 @@ connection.destroy()
 </details>
 </div>
 <div class="tabbed-block">
-<p><em>close</em><em> method of the </em>Connection* class is to close the dataset connection, i.e., reset all attributes to None. No parameters are required.</p>
+<p><strong>close</strong> method of the <em>Connection</em> class is to close the dataset connection, i.e., reset all attributes to None. No parameters are required.</p>
 <details class="example">
 <summary>Example: close the connection</summary>
 <p>Suppose <code>connection</code> is the instance of the <em>Connection</em> class.</p>

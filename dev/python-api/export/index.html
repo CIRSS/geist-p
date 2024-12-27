@@ -1310,7 +1310,7 @@
 
   <h1>Function export</h1>
 
-<p><em>export</em> function can export a dataset.</p>
+<p><strong>export</strong> function can export a dataset.</p>
 <p>Parameters description for <em>export()</em>:</p>
 <table>
 <thead>
@@ -1325,20 +1325,20 @@
 <tr>
 <td>datastore</td>
 <td>string</td>
-<td>A backend datastore, i.e., rdflib or duckdb</td>
-<td>[required]</td>
+<td>A backend datastore, i.e., <code>rdflib</code> or <code>duckdb</code></td>
+<td><code>[required]</code></td>
 </tr>
 <tr>
 <td>dataset</td>
-<td>string OR DuckPyConnection object OR GeistGraph object</td>
-<td>Dataset to load an object: (1) A string indicates the name of the dataset stored on disk OR (2) a DuckPyConnection object OR a GeistGraph object for dataset in memory</td>
+<td>string OR <code>DuckPyConnection</code> object OR <code>GeistGraph</code> object</td>
+<td>Dataset to load an object: (1) A string indicates the name of the dataset stored on disk OR (2) a <code>DuckPyConnection</code> object OR a <code>GeistGraph</code> object for dataset in memory</td>
 <td>[required]</td>
 </tr>
 <tr>
 <td>hasoutput</td>
 <td>bool</td>
-<td>True to export as a file or print it out</td>
-<td>[required]</td>
+<td><code>True</code> to export as a file or print it out</td>
+<td><code>[required]</code></td>
 </tr>
 <tr>
 <td>config</td>
@@ -1366,25 +1366,25 @@
 <td>outputroot</td>
 <td>string</td>
 <td>Path of the directory to store the exported table</td>
-<td>'./'</td>
+<td><code>./</code></td>
 </tr>
 <tr>
 <td>outputfile</td>
 <td>string</td>
 <td>Path of the file to store the exported table</td>
-<td>None</td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td>outputformat</td>
 <td>string</td>
-<td>Format of the exported table, i.e., 'csv' or 'json'</td>
-<td>'csv'</td>
+<td>Format of the exported table, i.e., <code>csv</code> or <code>json</code></td>
+<td><code>csv</code></td>
 </tr>
 <tr>
 <td>table</td>
 <td>string</td>
 <td>Name of the table to be exported</td>
-<td>'df'</td>
+<td><code>df</code></td>
 </tr>
 </tbody>
 </table>
@@ -1404,19 +1404,19 @@
 <td>outputroot</td>
 <td>string</td>
 <td>Path of the directory to store these exported triples</td>
-<td>'./'</td>
+<td><code>./</code></td>
 </tr>
 <tr>
 <td>outputfile</td>
 <td>string</td>
 <td>Path of the file to store these exported triples</td>
-<td>None</td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td>outputformat</td>
 <td>string</td>
-<td>Format of the exported triples, i.e., 'json-ld', 'n3', 'nquads', 'nt', 'hext', 'pretty-xml', 'trig', 'trix', 'turtle', 'longturtle', or 'xml'.</td>
-<td>'nt'</td>
+<td>Format of the exported triples, i.e., <code>json-ld</code>, <code>n3</code>, <code>nquads</code>, <code>nt</code>, <code>hext</code>, <code>pretty-xml</code>, <code>trig</code>, <code>trix</code>, <code>turtle</code>, <code>longturtle</code>, or <code>xml</code>.</td>
+<td><code>nt</code></td>
 </tr>
 </tbody>
 </table>

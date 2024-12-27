@@ -1286,9 +1286,9 @@
 
   <h1>Create</h1>
 
-<p><em>create</em> feature can create a new dataset on disk or in memory. For the disk option, a <code>.duckdb</code> or a <code>.pkl</code> file will be created under the <code>.geistdata/duckdb</code> or the <code>.geistdata/rdflib</code> folder with the same name of this dataset. For the memory option, a <code>DuckDBPyConnection</code> object or a <code>GeistGraph</code> object (a dictionary with "rdf_graph" and "infer" keys) will be returned.</p>
-<p>You can write a <a href="geist-templates/introduction.md">Geist template</a> with the <a href="geist-templates/tags/tag-create.md">create</a> tag. You can also use CLI or Python API step by step as follows:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">CLI: create command</label><label for="__tabbed_1_2">Python API: create() function</label><label for="__tabbed_1_3">Python API: create method of the Connection Class</label></div>
+<p><strong>create</strong> feature can create a new dataset on disk or in memory. For the disk option, a <code>.duckdb</code> or a <code>.pkl</code> file will be created under the <code>.geistdata/duckdb</code> or the <code>.geistdata/rdflib</code> folder with the same name of this dataset. For the memory option, a <code>DuckDBPyConnection</code> object or a <code>GeistGraph</code> object (a dictionary with <code>rdf_graph</code> and <code>infer</code> keys) will be returned.</p>
+<p>You can write a <a href="geist-templates/introduction.md">Geist template</a> with the <a href="geist-templates/tags/tag-create.md">create</a> tag. You can also use <strong>CLI</strong> or <strong>Python API</strong> step by step as follows:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">CLI: create command</label><label for="__tabbed_1_2">Python API: create function</label><label for="__tabbed_1_3">Python API: create method of the Connection Class</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>The <em>create</em> command has two subcommands, both of which create a new dataset on disk. The dataset name <code>:memory:</code> is a reserved value for datasets that exist only in memory and is not allowed in the CLI.</p>
@@ -1388,7 +1388,7 @@ Code:
 </details>
 </div>
 <div class="tabbed-block">
-<p><em>create</em> function can create a new dataset on disk or in memory.</p>
+<p><strong>create</strong> function can create a new dataset on disk or in memory.</p>
 <p>Parameters description for <em>create()</em>:</p>
 <table>
 <thead>
@@ -1403,32 +1403,32 @@ Code:
 <tr>
 <td>datastore</td>
 <td>string</td>
-<td>A backend datastore, i.e., rdflib or duckdb</td>
-<td>[required]</td>
+<td>A backend datastore, i.e., <code>rdflib</code> or <code>duckdb</code></td>
+<td><code>[required]</code></td>
 </tr>
 <tr>
 <td>dataset</td>
 <td>string</td>
 <td>Name of the dataset to be created. Note that <code>:memory:</code> is a reserved value for datasets that exist only in memory</td>
-<td>[required]</td>
+<td><code>[required]</code></td>
 </tr>
 <tr>
 <td>inputfile</td>
 <td>string</td>
 <td>A file to be loaded</td>
-<td>[required]</td>
+<td><code>[required]</code></td>
 </tr>
 <tr>
 <td>inputformat</td>
 <td>string</td>
 <td>Format of the file to be loaded</td>
-<td>[required]</td>
+<td><code>[required]</code></td>
 </tr>
 <tr>
 <td>isinputpath</td>
 <td>bool</td>
 <td>True if the inputfile is the file path, otherwise the inputfile is the content</td>
-<td>[required]</td>
+<td><code>[required]</code></td>
 </tr>
 <tr>
 <td>config</td>
@@ -1456,7 +1456,7 @@ Code:
 <td>table</td>
 <td>string</td>
 <td>Name of the table to be created</td>
-<td>df</td>
+<td><code>df</code></td>
 </tr>
 </tbody>
 </table>
@@ -1475,14 +1475,14 @@ Code:
 <tr>
 <td>colnames</td>
 <td>string</td>
-<td>Column names of triples with the format of [[subject1, predicate1, object1], [subject2, predicate2, object2], ...]</td>
-<td>[required] when inputformat=csv</td>
+<td>Column names of triples with the format of <code>[[subject1, predicate1, object1], [subject2, predicate2, object2], ...]</code></td>
+<td><code>[required]</code> when <code>inputformat=csv</code></td>
 </tr>
 <tr>
 <td>infer</td>
 <td>string</td>
-<td>Inference to perform on update, i.e., none, <a href="https://owl-rl.readthedocs.io/en/latest/RDFSClosure.html#owlrl.RDFSClosure.RDFS_Semantics">rdfs</a>, <a href="https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules">owl</a>, or <a href="https://owl-rl.readthedocs.io/en/latest/CombinedClosure.html#owlrl.CombinedClosure.RDFS_OWLRL_Semantics">rdfs_owl</a></td>
-<td>none</td>
+<td>Inference to perform on update, i.e., <code>none</code>, <code>[rdfs](https://owl-rl.readthedocs.io/en/latest/RDFSClosure.html#owlrl.RDFSClosure.RDFS_Semantics)</code>, <code>[owl](https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules)</code>, or <code>[rdfs_owl](https://owl-rl.readthedocs.io/en/latest/CombinedClosure.html#owlrl.CombinedClosure.RDFS_OWLRL_Semantics)</code></td>
+<td><code>none</code></td>
 </tr>
 </tbody>
 </table>
@@ -1555,7 +1555,7 @@ conn = geist.create(datastore=&#39;duckdb&#39;, dataset=&#39;:memory:&#39;, inpu
 </details>
 </div>
 <div class="tabbed-block">
-<p><em>create</em><em> method of the </em>Connection<em> class creates a new dataset on disk or in memory. It is very similar to the <code>create()</code> function. The only difference is that the <code>datastore</code> and the <code>dataset</code> parameters do not need to be passed as they have already been specified while initialzing the </em>Connection* class.</p>
+<p><strong>create</strong> method of the <em>Connection</em> class creates a new dataset on disk or in memory. It is very similar to the <code>create()</code> function. The only difference is that the <code>datastore</code> and the <code>dataset</code> parameters do not need to be passed as they have already been specified while initialzing the <em>Connection</em> class.</p>
 <p>Parameters description for <em>create</em> method of the <em>Connection</em> class:</p>
 <table>
 <thead>
@@ -1631,7 +1631,7 @@ conn = geist.create(datastore=&#39;duckdb&#39;, dataset=&#39;:memory:&#39;, inpu
 <td>colnames</td>
 <td>string</td>
 <td>Column names of triples with the format of [[subject1, predicate1, object1], [subject2, predicate2, object2], ...]</td>
-<td>[required] when inputformat=csv</td>
+<td>[required] when <code>inputformat</code>='csv'</td>
 </tr>
 <tr>
 <td>infer</td>

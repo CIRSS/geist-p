@@ -1310,7 +1310,7 @@
 
   <h1>Function create</h1>
 
-<p><em>create</em> function can create a new dataset on disk or in memory.</p>
+<p><strong>create</strong> function can create a new dataset on disk or in memory.</p>
 <p>Parameters description for <em>create()</em>:</p>
 <table>
 <thead>
@@ -1325,32 +1325,32 @@
 <tr>
 <td>datastore</td>
 <td>string</td>
-<td>A backend datastore, i.e., rdflib or duckdb</td>
-<td>[required]</td>
+<td>A backend datastore, i.e., <code>rdflib</code> or <code>duckdb</code></td>
+<td><code>[required]</code></td>
 </tr>
 <tr>
 <td>dataset</td>
 <td>string</td>
 <td>Name of the dataset to be created. Note that <code>:memory:</code> is a reserved value for datasets that exist only in memory</td>
-<td>[required]</td>
+<td><code>[required]</code></td>
 </tr>
 <tr>
 <td>inputfile</td>
 <td>string</td>
 <td>A file to be loaded</td>
-<td>[required]</td>
+<td><code>[required]</code></td>
 </tr>
 <tr>
 <td>inputformat</td>
 <td>string</td>
 <td>Format of the file to be loaded</td>
-<td>[required]</td>
+<td><code>[required]</code></td>
 </tr>
 <tr>
 <td>isinputpath</td>
 <td>bool</td>
 <td>True if the inputfile is the file path, otherwise the inputfile is the content</td>
-<td>[required]</td>
+<td><code>[required]</code></td>
 </tr>
 <tr>
 <td>config</td>
@@ -1378,7 +1378,7 @@
 <td>table</td>
 <td>string</td>
 <td>Name of the table to be created</td>
-<td>df</td>
+<td><code>df</code></td>
 </tr>
 </tbody>
 </table>
@@ -1397,14 +1397,14 @@
 <tr>
 <td>colnames</td>
 <td>string</td>
-<td>Column names of triples with the format of [[subject1, predicate1, object1], [subject2, predicate2, object2], ...]</td>
-<td>[required] when inputformat=csv</td>
+<td>Column names of triples with the format of <code>[[subject1, predicate1, object1], [subject2, predicate2, object2], ...]</code></td>
+<td><code>[required]</code> when <code>inputformat=csv</code></td>
 </tr>
 <tr>
 <td>infer</td>
 <td>string</td>
-<td>Inference to perform on update, i.e., none, <a href="https://owl-rl.readthedocs.io/en/latest/RDFSClosure.html#owlrl.RDFSClosure.RDFS_Semantics">rdfs</a>, <a href="https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules">owl</a>, or <a href="https://owl-rl.readthedocs.io/en/latest/CombinedClosure.html#owlrl.CombinedClosure.RDFS_OWLRL_Semantics">rdfs_owl</a></td>
-<td>none</td>
+<td>Inference to perform on update, i.e., <code>none</code>, <code>[rdfs](https://owl-rl.readthedocs.io/en/latest/RDFSClosure.html#owlrl.RDFSClosure.RDFS_Semantics)</code>, <code>[owl](https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules)</code>, or <code>[rdfs_owl](https://owl-rl.readthedocs.io/en/latest/CombinedClosure.html#owlrl.CombinedClosure.RDFS_OWLRL_Semantics)</code></td>
+<td><code>none</code></td>
 </tr>
 </tbody>
 </table>
