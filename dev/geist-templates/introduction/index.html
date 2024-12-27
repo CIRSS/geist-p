@@ -1516,6 +1516,10 @@ Options:
 -oroot, --outputroot TEXT      Path of the directory to store the expanded
                                 report (default: current directory)
 -so, --suppressoutput BOOLEAN  Suppress output or not (default: False)
+-a, --args &lt;TEXT TEXT&gt;...      Arguments to be passed to the report
+                                 template, e.g., (arg, value) indicates that
+                                 {@ arg @} in the report template will be
+                                 replaced by value
 --help                         Show this message and exit.
 </code></pre></div></p>
 <details class="example">
@@ -1552,6 +1556,32 @@ END_TEMPLATE
 <div class="highlight"><pre><span></span><code>{% create &quot;test&quot;, datastore=&quot;rdflib&quot;, inputformat=&quot;nt&quot;, isfilepath=False %}
     &lt;http://example.com/drewp&gt; &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://xmlns.com/foaf/0.1/Person&gt; .
     &lt;http://example.com/drewp&gt; &lt;http://example.com/says&gt; &quot;Hello World&quot; .
+{% endcreate %}
+
+{% query &quot;test&quot;, datastore=&quot;rdflib&quot;, isfilepath=False as all_triples %}
+    SELECT ?s ?p ?o
+    WHERE {
+        ?s ?p ?o
+    }
+    ORDER BY ?s ?p ?o
+{% endquery %}
+
+{% for _, row in all_triples.iterrows() %}
+    Subject: {{ row[&quot;s&quot;] }}, Predicate: {{ row[&quot;p&quot;] }}, Object: {{ row[&quot;o&quot;] }}.
+{% endfor %}
+
+{% destroy &quot;test&quot;, datastore=&quot;rdflib&quot; %}
+</code></pre></div></p>
+</details>
+<details class="example">
+<summary>Example 3: expand a report from a file with external arguments</summary>
+<div class="highlight"><pre><span></span><code>geist report --inputfile report.geist --args sentence &quot;Hello World&quot; --args feeling Happy
+</code></pre></div>
+<p>Here is the report.geist file:
+<div class="highlight"><pre><span></span><code>{% create &quot;test&quot;, datastore=&quot;rdflib&quot;, inputformat=&quot;nt&quot;, isfilepath=False %}
+    &lt;http://example.com/drewp&gt; &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://xmlns.com/foaf/0.1/Person&gt; .
+    &lt;http://example.com/drewp&gt; &lt;http://example.com/says&gt; {@ sentence @} .
+    &lt;http://example.com/drewp&gt; &lt;http://example.com/feels&gt; {@ feeling @} .
 {% endcreate %}
 
 {% query &quot;test&quot;, datastore=&quot;rdflib&quot;, isfilepath=False as all_triples %}
@@ -1607,6 +1637,12 @@ END_TEMPLATE
 <td>True to suppress output</td>
 <td><code>True</code></td>
 </tr>
+<tr>
+<td>args</td>
+<td>dict</td>
+<td>External arguments, e.g., <code>{"arg1": "value1", "arg2": "value2"}</code> denotes that <code>{@ arg1 @}</code> and <code>{@ arg2 @}</code> in the report template will be replaced by <code>value1</code> and <code>value2</code> respectively</td>
+<td><code>{}</code></td>
+</tr>
 </tbody>
 </table>
 <details class="example">
@@ -1651,6 +1687,42 @@ END_TEMPLATE
 <div class="highlight"><pre><span></span><code>{% create &quot;test&quot;, datastore=&quot;rdflib&quot;, inputformat=&quot;nt&quot;, isfilepath=False %}
     &lt;http://example.com/drewp&gt; &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://xmlns.com/foaf/0.1/Person&gt; .
     &lt;http://example.com/drewp&gt; &lt;http://example.com/says&gt; &quot;Hello World&quot; .
+{% endcreate %}
+
+{% query &quot;test&quot;, datastore=&quot;rdflib&quot;, isfilepath=False as all_triples %}
+    SELECT ?s ?p ?o
+    WHERE {
+        ?s ?p ?o
+    }
+    ORDER BY ?s ?p ?o
+{% endquery %}
+
+{% for _, row in all_triples.iterrows() %}
+    Subject: {{ row[&quot;s&quot;] }}, Predicate: {{ row[&quot;p&quot;] }}, Object: {{ row[&quot;o&quot;] }}.
+{% endfor %}
+
+{% destroy &quot;test&quot;, datastore=&quot;rdflib&quot; %}
+</code></pre></div></p>
+</details>
+<details class="example">
+<summary>Example 3: expand a report from a file with external arguments</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">geist</span>
+
+<span class="c1"># Return the expanded report as a string variable named expanded_report</span>
+<span class="n">expanded_report</span> <span class="o">=</span> <span class="n">geist</span><span class="o">.</span><span class="n">report</span><span class="p">(</span>
+    <span class="n">inputfile</span><span class="o">=</span><span class="s1">&#39;report.geist&#39;</span><span class="p">,</span> 
+    <span class="n">isinputpath</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+    <span class="n">args</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;sentence&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello World&quot;</span><span class="p">,</span> 
+        <span class="s2">&quot;feeling&quot;</span><span class="p">:</span> <span class="s2">&quot;Happy&quot;</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>Here is the report.geist file:
+<div class="highlight"><pre><span></span><code>{% create &quot;test&quot;, datastore=&quot;rdflib&quot;, inputformat=&quot;nt&quot;, isfilepath=False %}
+    &lt;http://example.com/drewp&gt; &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://xmlns.com/foaf/0.1/Person&gt; .
+    &lt;http://example.com/drewp&gt; &lt;http://example.com/says&gt; {@ sentence @} .
+    &lt;http://example.com/drewp&gt; &lt;http://example.com/feels&gt; {@ feeling @} .
 {% endcreate %}
 
 {% query &quot;test&quot;, datastore=&quot;rdflib&quot;, isfilepath=False as all_triples %}

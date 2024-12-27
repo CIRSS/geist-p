@@ -1317,6 +1317,10 @@ Options:
 -oroot, --outputroot TEXT      Path of the directory to store the expanded
                                 report (default: current directory)
 -so, --suppressoutput BOOLEAN  Suppress output or not (default: False)
+-a, --args &lt;TEXT TEXT&gt;...      Arguments to be passed to the report
+                                 template, e.g., (arg, value) indicates that
+                                 {@ arg @} in the report template will be
+                                 replaced by value
 --help                         Show this message and exit.
 </code></pre></div></p>
 <details class="example">
@@ -1353,6 +1357,32 @@ END_TEMPLATE
 <div class="highlight"><pre><span></span><code>{% create &quot;test&quot;, datastore=&quot;rdflib&quot;, inputformat=&quot;nt&quot;, isfilepath=False %}
     &lt;http://example.com/drewp&gt; &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://xmlns.com/foaf/0.1/Person&gt; .
     &lt;http://example.com/drewp&gt; &lt;http://example.com/says&gt; &quot;Hello World&quot; .
+{% endcreate %}
+
+{% query &quot;test&quot;, datastore=&quot;rdflib&quot;, isfilepath=False as all_triples %}
+    SELECT ?s ?p ?o
+    WHERE {
+        ?s ?p ?o
+    }
+    ORDER BY ?s ?p ?o
+{% endquery %}
+
+{% for _, row in all_triples.iterrows() %}
+    Subject: {{ row[&quot;s&quot;] }}, Predicate: {{ row[&quot;p&quot;] }}, Object: {{ row[&quot;o&quot;] }}.
+{% endfor %}
+
+{% destroy &quot;test&quot;, datastore=&quot;rdflib&quot; %}
+</code></pre></div></p>
+</details>
+<details class="example">
+<summary>Example 3: expand a report from a file with external arguments</summary>
+<div class="highlight"><pre><span></span><code>geist report --inputfile report.geist --args sentence &quot;Hello World&quot; --args feeling Happy
+</code></pre></div>
+<p>Here is the report.geist file:
+<div class="highlight"><pre><span></span><code>{% create &quot;test&quot;, datastore=&quot;rdflib&quot;, inputformat=&quot;nt&quot;, isfilepath=False %}
+    &lt;http://example.com/drewp&gt; &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://xmlns.com/foaf/0.1/Person&gt; .
+    &lt;http://example.com/drewp&gt; &lt;http://example.com/says&gt; {@ sentence @} .
+    &lt;http://example.com/drewp&gt; &lt;http://example.com/feels&gt; {@ feeling @} .
 {% endcreate %}
 
 {% query &quot;test&quot;, datastore=&quot;rdflib&quot;, isfilepath=False as all_triples %}
