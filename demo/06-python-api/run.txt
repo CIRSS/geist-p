@@ -94,7 +94,7 @@ connection.close()
 END_PYTHON
 
 echo "Stored Geist Datasets:"
-find .geistdata/ -type f
+find .geistdata/ -type f | sort
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
    v1  v2  v3
@@ -135,7 +135,7 @@ connection.close()
 END_PYTHON
 
 echo "Stored Geist Datasets:"
-find .geistdata/ -type f
+find .geistdata/ -type f | sort
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
    v1  v2  v3
@@ -163,7 +163,7 @@ connection_ex4.destroy()
 END_PYTHON
 
 echo "Stored Geist Datasets:"
-find .geistdata/ -type f
+find .geistdata/ -type f | sort
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 Stored Geist Datasets:
