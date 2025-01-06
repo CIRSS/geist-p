@@ -2,19 +2,19 @@
 
 Parameters description for *query* method of the *Connection* class:
 
-|Name           |Type    |Description                                | Default   |
-|-------------- |------- |------------------------------------------ |---------- |
-|inputfile      |string  |File containing the query                  |[required] |
-|isinputpath    |bool    |True if the inputfile is the file path, otherwise the inputfile is the content |[required] |
-|hasoutput      |bool    |True to store the query results as a CSV file or print them out |[required] |
-|config         |dict    |A dictionary with configurations when `hasoutput=True` | see below |
+|Name           |Type    |Description                    | Default    |
+|-------------- |------- |------------------------------ |----------- |
+|inputfile      |string  |File containing the query |REQUIRED |
+|isinputpath    |bool    |`True` if the inputfile is the file path, otherwise the inputfile is the content |REQUIRED |
+|hasoutput      |bool    |`True` to store the query results as a CSV file or print them out |REQUIRED |
+|config         |dict    |A dictionary with configurations when `hasoutput=True` |see below |
 
 Description for the *config* parameter:
 
-|Key            |Type    |Description                                     | Default   |
-|-------------- |------- |----------------------------------------------- |---------- |
-|outputroot     |string  |Path of the directory to store the query results|'./'       |
-|outputfile     |string  |Path of the file to store the query results     |None       |
+|Name           |Type    |Description                    | Default    |
+|-------------- |------- |------------------------------ |----------- |
+|outputroot     |string  |Path of the directory to store the query results |`'./'` |
+|outputfile     |string  |Path of the file to store the query results |`None`      |
 
 ??? example "Example 1: all rows of the `df` table in `test` dataset on disk (query from a string)"
 

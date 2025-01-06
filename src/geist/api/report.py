@@ -66,7 +66,7 @@ class LoadExtension(ContainerTag):
         content = get_content(environment.from_string(str(caller())).render(), isfilepath)
         if datastore == "rdflib":
             from geist.datastore.rdflib import rdflib_load
-            rdflib_load(dataset, content, inputformat, colnames, False)
+            rdflib_load(dataset, content, inputformat, colnames, False, None)
         elif datastore == "duckdb":
             from geist.datastore.duckdb import duckdb_load
             conn = duckdb_load(dataset, content, inputformat, table)

@@ -6,8 +6,8 @@ A *Connection* class has three attributes:
 
 |Name       |Type    |Description                                | Default   |
 |---------- |------- |------------------------------------------ |---------- |
-|datastore  |string  |A backend datastore, i.e., `rdflib` or `duckdb`|`[required]` |
-|dataset    |string  |Name of the dataset. Note that `:memory:` is a reserved value for datasets that exist only in memory|`[required]` |
+|datastore  |string  |A backend datastore, i.e., `'rdflib'` or `'duckdb'`|REQUIRED |
+|dataset    |string  |Name of the dataset. Note that `':memory:'` is a reserved value for datasets that exist only in memory|REQUIRED |
 |conn       |object  |A `DuckPyConnection` object OR a `GeistGraph` object |`None`       |
 
 ## How to instantiate a *Connection* class?

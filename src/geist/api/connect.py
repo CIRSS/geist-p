@@ -98,6 +98,7 @@ class Connection:
         if not self.conn:
             raise ValueError('You have not connected to any dataset yet. Please use the connect method first.')
         config['inmemory'] = True if self.dataset == ':memory:' else False
+        config['datasetname'] = None if self.dataset == ':memory' else self.dataset # Add dataset name to save as a file
         self.conn = geist_load(
             datastore=self.datastore, 
             dataset=self.conn, 

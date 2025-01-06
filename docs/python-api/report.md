@@ -2,13 +2,13 @@
 
 Parameters description for *report()*:
 
-|Name           |Type    |Description                | Default   |
-|-------------- |------- |-------------------------- |---------- |
-|inputfile      |string  |A report to be expanded    |`[required]` |
-|isinputpath    |bool    |True if the inputfile is the file path, otherwise the inputfile is the content | `False` |
-|outputroot     |string  |Path of the directory to store the expanded report | current directory, i.e., `./` |
-|suppressoutput |bool    |True to suppress output    | `True`    |
-|args           |dict    |External arguments, e.g., `{"arg1": "value1", "arg2": "value2"}` denotes that `{{ arg1 }}` and `{{ arg2 }}` in the report template will be replaced by `value1` and `value2` respectively | `{}` |
+|Name           |Type    |Description                    | Default    |
+|-------------- |------- |------------------------------ |----------- |
+|inputfile      |string  |A report to be expanded |REQUIRED |
+|isinputpath    |bool    |`True` if the inputfile is the file path, otherwise the inputfile is the content |`False` |
+|outputroot     |string  |Path of the directory to store the expanded report |current directory, i.e., `./` |
+|suppressoutput |bool    |`True` to suppress output |`True`    |
+|args           |dict    |External arguments, e.g., `{"arg1": "value1", "arg2": "value2"}` denotes that `{{ arg1 }}` and `{{ arg2 }}` in the report template will be replaced by `value1` and `value2` respectively |`{}` |
 
 ??? example "Example 1: expand a report from a string"
 

@@ -2,11 +2,11 @@
 
 Parameters description for *destroy()*:
 
-|Name           |Type    |Description                                | Default   |
-|-------------- |------- |------------------------------------------ |---------- |
-|datastore      |string  |A backend datastore, i.e., `rdflib` or `duckdb`|`[required]` |
-|dataset        |string  |Name of the dataset to be removed.         |`[required]` |
-|quiet          |bool    |True to suppress error messages if the provided dataset does not exist |`False` |
+|Name           |Type    |Description                    | Default    |
+|-------------- |------- |------------------------------ |----------- |
+|datastore      |string  |A backend datastore, i.e., `'rdflib'` or `'duckdb'` |REQUIRED |
+|dataset        |string  |Name of the dataset to be removed |REQUIRED |
+|quiet          |bool    |`True` to suppress error messages if the provided dataset does not exist |`False` |
 
 ??? example "Example: delete the `test` dataset"
 

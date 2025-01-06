@@ -187,7 +187,7 @@ def rdflib_create(dataset, inputfile, inputformat, colnames, infer):
             pickle.dump(geist_graph_object, f)
     return geist_graph_object
 
-def rdflib_load(dataset, inputfile, inputformat, colnames, inmemory):
+def rdflib_load(dataset, inputfile, inputformat, colnames, inmemory, datasetname=None):
     """Import data into a RDF dataset"""
     if inputformat == "csv" and (not colnames):
         raise ValueError("Please provide the column names of triples for the CSV file, i.e., --colnames")
@@ -195,6 +195,7 @@ def rdflib_load(dataset, inputfile, inputformat, colnames, inmemory):
     rdf_graph = rdf_graph + create_rdf_graph(inputfile, inputformat, colnames, infer)
     geist_graph_object = {"rdf_graph": rdf_graph, "infer": infer}
     if not inmemory:
+        dataset = datasetname if datasetname else dataset
         with open(DATA_DIR + dataset + ".pkl", "wb") as f:
             pickle.dump(geist_graph_object, f)
     return geist_graph_object

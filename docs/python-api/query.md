@@ -2,21 +2,21 @@
 
 Parameters description for *query()*:
 
-|Name           |Type    |Description                                | Default   |
-|-------------- |------- |------------------------------------------ |---------- |
-|datastore      |string  |A backend datastore, i.e., `rdflib` or `duckdb`|`[required]` |
-|dataset        |string OR `DuckPyConnection` object OR `GeistGraph` object |(1) A string indicates the name of the dataset stored on disk OR (2) a `DuckPyConnection` object OR a `GeistGraph` object for dataset in memory |`[required]` |
-|inputfile      |string  |File containing the query                |`[required]` |
-|isinputpath    |bool    |True if the inputfile is the file path, otherwise the inputfile is the content |`[required]` |
-|hasoutput      |bool    |True to store the query results as a CSV file or print them out |`[required]` |
-|config         |dict    |A dictionary with configurations when `hasoutput=True` | see below |
+|Name           |Type    |Description                    | Default    |
+|-------------- |------- |------------------------------ |----------- |
+|datastore      |string  |A backend datastore, i.e., `'rdflib'` or `'duckdb'` |REQUIRED |
+|dataset        |string OR `DuckPyConnection` object OR `GeistGraph` object|(1) A string indicates the name of the dataset stored on disk OR (2) a `DuckPyConnection` object OR a `GeistGraph` object for dataset in memory |REQUIRED |
+|inputfile      |string  |File containing the query |REQUIRED |
+|isinputpath    |bool    |True if the inputfile is the file path, otherwise the inputfile is the content |REQUIRED |
+|hasoutput      |bool    |True to store the query results as a CSV file or print them out |REQUIRED |
+|config         |dict    |A dictionary with configurations when `hasoutput=True` |see below |
 
 Description for the *config* parameter:
 
-|Key            |Type    |Description                                     | Default   |
-|-------------- |------- |----------------------------------------------- |---------- |
-|outputroot     |string  |Path of the directory to store the query results|`./`       |
-|outputfile     |string  |Path of the file to store the query results     |`None`       |
+|Name           |Type    |Description                    | Default    |
+|-------------- |------- |------------------------------ |----------- |
+|outputroot     |string  |Path of the directory to store the query results |`'./'`  |
+|outputfile     |string  |Path of the file to store the query results |`None`       |
 
 ??? example "Example 1: all rows of the `df` table in `test` dataset on disk (query from a string)"
 

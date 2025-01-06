@@ -1,6 +1,7 @@
 site_name: Geist
 repo_name: 'CIRSS/geist-p'
 repo_url: 'https://github.com/CIRSS/geist-p'
+copyright: Copyright &copy; 2023-2025, Center for Informatics Research in Science and Scholarship (CIRSS)
 theme:
   name: material
   features:
@@ -75,6 +76,14 @@ markdown_extensions:
   - admonition
   - pymdownx.snippets:
       base_path: ["docs"]
+plugins:
+  - with-pdf:
+      author: Meng Li, Timothy McPhillips, Bertram Ludäscher
+      copyright: Copyright &copy; 2023-2025, CIRSS
+      cover_subtitle: A multimodal data transformation, query, and reporting language
+      back_cover: true
+      two_columns_level: 0
+      output_path: document.pdf
 extra:
   version:
     provider: mike

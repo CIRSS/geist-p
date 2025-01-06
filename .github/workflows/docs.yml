@@ -28,8 +28,8 @@ jobs:
           path: .cache
           restore-keys: |
             mkdocs-material-
-      - run: pip install mkdocs-material
-      - run: pip install mike
+      - run: pip install mkdocs-material mike
+      - run: pip install https://github.com/domWalters/mkdocs-to-pdf/archive/refs/tags/v0.9.4.tar.gz
       - run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
       - run: echo "DOCS_TAG=$(echo $RELEASE_VERSION | sed -n "s/v\([0-9]\+\.[0-9]\+\).*$/\1/p")" >> $GITHUB_ENV
       - run: mike set-default latest

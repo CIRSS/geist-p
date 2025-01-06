@@ -54,13 +54,13 @@ Besides the Jinja [predefined filters](https://jinja.palletsprojects.com/en/stab
 
 ## How to execute (expand) a Geist template?
 
-=== "CLI"
+??? info "CLI"
 
     --8<--
     cli/report.md
     --8<--
 
-=== "Python API"
+??? info "Python API"
 
     --8<--
     python-api/report.md

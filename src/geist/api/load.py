@@ -17,7 +17,8 @@ def geist_load(datastore, dataset, inputfile, inputformat, isinputpath, config={
         from geist.datastore.rdflib import rdflib_load
         colnames = None if 'colnames' not in config else config['colnames']
         inmemory = False if 'inmemory' not in config else config['inmemory']
-        conn = rdflib_load(dataset=dataset, inputfile=content, inputformat=inputformat, colnames=colnames, inmemory=inmemory)
+        datasetname = None if 'datasetname' not in config else config['datasetname']
+        conn = rdflib_load(dataset=dataset, inputfile=content, inputformat=inputformat, colnames=colnames, inmemory=inmemory, datasetname=datasetname)
     elif datastore == 'duckdb':
         # Import data into a SQL dataset
         from geist.datastore.duckdb import duckdb_load
