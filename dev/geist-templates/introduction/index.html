@@ -1466,7 +1466,7 @@
 <h2 id="how-to-write-a-geist-template">How to write a Geist template?</h2>
 <p>A Geist template relies on tags and filters.</p>
 <h3 id="tags">Tags</h3>
-<p>Tags are used within the statements, i.e., <code>{% ... %}</code>. There are two types of tags, <code>StandaloneTag</code> and <code>ContainerTag</code>. While the <code>StandaloneTag</code> does not require a closing tag, the <code>ContainerTag</code> does. Besides the Jinja predefined tags (e.g., <code>for</code>), Geist supports the following tags:</p>
+<p>Tags are used within the statements, i.e., <code>{% ... %}</code>. There are two types of tags, <code>StandaloneTag</code> and <code>ContainerTag</code>. While the <code>StandaloneTag</code> does not require a closing tag, the <code>ContainerTag</code> does. Besides the Jinja <a href="https://jinja.palletsprojects.com/en/stable/templates/#list-of-control-structures">predefined tags</a> (e.g., <code>for</code>), Geist supports the following tags:</p>
 <p><code>StandaloneTag</code>:</p>
 <ul>
 <li><a href="../tags/tag-destroy/">destroy</a></li>
@@ -1488,7 +1488,7 @@
 <p>Custom tags can be defined through files with the <a href="../tags/tag-use/">use</a> tag.</p>
 <h3 id="filters">Filters</h3>
 <p>Filters are used to modify variables. Each filter can only take one variable as input. Multiple filters can be applied to a single variable in sequence. For example, <code>{{ var|filter1|filter2|filter3 }}</code> denotes the variable <code>var</code> will be processed through <code>filter1</code> first, then <code>filter2</code>, and <code>filter3</code> at the end.</p>
-<p>Geist supports the following filters:</p>
+<p>Besides the Jinja <a href="https://jinja.palletsprojects.com/en/stable/templates/#list-of-builtin-filters">predefined filters</a>, Geist supports the following filters:</p>
 <ul>
 <li><strong>head</strong>: extract the first 5 rows of a Pandas data frame</li>
 <li><strong>csv2df</strong>: convert a CSV string to a Pandas data frame</li>
@@ -1518,7 +1518,7 @@ Options:
 -so, --suppressoutput BOOLEAN  Suppress output or not (default: False)
 -a, --args &lt;TEXT TEXT&gt;...      Arguments to be passed to the report
                                  template, e.g., (arg, value) indicates that
-                                 {@ arg @} in the report template will be
+                                 {{ arg }} in the report template will be
                                  replaced by value
 --help                         Show this message and exit.
 </code></pre></div></p>
@@ -1580,8 +1580,8 @@ END_TEMPLATE
 <p>Here is the report.geist file:
 <div class="highlight"><pre><span></span><code>{% create &quot;test&quot;, datastore=&quot;rdflib&quot;, inputformat=&quot;nt&quot;, isfilepath=False %}
     &lt;http://example.com/drewp&gt; &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://xmlns.com/foaf/0.1/Person&gt; .
-    &lt;http://example.com/drewp&gt; &lt;http://example.com/says&gt; {@ sentence @} .
-    &lt;http://example.com/drewp&gt; &lt;http://example.com/feels&gt; {@ feeling @} .
+    &lt;http://example.com/drewp&gt; &lt;http://example.com/says&gt; &quot;{{ sentence }}&quot; .
+    &lt;http://example.com/drewp&gt; &lt;http://example.com/feels&gt; &quot;{{ feeling }}&quot; .
 {% endcreate %}
 
 {% query &quot;test&quot;, datastore=&quot;rdflib&quot;, isfilepath=False as all_triples %}
@@ -1640,14 +1640,14 @@ END_TEMPLATE
 <tr>
 <td>args</td>
 <td>dict</td>
-<td>External arguments, e.g., <code>{"arg1": "value1", "arg2": "value2"}</code> denotes that <code>{@ arg1 @}</code> and <code>{@ arg2 @}</code> in the report template will be replaced by <code>value1</code> and <code>value2</code> respectively</td>
+<td>External arguments, e.g., <code>{"arg1": "value1", "arg2": "value2"}</code> denotes that <code>{{ arg1 }}</code> and <code>{{ arg2 }}</code> in the report template will be replaced by <code>value1</code> and <code>value2</code> respectively</td>
 <td><code>{}</code></td>
 </tr>
 </tbody>
 </table>
 <details class="example">
 <summary>Example 1: expand a report from a string</summary>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">geist</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">geist</span>
 
 <span class="n">report</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 
@@ -1678,7 +1678,7 @@ END_TEMPLATE
 </details>
 <details class="example">
 <summary>Example 2: expand a report from a file</summary>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">geist</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">geist</span>
 
 <span class="c1"># Return the expanded report as a string variable named expanded_report</span>
 <span class="n">expanded_report</span> <span class="o">=</span> <span class="n">geist</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="n">inputfile</span><span class="o">=</span><span class="s1">&#39;report.geist&#39;</span><span class="p">,</span> <span class="n">isinputpath</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1706,7 +1706,7 @@ END_TEMPLATE
 </details>
 <details class="example">
 <summary>Example 3: expand a report from a file with external arguments</summary>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">geist</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">geist</span>
 
 <span class="c1"># Return the expanded report as a string variable named expanded_report</span>
 <span class="n">expanded_report</span> <span class="o">=</span> <span class="n">geist</span><span class="o">.</span><span class="n">report</span><span class="p">(</span>
@@ -1721,8 +1721,8 @@ END_TEMPLATE
 <p>Here is the report.geist file:
 <div class="highlight"><pre><span></span><code>{% create &quot;test&quot;, datastore=&quot;rdflib&quot;, inputformat=&quot;nt&quot;, isfilepath=False %}
     &lt;http://example.com/drewp&gt; &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://xmlns.com/foaf/0.1/Person&gt; .
-    &lt;http://example.com/drewp&gt; &lt;http://example.com/says&gt; {@ sentence @} .
-    &lt;http://example.com/drewp&gt; &lt;http://example.com/feels&gt; {@ feeling @} .
+    &lt;http://example.com/drewp&gt; &lt;http://example.com/says&gt; &quot;{{ sentence }}&quot; .
+    &lt;http://example.com/drewp&gt; &lt;http://example.com/feels&gt; &quot;{{ feeling }}&quot; .
 {% endcreate %}
 
 {% query &quot;test&quot;, datastore=&quot;rdflib&quot;, isfilepath=False as all_triples %}
