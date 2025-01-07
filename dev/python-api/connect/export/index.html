@@ -484,17 +484,23 @@
 <thead>
 <tr>
 <th>Name</th>
+<th>Type</th>
 <th>Description</th>
+<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>hasoutput</td>
-<td>Bool. <code>True</code> to export as a file or print it out (<code>[required]</code>)</td>
+<td>bool</td>
+<td><code>True</code> to export as a file or print it out</td>
+<td><code>[required]</code></td>
 </tr>
 <tr>
 <td>config</td>
-<td>Dict. A dictionary with configurations for certain backend store. See below for detailed information</td>
+<td>dict</td>
+<td>A dictionary with configurations for certain backend store</td>
+<td>see below</td>
 </tr>
 </tbody>
 </table>
@@ -505,25 +511,35 @@
 <thead>
 <tr>
 <th>Key</th>
+<th>Type</th>
 <th>Description</th>
+<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>outputroot</td>
-<td>String. Path of the directory to store the exported table (by default, <code>'./'</code>)</td>
+<td>string</td>
+<td>Path of the directory to store the exported table</td>
+<td><code>'./'</code></td>
 </tr>
 <tr>
 <td>outputfile</td>
-<td>String. Path of the file to store the exported table (by default, <code>None</code>)</td>
+<td>string</td>
+<td>Path of the file to store the exported table</td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td>outputformat</td>
-<td>String. Format of the exported table, i.e., <code>'csv'</code> or <code>'json'</code> (by default, <code>'csv'</code>)</td>
+<td>string</td>
+<td>Format of the exported table, i.e., <code>'csv'</code> or <code>'json'</code></td>
+<td><code>'csv'</code></td>
 </tr>
 <tr>
 <td>table</td>
-<td>String. Name of the table to be exported (by default, <code>'df'</code>)</td>
+<td>string</td>
+<td>Name of the table to be exported</td>
+<td><code>'df'</code></td>
 </tr>
 </tbody>
 </table>
@@ -556,21 +572,29 @@ data = connection.export(hasoutput=False, config={'table': 'df'})
 <thead>
 <tr>
 <th>Key</th>
+<th>Type</th>
 <th>Description</th>
+<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>outputroot</td>
-<td>String. Path of the directory to store these exported triples (by default, <code>'./'</code>)</td>
+<td>string</td>
+<td>Path of the directory to store these exported triples</td>
+<td><code>'./'</code></td>
 </tr>
 <tr>
 <td>outputfile</td>
-<td>String. Path of the file to store these exported triples (by default, <code>None</code>)</td>
+<td>string</td>
+<td>Path of the file to store these exported triples</td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td>outputformat</td>
-<td>String. Format of the exported triples, i.e., <code>'json-ld'</code>, <code>'n3'</code>, <code>'nquads'</code>, <code>'nt'</code>, <code>'hext'</code>, <code>'pretty-xml'</code>, <code>'trig'</code>, <code>'trix'</code>, <code>'turtle'</code>, <code>'longturtle'</code>, or <code>'xml'</code> (by default, <code>'nt'</code>)</td>
+<td>string</td>
+<td>Format of the exported triples, i.e., <code>'json-ld'</code>, <code>'n3'</code>, <code>'nquads'</code>, <code>'nt'</code>, <code>'hext'</code>, <code>'pretty-xml'</code>, <code>'trig'</code>, <code>'trix'</code>, <code>'turtle'</code>, <code>'longturtle'</code>, or <code>'xml'</code></td>
+<td><code>'nt'</code></td>
 </tr>
 </tbody>
 </table>

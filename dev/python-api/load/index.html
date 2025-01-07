@@ -487,33 +487,47 @@
 <thead>
 <tr>
 <th>Name</th>
+<th>Type</th>
 <th>Description</th>
+<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>datastore</td>
-<td>String. A backend datastore, i.e., <code>'rdflib'</code> or <code>'duckdb'</code> (<code>[required]</code>)</td>
+<td>string</td>
+<td>A backend datastore, i.e., <code>'rdflib'</code> or <code>'duckdb'</code></td>
+<td><code>[required]</code></td>
 </tr>
 <tr>
 <td>dataset</td>
-<td>String OR <code>DuckPyConnection</code> object OR <code>GeistGraph</code> object. Dataset to load an object: (1) A string indicates the name of the dataset stored on disk OR (2) a <code>DuckPyConnection</code> object OR a <code>GeistGraph</code> object for dataset in memory (<code>[required]</code>)</td>
+<td>string OR <code>DuckPyConnection</code> object OR <code>GeistGraph</code> object</td>
+<td>Dataset to load an object: (1) A string indicates the name of the dataset stored on disk OR (2) a <code>DuckPyConnection</code> object OR a <code>GeistGraph</code> object for dataset in memory</td>
+<td><code>[required]</code></td>
 </tr>
 <tr>
 <td>inputfile</td>
-<td>String. File to be loaded (<code>[required]</code>)</td>
+<td>string</td>
+<td>File to be loaded</td>
+<td><code>[required]</code></td>
 </tr>
 <tr>
 <td>inputformat</td>
-<td>String. Format of the file to be loaded (<code>[required]</code>)</td>
+<td>string</td>
+<td>Format of the file to be loaded</td>
+<td><code>[required]</code></td>
 </tr>
 <tr>
 <td>isinputpath</td>
-<td>Bool. <code>True</code> if the inputfile is the file path, otherwise the inputfile is the content (<code>[required]</code>)</td>
+<td>bool</td>
+<td><code>True</code> if the inputfile is the file path, otherwise the inputfile is the content</td>
+<td><code>[required]</code></td>
 </tr>
 <tr>
 <td>config</td>
-<td>Dict. A dictionary with configurations for certain backend store. See below for detailed information</td>
+<td>dict</td>
+<td>A dictionary with configurations for certain backend store</td>
+<td>see below</td>
 </tr>
 </tbody>
 </table>
@@ -523,14 +537,18 @@
 <table>
 <thead>
 <tr>
-<th>Key</th>
+<th>Name</th>
+<th>Type</th>
 <th>Description</th>
+<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>table</td>
-<td>String. Name of the table to be loaded (<code>[required]</code>)</td>
+<td>string</td>
+<td>Name of the table to be loaded</td>
+<td><code>[required]</code></td>
 </tr>
 </tbody>
 </table>
@@ -556,18 +574,24 @@ geist.load(datastore='duckdb', dataset='test', inputfile=csv_str, inputformat='c
 <table>
 <thead>
 <tr>
-<th>Key</th>
+<th>Name</th>
+<th>Type</th>
 <th>Description</th>
+<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>inmemory</td>
-<td>Bool. <code>True</code> if the new dataset (after loading data) is stored in memory only, otherwise it is stored on disk (by default, <code>False</code>)</td>
+<td>bool</td>
+<td><code>True</code> if the new dataset (after loading data) is stored in memory only, otherwise it is stored on disk</td>
+<td><code>False</code></td>
 </tr>
 <tr>
 <td>colnames</td>
-<td>String. Column names of triples with the format of <code>[[subject1, predicate1, object1], [subject2, predicate2, object2], ...]</code> (<code>[required]</code> when <code>inputformat='csv'</code>)</td>
+<td>string</td>
+<td>Column names of triples with the format of <code>[[subject1, predicate1, object1], [subject2, predicate2, object2], ...]</code></td>
+<td><code>[required]</code> when <code>inputformat='csv'</code></td>
 </tr>
 </tbody>
 </table>
