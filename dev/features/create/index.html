@@ -586,47 +586,33 @@ Code:
 <thead>
 <tr>
 <th>Name</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>datastore</td>
-<td>string</td>
-<td>A backend datastore, i.e., <code>rdflib</code> or <code>duckdb</code></td>
-<td><code>[required]</code></td>
+<td>String. A backend datastore, i.e., <code>'rdflib'</code> or <code>'duckdb'</code> (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>dataset</td>
-<td>string</td>
-<td>Name of the dataset to be created. Note that <code>:memory:</code> is a reserved value for datasets that exist only in memory</td>
-<td><code>[required]</code></td>
+<td>String. Name of the dataset to be created. Note that <code>':memory:'</code> is a reserved value for datasets that exist only in memory (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>inputfile</td>
-<td>string</td>
-<td>A file to be loaded</td>
-<td><code>[required]</code></td>
+<td>String. A file to be loaded (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>inputformat</td>
-<td>string</td>
-<td>Format of the file to be loaded</td>
-<td><code>[required]</code></td>
+<td>String. Format of the file to be loaded (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>isinputpath</td>
-<td>bool</td>
-<td>True if the inputfile is the file path, otherwise the inputfile is the content</td>
-<td><code>[required]</code></td>
+<td>Bool. <code>True</code> if the inputfile is the file path, otherwise the inputfile is the content (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>config</td>
-<td>dict</td>
-<td>A dictionary with configurations for certain backend store</td>
-<td>see below</td>
+<td>Dict. A dictionary with configurations for certain backend store. See below for detailed information</td>
 </tr>
 </tbody>
 </table>
@@ -638,17 +624,13 @@ Code:
 <thead>
 <tr>
 <th>Key</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>table</td>
-<td>string</td>
-<td>Name of the table to be created</td>
-<td><code>df</code></td>
+<td>String. Name of the table to be created (by default, <code>'df'</code>)</td>
 </tr>
 </tbody>
 </table>
@@ -658,23 +640,17 @@ Code:
 <thead>
 <tr>
 <th>Key</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>colnames</td>
-<td>string</td>
-<td>Column names of triples with the format of <code>[[subject1, predicate1, object1], [subject2, predicate2, object2], ...]</code></td>
-<td><code>[required]</code> when <code>inputformat=csv</code></td>
+<td>String. Column names of triples with the format of <code>[[subject1, predicate1, object1], [subject2, predicate2, object2], ...]</code> (<code>[required]</code> when <code>inputformat='csv'</code>)</td>
 </tr>
 <tr>
 <td>infer</td>
-<td>string</td>
-<td>Inference to perform on update, i.e., <code>none</code>, <code>[rdfs](https://owl-rl.readthedocs.io/en/latest/RDFSClosure.html#owlrl.RDFSClosure.RDFS_Semantics)</code>, <code>[owl](https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules)</code>, or <code>[rdfs_owl](https://owl-rl.readthedocs.io/en/latest/CombinedClosure.html#owlrl.CombinedClosure.RDFS_OWLRL_Semantics)</code></td>
-<td><code>none</code></td>
+<td>String. Inference to perform on update, i.e., <code>none</code>, <code>[rdfs](https://owl-rl.readthedocs.io/en/latest/RDFSClosure.html#owlrl.RDFSClosure.RDFS_Semantics)</code>, <code>[owl](https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules)</code>, or <code>[rdfs_owl](https://owl-rl.readthedocs.io/en/latest/CombinedClosure.html#owlrl.CombinedClosure.RDFS_OWLRL_Semantics)</code> (by default, <code>'none'</code>)</td>
 </tr>
 </tbody>
 </table>
@@ -753,35 +729,25 @@ conn = geist.create(datastore='duckdb', dataset=':memory:', inputfile="test.csv"
 <thead>
 <tr>
 <th>Name</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>inputfile</td>
-<td>string</td>
-<td>A file to be loaded</td>
-<td>[required]</td>
+<td>String. A file to be loaded (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>inputformat</td>
-<td>string</td>
-<td>Format of the file to be loaded</td>
-<td>[required]</td>
+<td>String. Format of the file to be loaded (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>isinputpath</td>
-<td>bool</td>
-<td>True if the inputfile is the file path, otherwise the inputfile is the content</td>
-<td>[required]</td>
+<td>Bool. <code>True</code> if the inputfile is the file path, otherwise the inputfile is the content (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>config</td>
-<td>dict</td>
-<td>A dictionary with configurations for certain backend store</td>
-<td>see below</td>
+<td>Dict. A dictionary with configurations for certain backend store. See below for detailed information</td>
 </tr>
 </tbody>
 </table>
@@ -793,17 +759,13 @@ conn = geist.create(datastore='duckdb', dataset=':memory:', inputfile="test.csv"
 <thead>
 <tr>
 <th>Key</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>table</td>
-<td>string</td>
-<td>Name of the table to be created</td>
-<td>df</td>
+<td>String. Name of the table to be created (by default, <code>'df'</code>)</td>
 </tr>
 </tbody>
 </table>
@@ -813,23 +775,17 @@ conn = geist.create(datastore='duckdb', dataset=':memory:', inputfile="test.csv"
 <thead>
 <tr>
 <th>Key</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>colnames</td>
-<td>string</td>
-<td>Column names of triples with the format of [[subject1, predicate1, object1], [subject2, predicate2, object2], ...]</td>
-<td>[required] when <code>inputformat</code>='csv'</td>
+<td>String. Column names of triples with the format of <code>[[subject1, predicate1, object1], [subject2, predicate2, object2], ...]</code>. (<code>[required]</code> when <code>inputformat='csv'</code>)</td>
 </tr>
 <tr>
 <td>infer</td>
-<td>string</td>
-<td>Inference to perform on update, i.e., none, <a href="https://owl-rl.readthedocs.io/en/latest/RDFSClosure.html#owlrl.RDFSClosure.RDFS_Semantics">rdfs</a>, <a href="https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules">owl</a>, or <a href="https://owl-rl.readthedocs.io/en/latest/CombinedClosure.html#owlrl.CombinedClosure.RDFS_OWLRL_Semantics">rdfs_owl</a></td>
-<td>none</td>
+<td>String. Inference to perform on update, i.e., none, <a href="https://owl-rl.readthedocs.io/en/latest/RDFSClosure.html#owlrl.RDFSClosure.RDFS_Semantics">rdfs</a>, <a href="https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules">owl</a>, or <a href="https://owl-rl.readthedocs.io/en/latest/CombinedClosure.html#owlrl.CombinedClosure.RDFS_OWLRL_Semantics">rdfs_owl</a> (by default, <code>none</code>)</td>
 </tr>
 </tbody>
 </table>

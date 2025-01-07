@@ -484,35 +484,25 @@
 <thead>
 <tr>
 <th>Name</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>inputfile</td>
-<td>string</td>
-<td>File containing the query</td>
-<td>[required]</td>
+<td>String. File containing the query (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>isinputpath</td>
-<td>bool</td>
-<td>True if the inputfile is the file path, otherwise the inputfile is the content</td>
-<td>[required]</td>
+<td>Bool. <code>True</code> if the inputfile is the file path, otherwise the inputfile is the content (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>hasoutput</td>
-<td>bool</td>
-<td>True to store the query results as a CSV file or print them out</td>
-<td>[required]</td>
+<td>Bool. <code>True</code> to store the query results as a CSV file or print them out (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>config</td>
-<td>dict</td>
-<td>A dictionary with configurations when <code>hasoutput=True</code></td>
-<td>see below</td>
+<td>Dict. A dictionary with configurations when <code>hasoutput=True</code>. See below for detailed information</td>
 </tr>
 </tbody>
 </table>
@@ -521,23 +511,17 @@
 <thead>
 <tr>
 <th>Key</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>outputroot</td>
-<td>string</td>
-<td>Path of the directory to store the query results</td>
-<td>'./'</td>
+<td>String. Path of the directory to store the query results (by default, <code>'./'</code></td>
 </tr>
 <tr>
 <td>outputfile</td>
-<td>string</td>
-<td>Path of the file to store the query results</td>
-<td>None</td>
+<td>String. Path of the file to store the query results (by default, <code>None</code></td>
 </tr>
 </tbody>
 </table>

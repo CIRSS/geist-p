@@ -586,47 +586,33 @@ Code:
 <thead>
 <tr>
 <th>Name</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>datastore</td>
-<td>string</td>
-<td>A backend datastore, i.e., <code>rdflib</code> or <code>duckdb</code></td>
-<td><code>[required]</code></td>
+<td>String. A backend datastore, i.e., <code>'rdflib'</code> or <code>'duckdb'</code> (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>dataset</td>
-<td>string OR <code>DuckPyConnection</code> object OR <code>GeistGraph</code> object</td>
-<td>(1) A string indicates the name of the dataset stored on disk OR (2) a <code>DuckPyConnection</code> object OR a <code>GeistGraph</code> object for dataset in memory</td>
-<td><code>[required]</code></td>
+<td>String OR <code>DuckPyConnection</code> object OR <code>GeistGraph</code> object: (1) A string indicates the name of the dataset stored on disk OR (2) a <code>DuckPyConnection</code> object OR a <code>GeistGraph</code> object for dataset in memory (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>inputfile</td>
-<td>string</td>
-<td>File containing the query</td>
-<td><code>[required]</code></td>
+<td>String. File containing the query (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>isinputpath</td>
-<td>bool</td>
-<td>True if the inputfile is the file path, otherwise the inputfile is the content</td>
-<td><code>[required]</code></td>
+<td>Bool</td>
 </tr>
 <tr>
 <td>hasoutput</td>
-<td>bool</td>
-<td>True to store the query results as a CSV file or print them out</td>
-<td><code>[required]</code></td>
+<td>Bool</td>
 </tr>
 <tr>
 <td>config</td>
-<td>dict</td>
-<td>A dictionary with configurations when <code>hasoutput=True</code></td>
-<td>see below</td>
+<td>Dict</td>
 </tr>
 </tbody>
 </table>
@@ -635,23 +621,17 @@ Code:
 <thead>
 <tr>
 <th>Key</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>outputroot</td>
-<td>string</td>
-<td>Path of the directory to store the query results</td>
-<td><code>./</code></td>
+<td>String. Path of the directory to store the query results (by default, <code>'./'</code>)</td>
 </tr>
 <tr>
 <td>outputfile</td>
-<td>string</td>
-<td>Path of the file to store the query results</td>
-<td><code>None</code></td>
+<td>String. Path of the file to store the query results (by default, <code>None</code>)</td>
 </tr>
 </tbody>
 </table>
@@ -707,35 +687,25 @@ Code:
 <thead>
 <tr>
 <th>Name</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>inputfile</td>
-<td>string</td>
-<td>File containing the query</td>
-<td>[required]</td>
+<td>String. File containing the query (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>isinputpath</td>
-<td>bool</td>
-<td>True if the inputfile is the file path, otherwise the inputfile is the content</td>
-<td>[required]</td>
+<td>Bool. <code>True</code> if the inputfile is the file path, otherwise the inputfile is the content (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>hasoutput</td>
-<td>bool</td>
-<td>True to store the query results as a CSV file or print them out</td>
-<td>[required]</td>
+<td>Bool. <code>True</code> to store the query results as a CSV file or print them out (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>config</td>
-<td>dict</td>
-<td>A dictionary with configurations when <code>hasoutput=True</code></td>
-<td>see below</td>
+<td>Dict. A dictionary with configurations when <code>hasoutput=True</code>. See below for detailed information</td>
 </tr>
 </tbody>
 </table>
@@ -744,23 +714,17 @@ Code:
 <thead>
 <tr>
 <th>Key</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>outputroot</td>
-<td>string</td>
-<td>Path of the directory to store the query results</td>
-<td>'./'</td>
+<td>String. Path of the directory to store the query results (by default, <code>'./'</code></td>
 </tr>
 <tr>
 <td>outputfile</td>
-<td>string</td>
-<td>Path of the file to store the query results</td>
-<td>None</td>
+<td>String. Path of the file to store the query results (by default, <code>None</code></td>
 </tr>
 </tbody>
 </table>

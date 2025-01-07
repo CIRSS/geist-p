@@ -484,35 +484,25 @@
 <thead>
 <tr>
 <th>Name</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>datastore</td>
-<td>string</td>
-<td>A backend datastore, i.e., rdflib or duckdb</td>
-<td>[required]</td>
+<td>String. A backend datastore, i.e., <code>'rdflib'</code> or <code>'duckdb'</code> (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>dataset</td>
-<td>string OR GeistGraph object</td>
-<td>Dataset to load an object: (1) A string indicates the name of the dataset stored on disk OR (2) a GeistGraph object for dataset in memory</td>
-<td>[required]</td>
+<td>String OR <code>GeistGraph</code> object. Dataset to load an object: (1) A string indicates the name of the dataset stored on disk OR (2) a <code>GeistGraph</code> object for dataset in memory (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>hasoutput</td>
-<td>bool</td>
-<td>True to export as a file or print it out</td>
-<td>[required]</td>
+<td>Bool. <code>True</code> to export as a file or print it out (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>config</td>
-<td>dict</td>
-<td>A dictionary with configurations for certain backend store</td>
-<td>see below</td>
+<td>Dict. A dictionary with configurations for certain backend store. See below for detailed information</td>
 </tr>
 </tbody>
 </table>
@@ -524,53 +514,37 @@
 <thead>
 <tr>
 <th>Key</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>rankdir</td>
-<td>string</td>
-<td>Direction of the graph: TB or BT or LR or RL</td>
-<td>'TB'</td>
+<td>String. Direction of the graph: <code>'TB'</code> or <code>'BT'</code> or <code>'LR'</code> or <code>'RL'</code> (by default, <code>'TB'</code>)</td>
 </tr>
 <tr>
 <td>mappings</td>
-<td>string</td>
-<td>File of the mappings to shorten text (str): path of a JSON file, where the key is the original text and the value is the shorter text</td>
-<td>None</td>
+<td>String. File of the mappings to shorten text (str): path of a JSON file, where the key is the original text and the value is the shorter text (by default, <code>None</code>)</td>
 </tr>
 <tr>
 <td>on</td>
-<td>string</td>
-<td>Column(s) to be mapped</td>
-<td>None</td>
+<td>String. Column(s) to be mapped (by default, <code>None</code>)</td>
 </tr>
 <tr>
 <td>samecolor</td>
-<td>bool</td>
-<td>True to use the same color for same edges, otherwise False</td>
-<td>True</td>
+<td>Bool. <code>True</code> to use the same color for same edges (by default, <code>True</code>)</td>
 </tr>
 <tr>
 <td>outputroot</td>
-<td>string</td>
-<td>Path of the directory to store the graph</td>
-<td>'./'</td>
+<td>String. Path of the directory to store the graph (by default, <code>'./'</code>)</td>
 </tr>
 <tr>
 <td>outputfile</td>
-<td>string</td>
-<td>Path of the file without extension to store the graph</td>
-<td>'res'</td>
+<td>String. Path of the file without extension to store the graph (by default, <code>'res'</code>)</td>
 </tr>
 <tr>
 <td>outputformats</td>
-<td>list</td>
-<td>Format of the graph: 'none' or 'svg' or 'png' or 'gv'</td>
-<td>['none']</td>
+<td>List. Format of the graph: <code>'none'</code> or <code>'svg'</code> or <code>'png'</code> or <code>'gv'</code> (by default, <code>['none']</code>)</td>
 </tr>
 </tbody>
 </table>

@@ -487,41 +487,29 @@
 <thead>
 <tr>
 <th>Name</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>inputfile</td>
-<td>string</td>
-<td>A report to be expanded</td>
-<td><code>[required]</code></td>
+<td>String. A report to be expanded (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>isinputpath</td>
-<td>bool</td>
-<td>True if the inputfile is the file path, otherwise the inputfile is the content</td>
-<td><code>False</code></td>
+<td>Bool. <code>True</code> if the inputfile is the file path, otherwise the inputfile is the content (by default, <code>False</code>)</td>
 </tr>
 <tr>
 <td>outputroot</td>
-<td>string</td>
-<td>Path of the directory to store the expanded report</td>
-<td>current directory, i.e., <code>./</code></td>
+<td>String. Path of the directory to store the expanded report (by default, current directory, i.e., <code>./</code>)</td>
 </tr>
 <tr>
 <td>suppressoutput</td>
-<td>bool</td>
-<td>True to suppress output</td>
-<td><code>True</code></td>
+<td>Bool. <code>True</code> to suppress output (by default, <code>True</code>)</td>
 </tr>
 <tr>
 <td>args</td>
-<td>dict</td>
-<td>External arguments, e.g., <code>{"arg1": "value1", "arg2": "value2"}</code> denotes that <code>{{ arg1 }}</code> and <code>{{ arg2 }}</code> in the report template will be replaced by <code>value1</code> and <code>value2</code> respectively</td>
-<td><code>{}</code></td>
+<td>Dict. External arguments, e.g., <code>{"arg1": "value1", "arg2": "value2"}</code> denotes that <code>{{ arg1 }}</code> and <code>{{ arg2 }}</code> in the report template will be replaced by <code>value1</code> and <code>value2</code> respectively (by default, <code>{}</code>)</td>
 </tr>
 </tbody>
 </table>

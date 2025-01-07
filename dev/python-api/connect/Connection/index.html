@@ -553,29 +553,21 @@
 <thead>
 <tr>
 <th>Name</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>datastore</td>
-<td>string</td>
-<td>A backend datastore, i.e., <code>rdflib</code> or <code>duckdb</code></td>
-<td><code>[required]</code></td>
+<td>String. A backend datastore, i.e., <code>'rdflib'</code> or <code>'duckdb'</code> (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>dataset</td>
-<td>string</td>
-<td>Name of the dataset. Note that <code>:memory:</code> is a reserved value for datasets that exist only in memory</td>
-<td><code>[required]</code></td>
+<td>String. Name of the dataset. Note that <code>':memory:'</code> is a reserved value for datasets that exist only in memory (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>conn</td>
-<td>object</td>
-<td>A <code>DuckPyConnection</code> object OR a <code>GeistGraph</code> object</td>
-<td><code>None</code></td>
+<td><code>DuckPyConnection</code> object OR <code>GeistGraph</code> object (by default, <code>None</code>)</td>
 </tr>
 </tbody>
 </table>
@@ -595,47 +587,33 @@
 <thead>
 <tr>
 <th>Name</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>datastore</td>
-<td>string</td>
-<td>A backend datastore, i.e., <code>rdflib</code> or <code>duckdb</code></td>
-<td><code>[required]</code></td>
+<td>String. A backend datastore, i.e., <code>'rdflib'</code> or <code>'duckdb'</code> (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>dataset</td>
-<td>string</td>
-<td>Name of the dataset to be created. Note that <code>:memory:</code> is a reserved value for datasets that exist only in memory</td>
-<td><code>[required]</code></td>
+<td>String. Name of the dataset to be created. Note that <code>':memory:'</code> is a reserved value for datasets that exist only in memory (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>inputfile</td>
-<td>string</td>
-<td>A file to be loaded</td>
-<td><code>[required]</code></td>
+<td>String. A file to be loaded (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>inputformat</td>
-<td>string</td>
-<td>Format of the file to be loaded</td>
-<td><code>[required]</code></td>
+<td>String. Format of the file to be loaded (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>isinputpath</td>
-<td>bool</td>
-<td>True if the inputfile is the file path, otherwise the inputfile is the content</td>
-<td><code>[required]</code></td>
+<td>Bool. <code>True</code> if the inputfile is the file path, otherwise the inputfile is the content (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>config</td>
-<td>dict</td>
-<td>A dictionary with configurations for certain backend store</td>
-<td>see below</td>
+<td>Dict. A dictionary with configurations for certain backend store. See below for detailed information</td>
 </tr>
 </tbody>
 </table>
@@ -647,17 +625,13 @@
 <thead>
 <tr>
 <th>Key</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>table</td>
-<td>string</td>
-<td>Name of the table to be created</td>
-<td><code>df</code></td>
+<td>String. Name of the table to be created (by default, <code>'df'</code>)</td>
 </tr>
 </tbody>
 </table>
@@ -667,23 +641,17 @@
 <thead>
 <tr>
 <th>Key</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>colnames</td>
-<td>string</td>
-<td>Column names of triples with the format of <code>[[subject1, predicate1, object1], [subject2, predicate2, object2], ...]</code></td>
-<td><code>[required]</code> when <code>inputformat=csv</code></td>
+<td>String. Column names of triples with the format of <code>[[subject1, predicate1, object1], [subject2, predicate2, object2], ...]</code> (<code>[required]</code> when <code>inputformat='csv'</code>)</td>
 </tr>
 <tr>
 <td>infer</td>
-<td>string</td>
-<td>Inference to perform on update, i.e., <code>none</code>, <code>[rdfs](https://owl-rl.readthedocs.io/en/latest/RDFSClosure.html#owlrl.RDFSClosure.RDFS_Semantics)</code>, <code>[owl](https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules)</code>, or <code>[rdfs_owl](https://owl-rl.readthedocs.io/en/latest/CombinedClosure.html#owlrl.CombinedClosure.RDFS_OWLRL_Semantics)</code></td>
-<td><code>none</code></td>
+<td>String. Inference to perform on update, i.e., <code>none</code>, <code>[rdfs](https://owl-rl.readthedocs.io/en/latest/RDFSClosure.html#owlrl.RDFSClosure.RDFS_Semantics)</code>, <code>[owl](https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules)</code>, or <code>[rdfs_owl](https://owl-rl.readthedocs.io/en/latest/CombinedClosure.html#owlrl.CombinedClosure.RDFS_OWLRL_Semantics)</code> (by default, <code>'none'</code>)</td>
 </tr>
 </tbody>
 </table>
@@ -778,35 +746,25 @@ conn = geist.create(datastore='duckdb', dataset=':memory:', inputfile="test.csv"
 <thead>
 <tr>
 <th>Name</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>inputfile</td>
-<td>string</td>
-<td>A file to be loaded</td>
-<td>[required]</td>
+<td>String. A file to be loaded (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>inputformat</td>
-<td>string</td>
-<td>Format of the file to be loaded</td>
-<td>[required]</td>
+<td>String. Format of the file to be loaded (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>isinputpath</td>
-<td>bool</td>
-<td>True if the inputfile is the file path, otherwise the inputfile is the content</td>
-<td>[required]</td>
+<td>Bool. <code>True</code> if the inputfile is the file path, otherwise the inputfile is the content (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>config</td>
-<td>dict</td>
-<td>A dictionary with configurations for certain backend store</td>
-<td>see below</td>
+<td>Dict. A dictionary with configurations for certain backend store. See below for detailed information</td>
 </tr>
 </tbody>
 </table>
@@ -818,17 +776,13 @@ conn = geist.create(datastore='duckdb', dataset=':memory:', inputfile="test.csv"
 <thead>
 <tr>
 <th>Key</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>table</td>
-<td>string</td>
-<td>Name of the table to be created</td>
-<td>df</td>
+<td>String. Name of the table to be created (by default, <code>'df'</code>)</td>
 </tr>
 </tbody>
 </table>
@@ -838,23 +792,17 @@ conn = geist.create(datastore='duckdb', dataset=':memory:', inputfile="test.csv"
 <thead>
 <tr>
 <th>Key</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>colnames</td>
-<td>string</td>
-<td>Column names of triples with the format of [[subject1, predicate1, object1], [subject2, predicate2, object2], ...]</td>
-<td>[required] when <code>inputformat</code>='csv'</td>
+<td>String. Column names of triples with the format of <code>[[subject1, predicate1, object1], [subject2, predicate2, object2], ...]</code>. (<code>[required]</code> when <code>inputformat='csv'</code>)</td>
 </tr>
 <tr>
 <td>infer</td>
-<td>string</td>
-<td>Inference to perform on update, i.e., none, <a href="https://owl-rl.readthedocs.io/en/latest/RDFSClosure.html#owlrl.RDFSClosure.RDFS_Semantics">rdfs</a>, <a href="https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules">owl</a>, or <a href="https://owl-rl.readthedocs.io/en/latest/CombinedClosure.html#owlrl.CombinedClosure.RDFS_OWLRL_Semantics">rdfs_owl</a></td>
-<td>none</td>
+<td>String. Inference to perform on update, i.e., none, <a href="https://owl-rl.readthedocs.io/en/latest/RDFSClosure.html#owlrl.RDFSClosure.RDFS_Semantics">rdfs</a>, <a href="https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules">owl</a>, or <a href="https://owl-rl.readthedocs.io/en/latest/CombinedClosure.html#owlrl.CombinedClosure.RDFS_OWLRL_Semantics">rdfs_owl</a> (by default, <code>none</code>)</td>
 </tr>
 </tbody>
 </table>
@@ -975,23 +923,17 @@ connection.destroy()
 <thead>
 <tr>
 <th>Name</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>hasoutput</td>
-<td>bool</td>
-<td>True to export as a file or print it out</td>
-<td>[required]</td>
+<td>Bool. <code>True</code> to export as a file or print it out (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>config</td>
-<td>dict</td>
-<td>A dictionary with configurations for certain backend store</td>
-<td>see below</td>
+<td>Dict. A dictionary with configurations for certain backend store. See below for detailed information</td>
 </tr>
 </tbody>
 </table>
@@ -1003,35 +945,25 @@ connection.destroy()
 <thead>
 <tr>
 <th>Key</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>outputroot</td>
-<td>string</td>
-<td>Path of the directory to store the exported table</td>
-<td>'./'</td>
+<td>String. Path of the directory to store the exported table (by default, <code>'./'</code>)</td>
 </tr>
 <tr>
 <td>outputfile</td>
-<td>string</td>
-<td>Path of the file to store the exported table</td>
-<td>None</td>
+<td>String. Path of the file to store the exported table (by default, <code>None</code>)</td>
 </tr>
 <tr>
 <td>outputformat</td>
-<td>string</td>
-<td>Format of the exported table, i.e., 'csv' or 'json'</td>
-<td>'csv'</td>
+<td>String. Format of the exported table, i.e., <code>'csv'</code> or <code>'json'</code> (by default, <code>'csv'</code>)</td>
 </tr>
 <tr>
 <td>table</td>
-<td>string</td>
-<td>Name of the table to be exported</td>
-<td>'df'</td>
+<td>String. Name of the table to be exported (by default, <code>'df'</code>)</td>
 </tr>
 </tbody>
 </table>
@@ -1041,29 +973,21 @@ connection.destroy()
 <thead>
 <tr>
 <th>Key</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>outputroot</td>
-<td>string</td>
-<td>Path of the directory to store these exported triples</td>
-<td>'./'</td>
+<td>String. Path of the directory to store these exported triples (by default, <code>'./'</code>)</td>
 </tr>
 <tr>
 <td>outputfile</td>
-<td>string</td>
-<td>Path of the file to store these exported triples</td>
-<td>None</td>
+<td>String. Path of the file to store these exported triples (by default, <code>None</code>)</td>
 </tr>
 <tr>
 <td>outputformat</td>
-<td>string</td>
-<td>Format of the exported triples, i.e., 'json-ld', 'n3', 'nquads', 'nt', 'hext', 'pretty-xml', 'trig', 'trix', 'turtle', 'longturtle', or 'xml'.</td>
-<td>'nt'</td>
+<td>String. Format of the exported triples, i.e., <code>'json-ld'</code>, <code>'n3'</code>, <code>'nquads'</code>, <code>'nt'</code>, <code>'hext'</code>, <code>'pretty-xml'</code>, <code>'trig'</code>, <code>'trix'</code>, <code>'turtle'</code>, <code>'longturtle'</code>, or <code>'xml'</code> (by default, <code>'nt'</code>)</td>
 </tr>
 </tbody>
 </table>
@@ -1101,35 +1025,25 @@ data = connection.export( hasoutput=False, config={'table': 'df'})
 <thead>
 <tr>
 <th>Name</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>datastore</td>
-<td>string</td>
-<td>A backend datastore, i.e., rdflib or duckdb</td>
-<td>[required]</td>
+<td>String. A backend datastore, i.e., <code>'rdflib'</code> or <code>'duckdb'</code> (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>dataset</td>
-<td>string OR GeistGraph object</td>
-<td>Dataset to load an object: (1) A string indicates the name of the dataset stored on disk OR (2) a GeistGraph object for dataset in memory</td>
-<td>[required]</td>
+<td>String OR <code>GeistGraph</code> object. Dataset to load an object: (1) A string indicates the name of the dataset stored on disk OR (2) a <code>GeistGraph</code> object for dataset in memory (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>hasoutput</td>
-<td>bool</td>
-<td>True to export as a file or print it out</td>
-<td>[required]</td>
+<td>Bool. <code>True</code> to export as a file or print it out (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>config</td>
-<td>dict</td>
-<td>A dictionary with configurations for certain backend store</td>
-<td>see below</td>
+<td>Dict. A dictionary with configurations for certain backend store. See below for detailed information</td>
 </tr>
 </tbody>
 </table>
@@ -1141,53 +1055,37 @@ data = connection.export( hasoutput=False, config={'table': 'df'})
 <thead>
 <tr>
 <th>Key</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>rankdir</td>
-<td>string</td>
-<td>Direction of the graph: TB or BT or LR or RL</td>
-<td>'TB'</td>
+<td>String. Direction of the graph: <code>'TB'</code> or <code>'BT'</code> or <code>'LR'</code> or <code>'RL'</code> (by default, <code>'TB'</code>)</td>
 </tr>
 <tr>
 <td>mappings</td>
-<td>string</td>
-<td>File of the mappings to shorten text (str): path of a JSON file, where the key is the original text and the value is the shorter text</td>
-<td>None</td>
+<td>String. File of the mappings to shorten text (str): path of a JSON file, where the key is the original text and the value is the shorter text (by default, <code>None</code>)</td>
 </tr>
 <tr>
 <td>on</td>
-<td>string</td>
-<td>Column(s) to be mapped</td>
-<td>None</td>
+<td>String. Column(s) to be mapped (by default, <code>None</code>)</td>
 </tr>
 <tr>
 <td>samecolor</td>
-<td>bool</td>
-<td>True to use the same color for same edges, otherwise False</td>
-<td>True</td>
+<td>Bool. <code>True</code> to use the same color for same edges (by default, <code>True</code>)</td>
 </tr>
 <tr>
 <td>outputroot</td>
-<td>string</td>
-<td>Path of the directory to store the graph</td>
-<td>'./'</td>
+<td>String. Path of the directory to store the graph (by default, <code>'./'</code>)</td>
 </tr>
 <tr>
 <td>outputfile</td>
-<td>string</td>
-<td>Path of the file without extension to store the graph</td>
-<td>'res'</td>
+<td>String. Path of the file without extension to store the graph (by default, <code>'res'</code>)</td>
 </tr>
 <tr>
 <td>outputformats</td>
-<td>list</td>
-<td>Format of the graph: 'none' or 'svg' or 'png' or 'gv'</td>
-<td>['none']</td>
+<td>List. Format of the graph: <code>'none'</code> or <code>'svg'</code> or <code>'png'</code> or <code>'gv'</code> (by default, <code>['none']</code>)</td>
 </tr>
 </tbody>
 </table>
@@ -1225,35 +1123,25 @@ connection.graph(hasoutput=True, config={'outputformats': ['svg']})
 <thead>
 <tr>
 <th>Name</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>inputfile</td>
-<td>string</td>
-<td>A file to be loaded</td>
-<td>[required]</td>
+<td>String. A file to be loaded (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>inputformat</td>
-<td>string</td>
-<td>Format of the file to be loaded</td>
-<td>[required]</td>
+<td>String. Format of the file to be loaded (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>isinputpath</td>
-<td>bool</td>
-<td>True if the inputfile is the file path, otherwise the inputfile is the content</td>
-<td>[required]</td>
+<td>Bool. <code>True</code> if the inputfile is the file path, otherwise the inputfile is the content (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>config</td>
-<td>dict</td>
-<td>A dictionary with configurations for certain backend store</td>
-<td>see below</td>
+<td>Dict. A dictionary with configurations for certain backend store. See below for detailed information</td>
 </tr>
 </tbody>
 </table>
@@ -1265,17 +1153,13 @@ connection.graph(hasoutput=True, config={'outputformats': ['svg']})
 <thead>
 <tr>
 <th>Key</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>table</td>
-<td>string</td>
-<td>Name of the table to be loaded</td>
-<td>[required]</td>
+<td>String. Name of the table to be loaded (<code>[required]</code>)</td>
 </tr>
 </tbody>
 </table>
@@ -1285,17 +1169,13 @@ connection.graph(hasoutput=True, config={'outputformats': ['svg']})
 <thead>
 <tr>
 <th>Key</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>colnames</td>
-<td>string</td>
-<td>Column names of triples with the format of [[subject1, predicate1, object1], [subject2, predicate2, object2], ...]</td>
-<td>[required] when <code>inputformat</code>='csv'</td>
+<td>String. Column names of triples with the format of <code>[[subject1, predicate1, object1], [subject2, predicate2, object2], ...]</code> (<code>[required]</code> when <code>inputformat='csv'</code>)</td>
 </tr>
 </tbody>
 </table>
@@ -1329,35 +1209,25 @@ connection.load(inputfile=csv_str, inputformat='csv', isinputpath=False, config=
 <thead>
 <tr>
 <th>Name</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>inputfile</td>
-<td>string</td>
-<td>File containing the query</td>
-<td>[required]</td>
+<td>String. File containing the query (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>isinputpath</td>
-<td>bool</td>
-<td>True if the inputfile is the file path, otherwise the inputfile is the content</td>
-<td>[required]</td>
+<td>Bool. <code>True</code> if the inputfile is the file path, otherwise the inputfile is the content (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>hasoutput</td>
-<td>bool</td>
-<td>True to store the query results as a CSV file or print them out</td>
-<td>[required]</td>
+<td>Bool. <code>True</code> to store the query results as a CSV file or print them out (<code>[required]</code>)</td>
 </tr>
 <tr>
 <td>config</td>
-<td>dict</td>
-<td>A dictionary with configurations when <code>hasoutput=True</code></td>
-<td>see below</td>
+<td>Dict. A dictionary with configurations when <code>hasoutput=True</code>. See below for detailed information</td>
 </tr>
 </tbody>
 </table>
@@ -1366,23 +1236,17 @@ connection.load(inputfile=csv_str, inputformat='csv', isinputpath=False, config=
 <thead>
 <tr>
 <th>Key</th>
-<th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>outputroot</td>
-<td>string</td>
-<td>Path of the directory to store the query results</td>
-<td>'./'</td>
+<td>String. Path of the directory to store the query results (by default, <code>'./'</code></td>
 </tr>
 <tr>
 <td>outputfile</td>
-<td>string</td>
-<td>Path of the file to store the query results</td>
-<td>None</td>
+<td>String. Path of the file to store the query results (by default, <code>None</code></td>
 </tr>
 </tbody>
 </table>
