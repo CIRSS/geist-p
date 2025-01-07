@@ -575,9 +575,8 @@
 <li><strong>process_str_for_html</strong>: preprocess a string to be displayed within an HTML document, e.g., replace <code>&lt;</code> with <code>&amp;lt</code></li>
 </ul>
 <h2 id="how-to-execute-expand-a-geist-template">How to execute (expand) a Geist template?</h2>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio"><input id="__tabbed_1_2" name="__tabbed_1" type="radio"><div class="tabbed-labels"><label for="__tabbed_1_1">CLI</label><label for="__tabbed_1_2">Python API</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
+<details class="info">
+<summary>CLI</summary>
 <p><em>report</em> command can expand a report (Geist template) using dataset(s).</p>
 <p>Here are options of the <em>report</em> command:
 <div class="highlight"><pre><span></span><code>Usage: geist report [OPTIONS]
@@ -673,8 +672,9 @@ END_TEMPLATE
 {% destroy "test", datastore="rdflib" %}
 </code></pre></div></p>
 </details>
-</div>
-<div class="tabbed-block">
+</details>
+<details class="info">
+<summary>Python API</summary>
 <p><strong>report</strong> function can expand a report (Geist template) using dataset(s).</p>
 <p>Parameters description for <em>report()</em>:</p>
 <table>
@@ -802,9 +802,7 @@ END_TEMPLATE
 {% destroy "test", datastore="rdflib" %}
 </code></pre></div></p>
 </details>
-</div>
-</div>
-</input></input></div>
+</details>
 </details>
 </article>
 </div>

@@ -618,9 +618,8 @@
 </tbody>
 </table>
 <p>Description for the <em>config</em> parameter:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio"><input id="__tabbed_1_2" name="__tabbed_1" type="radio"><div class="tabbed-labels"><label for="__tabbed_1_1">datastore: duckdb</label><label for="__tabbed_1_2">datastore: rdflib</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
+<details class="info">
+<summary>datastore: duckdb</summary>
 <table>
 <thead>
 <tr>
@@ -635,8 +634,9 @@
 </tr>
 </tbody>
 </table>
-</div>
-<div class="tabbed-block">
+</details>
+<details class="info">
+<summary>datastore: rdflib</summary>
 <table>
 <thead>
 <tr>
@@ -651,13 +651,11 @@
 </tr>
 <tr>
 <td>infer</td>
-<td>String. Inference to perform on update, i.e., <code>none</code>, <code>[rdfs](https://owl-rl.readthedocs.io/en/latest/RDFSClosure.html#owlrl.RDFSClosure.RDFS_Semantics)</code>, <code>[owl](https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules)</code>, or <code>[rdfs_owl](https://owl-rl.readthedocs.io/en/latest/CombinedClosure.html#owlrl.CombinedClosure.RDFS_OWLRL_Semantics)</code> (by default, <code>'none'</code>)</td>
+<td>String. Inference to perform on update, i.e., <code>'none'</code>, <a href="https://owl-rl.readthedocs.io/en/latest/RDFSClosure.html#owlrl.RDFSClosure.RDFS_Semantics"><code>'rdfs'</code></a>, <a href="https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules"><code>'owl'</code></a>, or <a href="https://owl-rl.readthedocs.io/en/latest/CombinedClosure.html#owlrl.CombinedClosure.RDFS_OWLRL_Semantics"><code>'rdfs_owl'</code></a> (by default, <code>'none'</code>)</td>
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-</input></input></div>
+</details>
 <details class="example">
 <summary>Example 1: create a <code>test</code> SQL dataset on disk from a string</summary>
 <p>The <code>.geistdata/duckdb/test.duckdb</code> file is created and a <code>DuckDBPyConnection</code> object is returned.</p>
@@ -769,9 +767,8 @@ conn = geist.create(datastore='duckdb', dataset=':memory:', inputfile="test.csv"
 </tbody>
 </table>
 <p>Description for the <em>config</em> parameter:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio"><input id="__tabbed_2_2" name="__tabbed_2" type="radio"><div class="tabbed-labels"><label for="__tabbed_2_1">datastore: duckdb</label><label for="__tabbed_2_2">datastore: rdflib</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
+<details class="info">
+<summary>datastore: duckdb</summary>
 <table>
 <thead>
 <tr>
@@ -786,8 +783,9 @@ conn = geist.create(datastore='duckdb', dataset=':memory:', inputfile="test.csv"
 </tr>
 </tbody>
 </table>
-</div>
-<div class="tabbed-block">
+</details>
+<details class="info">
+<summary>datastore: rdflib</summary>
 <table>
 <thead>
 <tr>
@@ -802,13 +800,11 @@ conn = geist.create(datastore='duckdb', dataset=':memory:', inputfile="test.csv"
 </tr>
 <tr>
 <td>infer</td>
-<td>String. Inference to perform on update, i.e., none, <a href="https://owl-rl.readthedocs.io/en/latest/RDFSClosure.html#owlrl.RDFSClosure.RDFS_Semantics">rdfs</a>, <a href="https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules">owl</a>, or <a href="https://owl-rl.readthedocs.io/en/latest/CombinedClosure.html#owlrl.CombinedClosure.RDFS_OWLRL_Semantics">rdfs_owl</a> (by default, <code>none</code>)</td>
+<td>String. Inference to perform on update, i.e., <code>'none'</code>, <a href="https://owl-rl.readthedocs.io/en/latest/RDFSClosure.html#owlrl.RDFSClosure.RDFS_Semantics"><code>'rdfs'</code></a>, <a href="https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules"><code>'owl'</code></a>, or <a href="https://owl-rl.readthedocs.io/en/latest/CombinedClosure.html#owlrl.CombinedClosure.RDFS_OWLRL_Semantics"><code>'rdfs_owl'</code></a> (by default, <code>'none'</code>)</td>
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-</input></input></div>
+</details>
 <details class="example">
 <summary>Example 1: create a <code>test</code> SQL dataset from a string</summary>
 <p>The <code>.geistdata/duckdb/test.duckdb</code> file is created and a <code>Connection</code> instance is returned.</p>
@@ -938,9 +934,8 @@ connection.destroy()
 </tbody>
 </table>
 <p>Description for the <em>config</em> parameter:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio"><input id="__tabbed_3_2" name="__tabbed_3" type="radio"><div class="tabbed-labels"><label for="__tabbed_3_1">datastore: duckdb</label><label for="__tabbed_3_2">datastore: rdflib</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
+<details class="info">
+<summary>datastore: duckdb</summary>
 <table>
 <thead>
 <tr>
@@ -967,8 +962,9 @@ connection.destroy()
 </tr>
 </tbody>
 </table>
-</div>
-<div class="tabbed-block">
+</details>
+<details class="info">
+<summary>datastore: rdflib</summary>
 <table>
 <thead>
 <tr>
@@ -991,9 +987,7 @@ connection.destroy()
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-</input></input></div>
+</details>
 <details class="example">
 <summary>Example 1: export all rows of the <code>df</code> table in <code>test</code> dataset on disk</summary>
 <p>There exist a file with the path of <code>.geistdata/duckdb/test.duckdb</code>. The following code returns a Pandas data frame named <code>data</code>.</p>
@@ -1048,9 +1042,8 @@ data = connection.export( hasoutput=False, config={'table': 'df'})
 </tbody>
 </table>
 <p>Description for the <em>config</em> parameter:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="4:1"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio"><div class="tabbed-labels"><label for="__tabbed_4_1">datastore: rdflib</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
+<details class="info">
+<summary>datastore: rdflib</summary>
 <table>
 <thead>
 <tr>
@@ -1089,9 +1082,7 @@ data = connection.export( hasoutput=False, config={'table': 'df'})
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-</input></div>
+</details>
 <details class="example">
 <summary>Example 1: visualize the <code>test</code> dataset on disk</summary>
 <p>There exist a file with the path of <code>.geistdata/duckdb/test.duckdb</code>. The following code visualizes the test dataset as a graph and saves it as the res.svg file.</p>
@@ -1146,9 +1137,8 @@ connection.graph(hasoutput=True, config={'outputformats': ['svg']})
 </tbody>
 </table>
 <p>Description for the <em>config</em> parameter:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio"><input id="__tabbed_5_2" name="__tabbed_5" type="radio"><div class="tabbed-labels"><label for="__tabbed_5_1">datastore: duckdb</label><label for="__tabbed_5_2">datastore: rdflib</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
+<details class="info">
+<summary>datastore: duckdb</summary>
 <table>
 <thead>
 <tr>
@@ -1163,8 +1153,9 @@ connection.graph(hasoutput=True, config={'outputformats': ['svg']})
 </tr>
 </tbody>
 </table>
-</div>
-<div class="tabbed-block">
+</details>
+<details class="info">
+<summary>datastore: rdflib</summary>
 <table>
 <thead>
 <tr>
@@ -1179,9 +1170,7 @@ connection.graph(hasoutput=True, config={'outputformats': ['svg']})
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-</input></input></div>
+</details>
 <details class="example">
 <summary>Example: load a table into the <code>test</code> dataset</summary>
 <p>There exist a file with the path of <code>.geistdata/duckdb/test.duckdb</code>. The <code>csv_str</code> will be imported into the <code>df</code> table. Note that the order of table columns should be consistent with the imported data.</p>
