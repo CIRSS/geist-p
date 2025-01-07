@@ -22,9 +22,6 @@
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
 <div data-md-component="skip">
-<a class="md-skip" href="#create-a-geistgraph-object-a-dictionary-with-rdf_graph-and-infer-keys">
-          Skip to content
-        </a>
 </div>
 <div data-md-component="announce">
 </div>
@@ -483,6 +480,7 @@
 </div>
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
+<h1>Function create</h1>
 <p><strong>create</strong> function can create a new dataset on disk or in memory.</p>
 <p>Parameters description for <em>create()</em>:</p>
 <table>
@@ -624,17 +622,18 @@ conn = geist.create(datastore='duckdb', dataset=':memory:', inputfile="test.csv"
 <details class="example">
 <summary>Example 1: create a <code>test</code> RDF dataset on disk from a string</summary>
 <p>The <code>.geistdata/rdflib/test.pkl</code> file is created and a <code>GeistGraph</code> object is returned.</p>
-<p>```
-import geist</p>
-<p>csv_str = """
+<div class="highlight"><pre><span></span><code>import geist
+
+csv_str = """
 subject,predicate,object
-<a href="http://example.com/drewp">http://example.com/drewp</a>,<a href="http://www.w3.org/1999/02/22-rdf-syntax-ns#type">http://www.w3.org/1999/02/22-rdf-syntax-ns#type</a>,<a href="http://xmlns.com/foaf/0.1/Person">http://xmlns.com/foaf/0.1/Person</a>
-<a href="http://example.com/drewp">http://example.com/drewp</a>,<a href="http://example.com/says">http://example.com/says</a>,"Hello World"
-"""</p>
-<h1 id="create-a-geistgraph-object-a-dictionary-with-rdf_graph-and-infer-keys">Create a GeistGraph object: a dictionary with 'rdf_graph' and 'infer' keys</h1>
-<p>conn = geist.create(datastore='rdflib', dataset='test', inputfile=csv_str, inputformat="csv", isinputpath=False, config={"colnames": "[['subject', 'predicate', 'object']]"})</p>
+&lt;http://example.com/drewp&gt;,&lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt;,&lt;http://xmlns.com/foaf/0.1/Person&gt;
+&lt;http://example.com/drewp&gt;,&lt;http://example.com/says&gt;,"Hello World"
+"""
+
+# Create a GeistGraph object: a dictionary with 'rdf_graph' and 'infer' keys
+conn = geist.create(datastore='rdflib', dataset='test', inputfile=csv_str, inputformat="csv", isinputpath=False, config={"colnames": "[['subject', 'predicate', 'object']]"})
+</code></pre></div>
 </details>
-<p>```</p>
 <details class="example">
 <summary>Example 2: create a <code>test</code> RDF dataset on disk from a file</summary>
 <p>The <code>.geistdata/rdflib/test.pkl</code> file is created and a <code>GeistGraph</code> object is returned.</p>
