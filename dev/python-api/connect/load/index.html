@@ -494,19 +494,19 @@
 <td>inputfile</td>
 <td>string</td>
 <td>A file to be loaded</td>
-<td><code>[required]</code></td>
+<td>REQUIRED</td>
 </tr>
 <tr>
 <td>inputformat</td>
 <td>string</td>
 <td>Format of the file to be loaded</td>
-<td><code>[required]</code></td>
+<td>REQUIRED</td>
 </tr>
 <tr>
 <td>isinputpath</td>
 <td>bool</td>
 <td><code>True</code> if the inputfile is the file path, otherwise the inputfile is the content</td>
-<td><code>[required]</code></td>
+<td>REQUIRED</td>
 </tr>
 <tr>
 <td>config</td>
@@ -533,7 +533,7 @@
 <td>table</td>
 <td>string</td>
 <td>Name of the table to be loaded</td>
-<td><code>[required]</code></td>
+<td>REQUIRED</td>
 </tr>
 </tbody>
 </table>
@@ -572,7 +572,7 @@ connection.load(inputfile=csv_str, inputformat='csv', isinputpath=False, config=
 <td>colnames</td>
 <td>string</td>
 <td>Column names of triples with the format of <code>[[subject1, predicate1, object1], [subject2, predicate2, object2], ...]</code></td>
-<td><code>[required]</code> when <code>inputformat='csv'</code></td>
+<td>REQUIRED when <code>inputformat='csv'</code></td>
 </tr>
 </tbody>
 </table>

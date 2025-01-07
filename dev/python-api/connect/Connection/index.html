@@ -563,13 +563,13 @@
 <td>datastore</td>
 <td>string</td>
 <td>A backend datastore, i.e., <code>'rdflib'</code> or <code>'duckdb'</code></td>
-<td><code>[required]</code></td>
+<td>REQUIRED</td>
 </tr>
 <tr>
 <td>dataset</td>
 <td>string</td>
 <td>Name of the dataset. Note that <code>':memory:'</code> is a reserved value for datasets that exist only in memory</td>
-<td><code>[required]</code></td>
+<td>REQUIRED</td>
 </tr>
 <tr>
 <td>conn</td>
@@ -605,31 +605,31 @@
 <td>datastore</td>
 <td>string</td>
 <td>A backend datastore, i.e., <code>'rdflib'</code> or <code>'duckdb'</code></td>
-<td><code>[required]</code></td>
+<td>REQUIRED</td>
 </tr>
 <tr>
 <td>dataset</td>
 <td>string</td>
 <td>Name of the dataset to be created. Note that <code>':memory:'</code> is a reserved value for datasets that exist only in memory</td>
-<td><code>[required]</code></td>
+<td>REQUIRED</td>
 </tr>
 <tr>
 <td>inputfile</td>
 <td>string</td>
 <td>A file to be loaded</td>
-<td><code>[required]</code></td>
+<td>REQUIRED</td>
 </tr>
 <tr>
 <td>inputformat</td>
 <td>string</td>
 <td>Format of the file to be loaded</td>
-<td><code>[required]</code></td>
+<td>REQUIRED</td>
 </tr>
 <tr>
 <td>isinputpath</td>
 <td>bool</td>
 <td><code>True</code> if the inputfile is the file path, otherwise the inputfile is the content</td>
-<td><code>[required]</code></td>
+<td>REQUIRED</td>
 </tr>
 <tr>
 <td>config</td>
@@ -741,7 +741,7 @@ conn = geist.create(datastore='duckdb', dataset=':memory:', inputfile="test.csv"
 <td>colnames</td>
 <td>string</td>
 <td>Column names of triples with the format of <code>[[subject1, predicate1, object1], [subject2, predicate2, object2], ...]</code></td>
-<td><code>[required]</code> when <code>inputformat='csv'</code></td>
+<td>REQUIRED when <code>inputformat='csv'</code></td>
 </tr>
 <tr>
 <td>infer</td>
@@ -846,19 +846,19 @@ conn = geist.create(datastore='rdflib', dataset=':memory:', inputfile='test.csv'
 <td>inputfile</td>
 <td>string</td>
 <td>A file to be loaded</td>
-<td><code>[required]</code></td>
+<td>REQUIRED</td>
 </tr>
 <tr>
 <td>inputformat</td>
 <td>string</td>
 <td>Format of the file to be loaded</td>
-<td><code>[required]</code></td>
+<td>REQUIRED</td>
 </tr>
 <tr>
 <td>isinputpath</td>
 <td>bool</td>
 <td><code>True</code> if the inputfile is the file path, otherwise the inputfile is the content</td>
-<td><code>[required]</code></td>
+<td>REQUIRED</td>
 </tr>
 <tr>
 <td>config</td>
@@ -974,7 +974,7 @@ connection.create(inputfile="test.csv", inputformat="csv", isinputpath=True, con
 <td>colnames</td>
 <td>string</td>
 <td>Column names of triples with the format of <code>[[subject1, predicate1, object1], [subject2, predicate2, object2], ...]</code>.</td>
-<td><code>[required]</code> when <code>inputformat='csv'</code>)</td>
+<td>REQUIRED when <code>inputformat='csv'</code>)</td>
 </tr>
 <tr>
 <td>infer</td>
@@ -1105,7 +1105,7 @@ connection.destroy()
 <td>hasoutput</td>
 <td>bool</td>
 <td><code>True</code> to export as a file or print it out</td>
-<td><code>[required]</code></td>
+<td>REQUIRED</td>
 </tr>
 <tr>
 <td>config</td>
@@ -1251,19 +1251,19 @@ data = connection.export(hasoutput=False)
 <td>datastore</td>
 <td>string</td>
 <td>A backend datastore, i.e., <code>'rdflib'</code> or <code>'duckdb'</code></td>
-<td><code>[required]</code></td>
+<td>REQUIRED`</td>
 </tr>
 <tr>
 <td>dataset</td>
 <td>string OR <code>GeistGraph</code> object</td>
 <td>Dataset to load an object: (1) A string indicates the name of the dataset stored on disk OR (2) a <code>GeistGraph</code> object for dataset in memory</td>
-<td><code>[required]</code></td>
+<td>REQUIRED</td>
 </tr>
 <tr>
 <td>hasoutput</td>
 <td>bool</td>
 <td><code>True</code> to export as a file or print it out</td>
-<td><code>[required]</code></td>
+<td>REQUIRED</td>
 </tr>
 <tr>
 <td>config</td>
@@ -1372,19 +1372,19 @@ connection.graph(hasoutput=True, config={'outputformats': ['svg']})
 <td>inputfile</td>
 <td>string</td>
 <td>A file to be loaded</td>
-<td><code>[required]</code></td>
+<td>REQUIRED</td>
 </tr>
 <tr>
 <td>inputformat</td>
 <td>string</td>
 <td>Format of the file to be loaded</td>
-<td><code>[required]</code></td>
+<td>REQUIRED</td>
 </tr>
 <tr>
 <td>isinputpath</td>
 <td>bool</td>
 <td><code>True</code> if the inputfile is the file path, otherwise the inputfile is the content</td>
-<td><code>[required]</code></td>
+<td>REQUIRED</td>
 </tr>
 <tr>
 <td>config</td>
@@ -1411,7 +1411,7 @@ connection.graph(hasoutput=True, config={'outputformats': ['svg']})
 <td>table</td>
 <td>string</td>
 <td>Name of the table to be loaded</td>
-<td><code>[required]</code></td>
+<td>REQUIRED</td>
 </tr>
 </tbody>
 </table>
@@ -1450,7 +1450,7 @@ connection.load(inputfile=csv_str, inputformat='csv', isinputpath=False, config=
 <td>colnames</td>
 <td>string</td>
 <td>Column names of triples with the format of <code>[[subject1, predicate1, object1], [subject2, predicate2, object2], ...]</code></td>
-<td><code>[required]</code> when <code>inputformat='csv'</code></td>
+<td>REQUIRED when <code>inputformat='csv'</code></td>
 </tr>
 </tbody>
 </table>
@@ -1490,19 +1490,19 @@ connection.load(inputfile=csv_str, inputformat='csv', isinputpath=False, config=
 <td>inputfile</td>
 <td>string</td>
 <td>File containing the query</td>
-<td><code>[required]</code></td>
+<td>REQUIRED</td>
 </tr>
 <tr>
 <td>isinputpath</td>
 <td>bool</td>
 <td><code>True</code> if the inputfile is the file path, otherwise the inputfile is the content</td>
-<td><code>[required]</code></td>
+<td>REQUIRED</td>
 </tr>
 <tr>
 <td>hasoutput</td>
 <td>bool</td>
 <td><code>True</code> to store the query results as a CSV file or print them out</td>
-<td><code>[required]</code></td>
+<td>REQUIRED</td>
 </tr>
 <tr>
 <td>config</td>
