@@ -9,15 +9,22 @@ def destroy():
     pass
 
 @destroy.command()
-@click.option('--dataset', '-d', default='kb', type=str, callback=validate_dataset, help='Name of RDF dataset to be removed (default "kb")')
+@click.option('--dataset', '-d', default='kb', type=str, callback=validate_dataset, help='Name of an RDF dataset to be removed (default "kb")')
 @click.option('--quiet', '-q', is_flag=True, show_default=True, default=False, help="Suppress error messages if the provided dataset does not exist")
 def rdflib(dataset, quiet):
     """Delete an RDF dataset"""
     geist_destroy(datastore='rdflib', dataset=dataset, quiet=quiet)
 
 @destroy.command()
-@click.option('--dataset', '-d', default='kb', type=str, callback=validate_dataset, help='Name of SQL dataset to be removed (default "kb")')
+@click.option('--dataset', '-d', default='kb', type=str, callback=validate_dataset, help='Name of a SQL dataset to be removed (default "kb")')
 @click.option('--quiet', '-q', is_flag=True, show_default=True, default=False, help="Suppress error messages if the provided dataset does not exist")
 def duckdb(dataset, quiet):
     """Delete a SQL dataset"""
     geist_destroy(datastore='duckdb', dataset=dataset, quiet=quiet)
+
+@destroy.command()
+@click.option('--dataset', '-d', default='kb', type=str, callback=validate_dataset, help='Name of an ASP dataset to be removed (default "kb")')
+@click.option('--quiet', '-q', is_flag=True, show_default=True, default=False, help="Suppress error messages if the provided dataset does not exist")
+def clingo(dataset, quiet):
+    """Delete an ASP dataset"""
+    geist_destroy(datastore='clingo', dataset=dataset, quiet=quiet)

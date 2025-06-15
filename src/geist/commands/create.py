@@ -27,3 +27,13 @@ def duckdb(dataset, inputfile, inputformat, table):
     """Create a new SQL dataset using DuckDB"""
     conn = geist_create(datastore='duckdb', dataset=dataset, inputfile=inputfile.read(), inputformat=inputformat, isinputpath=False, config={'table': table})
     conn.close()
+
+@create.command()
+@click.option('--dataset', '-d', default='kb', type=str, callback=validate_dataset, help='Name of ASP dataset to create (default "kb")')
+@click.option('--inputfile', '-ifile', required=True, type=click.File('r'), default=sys.stdin, help='Path of the file to be loaded as facts, rules, and contraints')
+@click.option('--inputformat', '-iformat', default='lp', type=click.Choice(['lp', 'csv']), help='Format of the file to be loaded as facts, rules, and constraints. Note that "csv" only supports facts (default "lp")')
+@click.option('--predicate', '-pred', default='isfirstcol', type=str, help='"isfirstcol" for using the first column as the predicate name; strings other than "isfirstcol" are used as the predicate name directly (default: "isfirstcol")')
+@click.option('--programname', '-prog', default='base', type=str, help='Name of the program (default: "base")')
+def clingo(dataset, inputfile, inputformat, predicate, programname):
+    """Create a new ASP dataset using Clingo"""
+    geist_create(datastore='clingo', dataset=dataset, inputfile=inputfile.read(), inputformat=inputformat, isinputpath=False, config={'predicate': predicate, 'programname': programname})

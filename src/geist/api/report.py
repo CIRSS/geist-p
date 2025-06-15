@@ -46,7 +46,7 @@ class CustomCodeGenerator(CodeGenerator):
 class CreateExtension(ContainerTag):
     tags = {"create"}
     
-    def render(self, dataset="kb", datastore="rdflib", inputformat="json-ld", colnames=None, infer="none", isfilepath=True, table="df", caller=None):
+    def render(self, dataset="kb", datastore="rdflib", inputformat="json-ld", colnames=None, infer="none", isfilepath=True, table="df", predicate="isfirstcol", name="base", caller=None):
         content = get_content(environment.from_string(str(caller())).render(), isfilepath)
         if datastore == "rdflib":
             from geist.datastore.rdflib import rdflib_create
@@ -55,14 +55,17 @@ class CreateExtension(ContainerTag):
             from geist.datastore.duckdb import duckdb_create
             conn = duckdb_create(dataset, content, inputformat, table)
             conn.close()
+        elif datastore == "clingo":
+            from geist.datastore.clingo import clingo_create
+            clingo_create(dataset, content, inputformat, predicate, name)
         else:
-            raise ValueError("Invalid datastore. Only rdflib and duckdb are supported for now.")
+            raise ValueError("Invalid datastore. Only rdflib, duckdb, and clingo are supported for now.")
         return ""
 
 class LoadExtension(ContainerTag):
     tags = {"load"}
     
-    def render(self, dataset="kb", datastore="rdflib", inputformat="json-ld", colnames=None, isfilepath=True, table="df", caller=None):
+    def render(self, dataset="kb", datastore="rdflib", inputformat="json-ld", colnames=None, isfilepath=True, table="df", predicate="isfirstcol", programname="base", caller=None):
         content = get_content(environment.from_string(str(caller())).render(), isfilepath)
         if datastore == "rdflib":
             from geist.datastore.rdflib import rdflib_load
@@ -71,14 +74,17 @@ class LoadExtension(ContainerTag):
             from geist.datastore.duckdb import duckdb_load
             conn = duckdb_load(dataset, content, inputformat, table)
             conn.close()
+        elif datastore == "clingo":
+            from geist.datastore.clingo import clingo_load
+            clingo_load(dataset, content, inputformat, predicate, programname, False)
         else:
-            raise ValueError("Invalid datastore. Only rdflib and duckdb are supported for now.")
+            raise ValueError("Invalid datastore. Only rdflib, duckdb, and clingo are supported for now.")
         return ""
 
 class QueryExtension(ContainerTag):
     tags = {"query"}
 
-    def render(self, dataset="kb", datastore="rdflib", isfilepath=True, caller=None):
+    def render(self, dataset="kb", datastore="rdflib", isfilepath=True, predicate=None, oformat="lp", caller=None):
         res = '{}'
         content = get_content(environment.from_string(str(caller())).render(), isfilepath)
         if datastore == "rdflib":
@@ -90,8 +96,19 @@ class QueryExtension(ContainerTag):
             conn = load_sql_dataset(dataset)
             res = conn.sql(content).df()
             conn.close()
+        elif datastore == "clingo":
+            from geist.datastore.clingo import load_asp_dataset, query2dict, dict2facts, dict2dfs
+            conn = load_asp_dataset(dataset, name="base")
+            raw_res = query2dict(conn, content)
+            if oformat == "lp":
+                res = dict2facts({predicate: raw_res[predicate]})
+            elif oformat == "df":
+                res = dict2dfs(raw_res)
+                res = res[predicate] if predicate else res
+            else:
+                raise ValueError("Only 'lp' and 'df' are supported for now.")
         else:
-            raise ValueError("Invalid datastore. Only rdflib and duckdb are supported for now.")
+            raise ValueError("Invalid datastore. Only rdflib, duckdb, and clingo are supported for now.")
         return res
 
 class DestroyExtension(StandaloneTag):
@@ -104,8 +121,11 @@ class DestroyExtension(StandaloneTag):
         elif datastore == "duckdb":
             from geist.datastore.duckdb import duckdb_destroy
             duckdb_destroy(dataset=dataset, quiet=quiet)
+        elif datastore == "clingo":
+            from geist.datastore.clingo import clingo_destroy
+            clingo_destroy(dataset=dataset, quiet=quiet)
         else:
-            raise ValueError("Invalid datastore. Only rdflib and duckdb are supported for now.")
+            raise ValueError("Invalid datastore. Only rdflib, duckdb, and clingo are supported for now.")
         return ""
 
 class GraphExtension(StandaloneTag):

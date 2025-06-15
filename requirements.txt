@@ -8,3 +8,4 @@ pandas
 tabulate
 pygraphviz
 duckdb
+clingo==5.8.0

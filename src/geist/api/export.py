@@ -1,7 +1,7 @@
 def geist_export(datastore, dataset, hasoutput, config={}):
     """
     Export a dataset.
-    :param datastore: a string. Backend datastores, i.e., rdflib, duckdb
+    :param datastore: a string. Backend datastores, i.e., rdflib, duckdb, or clingo
     :param dataset: a string represents the name of the dataset to be exported OR a GeistGraph object OR a DuckPyConnection object
     :param hasoutput: bool. True to export as a file or print it out
     :param config: a dictionary with 'outputroot', 'outputfile', 'outputformat', and 'table' keys
@@ -32,6 +32,17 @@ def geist_export(datastore, dataset, hasoutput, config={}):
             outputfile=outputfile, 
             outputformat='csv' if 'outputformat' not in config else config['outputformat']
         )
+    elif datastore == 'clingo':
+        # Export an ASP dataset
+        from geist.datastore.clingo import clingo_export
+        (data, conn) = clingo_export(
+            dataset=dataset,
+            predicate=None if 'predicate' not in config else config['predicate'],
+            hasoutput=hasoutput, 
+            outputroot=outputroot,
+            outputfile=outputfile,
+            outputformat='lp' if 'outputformat' not in config else config['outputformat']
+        )
     else:
-        raise ValueError("Invalid datastore. Only rdflib and duckdb are supported for now.")
+        raise ValueError("Invalid datastore. Only rdflib, duckdb, and clingo are supported for now.")
     return data, conn
