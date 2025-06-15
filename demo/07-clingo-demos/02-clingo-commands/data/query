@@ -1,0 +1,2 @@
+friends(X, Z) :- friends(X, Y), friends(Y, Z), X < Z.
+friends(Y, Z) :- friends(X, Y), friends(X, Z), Y < Z.

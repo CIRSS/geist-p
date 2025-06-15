@@ -6,20 +6,21 @@ from geist.api.load import geist_load
 from geist.api.query import geist_query
 from geist.datastore.rdflib import load_rdf_dataset
 from geist.datastore.duckdb import load_sql_dataset
-import duckdb
+from geist.datastore.clingo import load_asp_dataset
+import duckdb, clingo
 
 class Connection:
     def __init__(self, datastore, dataset, conn=None):
         # Initialize the connection to the dataset
         self.datastore = datastore
         self.dataset = dataset
-        self.conn = conn # a DuckPyConnection object or a GeistGraph object
+        self.conn = conn # a DuckPyConnection object or a GeistGraph object or a Control object
     
     @classmethod
     def connect(cls, datastore, dataset):
         """
         Create a new Connection instance to connect to a dataset.
-        :param datastore: a string. Backend datastores, i.e., rdflib, duckdb
+        :param datastore: a string. Backend datastores, i.e., rdflib, duckdb, or clingo
         :param dataset: a string. Name of the dataset. You can pass ':memory:' to create
                         a dataset existing only in memory, and open a connection to it.
         :return connection: a Connection object.
@@ -36,8 +37,13 @@ class Connection:
                 conn = duckdb.connect(dataset)
             else:
                 conn = load_sql_dataset(dataset)
+        elif datastore == 'clingo':
+            if dataset == ':memory:':
+                conn = clingo.control.Control()
+            else:
+                conn = load_asp_dataset(dataset)
         else:
-            raise ValueError("Invalid datastore. Only rdflib and duckdb are supported for now.")
+            raise ValueError("Invalid datastore. Only rdflib, duckdb, and clingo are supported for now.")
         connection = cls(datastore, dataset, conn)
         return connection
 

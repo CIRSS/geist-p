@@ -1,0 +1,532 @@
+================================================== bash cell | available_commands ==================================================
+
+geist --help
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+Usage: geist [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  create   Create a new dataset
+  destroy  Delete a dataset
+  export   Export a dataset
+  graph    Visualize a dataset
+  load     Import data into a dataset
+  query    Perform a query on a dataset
+  report   Expand a report using dataset(s)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================================== bash cell | create_command ====================================================
+
+geist create clingo --help
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+Usage: geist create clingo [OPTIONS]
+
+  Create a new ASP dataset using Clingo
+
+Options:
+  -d, --dataset TEXT              Name of ASP dataset to create (default "kb")
+  -ifile, --inputfile FILENAME    Path of the file to be loaded as facts,
+                                  rules, and contraints  [required]
+  -iformat, --inputformat [lp|csv]
+                                  Format of the file to be loaded as facts,
+                                  rules, and constraints. Note that "csv" only
+                                  supports facts (default "lp")
+  -pred, --predicate TEXT         "isfirstcol" for using the first column as
+                                  the predicate name; strings other than
+                                  "isfirstcol" are used as the predicate name
+                                  directly (default: "isfirstcol")
+  -prog, --programname TEXT       Name of the program (default: "base")
+  --help                          Show this message and exit.
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+===================================================== bash cell | create_stdin =====================================================
+
+geist create clingo -d test -iformat lp << __END_INPUT__
+
+friends(a, b).
+friends(a, c).
+
+__END_INPUT__
+
+geist export clingo -d test | sort
+
+geist destroy clingo -d test
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+friends(a,b).
+friends(a,c).
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================================== bash cell | create_file_lp ====================================================
+
+geist create clingo -d test -ifile data/friends.lp -iformat lp
+
+geist export clingo -d test | sort
+
+geist destroy clingo -d test
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+friends(a,b).
+friends(a,c).
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+=================================================== bash cell | create_file_csv ====================================================
+
+geist create clingo -d test -ifile data/friends.csv -iformat csv -pred friends
+
+geist export clingo -d test | sort
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+friends(a,b).
+friends(a,c).
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+===================================================== bash cell | load_command =====================================================
+
+geist load clingo --help
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+Usage: geist load clingo [OPTIONS]
+
+  Import data into an ASP dataset
+
+Options:
+  -d, --dataset TEXT              Name of an ASP dataset to load a file
+                                  (default "kb")
+  -ifile, --inputfile FILENAME    Path of the file to be loaded  [required]
+  -iformat, --inputformat [lp|csv]
+                                  Format of the file to be loaded (default
+                                  "lp")
+  -pred, --predicate TEXT         Name of the predicate to be created
+                                  (default: "isfirstcol")
+  -prog, --programname TEXT       Name of the program (default: "base")
+  --help                          Show this message and exit.
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+================================================== bash cell | load_dataset_test ===================================================
+
+geist load clingo -d test -ifile data/new_friends.lp -iformat lp
+
+geist export clingo -d test | sort
+
+ls -R .geistdata
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+friends(a,b).
+friends(a,c).
+friends(b,d).
+.geistdata:
+clingo
+
+.geistdata/clingo:
+test.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+=================================================== bash cell | destroy_command ====================================================
+
+geist destroy --help
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+Usage: geist destroy [OPTIONS] COMMAND [ARGS]...
+
+  Delete a dataset
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  clingo  Delete an ASP dataset
+  duckdb  Delete a SQL dataset
+  rdflib  Delete an RDF dataset
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+================================================= bash cell | destroy_dataset_test =================================================
+
+geist destroy clingo -d test
+
+ls -R .geistdata
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+.geistdata:
+clingo
+
+.geistdata/clingo:
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+================================================== bash cell | create_dataset_kb ===================================================
+
+geist create clingo -ifile data/friends.lp
+
+ls -R .geistdata
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+.geistdata:
+clingo
+
+.geistdata/clingo:
+kb.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================================== bash cell | export_command ====================================================
+
+geist export clingo --help
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+Usage: geist export clingo [OPTIONS]
+
+  Export an ASP dataset
+
+Options:
+  -d, --dataset TEXT              Name of an ASP dataset to be exported
+                                  (default "kb")
+  -oroot, --outputroot TEXT       Path of the directory to store the exported
+                                  data (default: current directory). If the
+                                  given path (i.e., --outputfile) is None or a
+                                  relative path, it will be ignored.
+  -ofile, --outputfile TEXT       Path of the file to store the exported data.
+                                  File name will be updated as
+                                  "{ofile}#{predicate}.csv" (default: None)
+  -oformat, --outputformat [lp|csv]
+                                  Format of the exported data (default lp)
+  -pred, --predicate TEXT         Name of the predicate to be exported
+                                  (default "predicate")
+  --help                          Show this message and exit.
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+================================================== bash cell | export_dataset_kb ===================================================
+
+geist export clingo | sort
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+friends(a,b).
+friends(a,c).
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================================== bash cell | query_command =====================================================
+
+geist query clingo --help
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+Usage: geist query clingo [OPTIONS]
+
+  Perform an ASP query on a dataset
+
+Options:
+  -d, --dataset TEXT              Name of ASP dataset to be queried (default
+                                  "kb")
+  -ifile, --inputfile FILENAME    Specify either the path of the file
+                                  containing the ASP query to execute or
+                                  provide the ASP query itself via stdin
+                                  [required]
+  -oroot, --outputroot TEXT       Path of the directory to store the query
+                                  results (default: current directory). If the
+                                  given path (i.e., --outputfile) is None or a
+                                  relative path, it will be ignored.
+  -ofile, --outputfile TEXT       Path of the file to store the query results
+                                  (default: None)
+  -oformat, --outputformat [lp|csv]
+                                  Format of the exported data (default lp)
+  -pred, --predicate TEXT         Name of the predicate to be queried
+  -prog, --programname TEXT       Name of the program
+  --help                          Show this message and exit.
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+================================================ bash cell | file_query_dataset_kb =================================================
+
+geist query clingo --inputfile data/query
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+friends(a,b).
+friends(a,c).
+friends(b,c).
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+================================================ bash cell | stdin_query_dataset_kb ================================================
+
+geist query clingo << __END_QUERY__
+
+friends(X, Z) :- friends(X, Y), friends(Y, Z), X < Z.
+friends(Y, Z) :- friends(X, Y), friends(X, Z), Y < Z.
+
+__END_QUERY__
+
+geist destroy clingo -d kb
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+friends(a,b).
+friends(a,c).
+friends(b,c).
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+================================================ bash cell | query_dataset_to_newkb ================================================
+
+geist create clingo -d kb -ifile data/friends.lp
+
+geist query clingo -d kb --outputfile products/qres -pred friends_of_b << __END_QUERY__
+
+friends_of_b(X) :- friends(X, b).
+friends_of_b(X) :- friends(b, X).
+
+__END_QUERY__
+
+geist create clingo -d newkb -ifile products/qres#friends_of_b.csv -iformat csv -pred friends_of_b
+
+geist export clingo -d newkb
+
+geist destroy clingo -d newkb
+geist destroy clingo -d kb
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+friends_of_b(a).
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================================== bash cell | report_command ====================================================
+
+geist report --help
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+Usage: geist report [OPTIONS]
+
+  Expand a report using dataset(s)
+
+Options:
+  -ifile, --inputfile FILENAME   Path of the file containing the report
+                                 template to expand  [required]
+  -oroot, --outputroot TEXT      Path of the directory to store the expanded
+                                 report (default: current directory)
+  -so, --suppressoutput BOOLEAN  Suppress output or not (default: False)
+  -a, --args <TEXT TEXT>...      Arguments to be passed to the report
+                                 template, e.g., (arg, value) indicates that
+                                 {{ arg }} in the report template will be
+                                 replaced by value
+  --help                         Show this message and exit.
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+=================================================== bash cell | report_create_kb ===================================================
+
+geist report << END_TEMPLATE
+
+{% create datastore="clingo", inputformat="lp", isfilepath=False %}
+    friends(a, b).
+    friends(a, c).
+{% endcreate %}
+
+{% query datastore="clingo", oformat="df", isfilepath=False as expanded_friends %}
+    friends(X, Z) :- friends(X, Y), friends(Y, Z), X < Z.
+    friends(Y, Z) :- friends(X, Y), friends(X, Z), Y < Z.
+{% endquery %}
+
+{% for _, row in expanded_friends["friends"].iterrows() %}
+    {{ row.iloc[0] }} and {{ row.iloc[1] }} are friends.
+{% endfor %}
+
+{% destroy datastore="clingo" %}
+
+END_TEMPLATE
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+
+
+    a and b are friends.
+    a and c are friends.
+    b and c are friends.
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+================================================ bash cell | report_create_kb_file =================================================
+
+geist report -oroot products << END_TEMPLATE
+
+{% create datastore="clingo", inputformat="lp" %} data/friends.lp {% endcreate %}
+
+{% query datastore="clingo", oformat="df" as expanded_friends %} data/query {% endquery %}
+
+{%- html "report.html" %}
+<body>
+    <u>Friends:</u>
+    {% for _, row in expanded_friends["friends"].iterrows() %}
+        {%- set p1 = row.iloc[0] | process_str_for_html %}
+        {%- set p2 = row.iloc[1] | process_str_for_html %}
+        <li>{{ p1 }}, {{ p2 }}</li>
+    {% endfor -%}<br>
+</body>
+{%- endhtml %}
+
+{% destroy datastore="clingo" %}
+
+END_TEMPLATE
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+
+
+<!DOCTYPE html>
+<html>
+<body>
+    <u>Friends:</u>
+            <li>a, b</li>
+            <li>a, c</li>
+            <li>b, c</li>
+    <br>
+</body>
+</html>
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+====================================== bash cell | report_with_nested_rules_interact_using_lp ======================================
+
+geist report << END_TEMPLATE
+
+{%- create "kb1", datastore="clingo", inputformat="lp", isfilepath=False %}
+    friends(a, b).
+    friends(a, c).
+{% endcreate %}
+
+{%- create "kb2", datastore="clingo", inputformat="lp", isfilepath=False %}
+    flag1(a).
+    flag1(b).
+    flag2(b).
+    flag2(c).
+{% endcreate %}
+
+{%- load "kb1", datastore="clingo", inputformat="lp", isfilepath=False %}
+    {% query "kb2", datastore="clingo", predicate="select", oformat="lp", isfilepath=False as selected_person %}
+        select(X) :- flag1(X), flag2(X).
+    {% endquery %}
+    {{ selected_person }}
+{% endload %}
+
+{% query "kb1", datastore="clingo", predicate="friends_of_selected_person", isfilepath=False as friends_of_selected_person %}
+    friends_of_selected_person(X) :- friends(X, Y), select(Y).
+    friends_of_selected_person(X) :- friends(Y, X), select(Y).
+{% endquery %}
+{{ friends_of_selected_person }}
+
+{%- destroy "kb1", datastore="clingo" %}
+{%- destroy "kb2", datastore="clingo" %}
+
+END_TEMPLATE
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+friends_of_selected_person(a).
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+====================================== bash cell | report_with_nested_rules_interact_using_df ======================================
+
+geist report << END_TEMPLATE
+
+{%- create "kb1", datastore="clingo", inputformat="lp", isfilepath=False %}
+    friends(a, b).
+    friends(a, c).
+{% endcreate %}
+
+{%- create "kb2", datastore="clingo", inputformat="lp", isfilepath=False %}
+    flag1(a).
+    flag1(b).
+    flag2(b).
+    flag2(c).
+{% endcreate %}
+
+{%- load "kb1", datastore="clingo", inputformat="csv", predicate="select", isfilepath=False %}
+    {% query "kb2", datastore="clingo", predicate="select", oformat="df", isfilepath=False as selected_person %}
+        select(X) :- flag1(X), flag2(X).
+    {% endquery %}
+    {{ selected_person.to_string(index=False) }}
+{% endload %}
+
+{% query "kb1", datastore="clingo", predicate="friends_of_selected_person", isfilepath=False as friends_of_selected_person %}
+    friends_of_selected_person(X) :- friends(X, Y), select(Y).
+    friends_of_selected_person(X) :- friends(Y, X), select(Y).
+{% endquery %}
+{{ friends_of_selected_person }}
+
+{%- destroy "kb1", datastore="clingo" %}
+{%- destroy "kb2", datastore="clingo" %}
+
+END_TEMPLATE
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+friends_of_selected_person(a).
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+===================================== bash cell | report_with_nested_queries_interact_using_lp =====================================
+
+geist report << END_TEMPLATE
+
+{%- create "kb1", datastore="clingo", inputformat="lp", isfilepath=False %}
+    friends(a, b).
+    friends(a, c).
+{% endcreate %}
+
+{%- create "kb2", datastore="clingo", inputformat="lp", isfilepath=False %}
+    flag1(a).
+    flag1(b).
+    flag2(a).
+    flag2(b).
+    flag2(c).
+{% endcreate %}
+
+{%- query "kb1", datastore="clingo", predicate="friends_of_selected_person", isfilepath=False %}
+    {% query "kb2", datastore="clingo", predicate="select", oformat="lp", isfilepath=False as selected_person %}
+        select(X) :- flag1(X), flag2(X).
+    {% endquery %}
+    {{ selected_person }}
+    % friends_of_selected_person(X, Y): X is a friend of the selected person Y
+    friends_of_selected_person(X, Y) :- friends(X, Y), select(Y).
+    friends_of_selected_person(X, Y) :- friends(Y, X), select(Y).
+{% endquery %}
+{{ friends_of_selected_person }}
+
+{%- destroy "kb1", datastore="clingo" %}
+{%- destroy "kb2", datastore="clingo" %}
+
+END_TEMPLATE
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+friends_of_selected_person(b,a).
+friends_of_selected_person(c,a).
+friends_of_selected_person(a,b).
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+

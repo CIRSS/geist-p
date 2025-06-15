@@ -3,12 +3,13 @@ from geist.tools.utils import get_content
 def geist_create(datastore, dataset, inputfile, inputformat, isinputpath, config={}):
     """
     Create a new dataset.
-    :param datastore: a string. Backend datastores, i.e., rdflib, duckdb
+    :param datastore: a string. Backend datastores, i.e., rdflib, duckdb, or clingo
     :param dataset: a string. Name of the dataset to be created
     :param inputfile: a string. File to be loaded
     :param inputformat: a string. Format of the file to be loaded
     :param isinputpath: bool. True if the inputfile is the file path, otherwise the inputfile is the content
     :param config: a dictionary with 'colnames' and 'infer' keys (when datastore=rdflib) OR the 'table' key (when datastore=duckdb)
+                   OR 'predicate' and 'programname' keys (when datastore=clingo)
                    by default, colnames=None, infer='none', table='df'
     """
     content = get_content(inputfile, isinputpath)
@@ -31,7 +32,17 @@ def geist_create(datastore, dataset, inputfile, inputformat, isinputpath, config
             inputformat=inputformat, 
             table='df' if 'table' not in config else config['table']
         )
+    elif datastore == 'clingo':
+        # Create a new ASP dataset using Clingo
+        from geist.datastore.clingo import clingo_create
+        conn = clingo_create(
+            dataset=dataset,
+            inputfile=content,
+            inputformat=inputformat,
+            predicate='isfirstcol' if 'predicate' not in config else config['predicate'],
+            programname='base' if 'programname' not in config else config['programname']
+        )
     else:
-        raise ValueError("Invalid datastore. Only rdflib and duckdb are supported for now.")
+        raise ValueError("Invalid datastore. Only rdflib, duckdb, and clingo are supported for now.")
     return conn
 

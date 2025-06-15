@@ -2,24 +2,58 @@
 
 # ------------------------------------------------------------------------------
 
-bash_cell 'ex1: create a DuckDB dataset in memory using geist.Connection and export as a Pandas data frame' << END_CELL
+bash_cell 'ex1: create an ASP dataset in memory using geist.Connection and export as a Pandas data frame' << END_CELL
 
 python3 << END_PYTHON
 
 import geist
 
 csv_str = """
-v1,v2,v3
-1,2,3
-7,8,9
+arg1,arg2
+a,b
+b,c
 """
 
 # create a Connection object
-connection = geist.Connection(datastore='duckdb', dataset=':memory:')
-connection.create(inputfile=csv_str, inputformat="csv", isinputpath=False, config={"table": "df"})
+connection = geist.Connection(datastore='clingo', dataset=':memory:')
+connection.create(inputfile=csv_str, inputformat="csv", isinputpath=False, config={"predicate": "friends"})
 
 # query the dataset
-df = connection.export(hasoutput=False, config={'table': 'df'})
+res = connection.export(hasoutput=False)
+# show exported data
+print(f"List of data frames: {res}")
+
+# query the dataset and show the exported facts directly
+print(f"Facts:")
+connection.export(hasoutput=True)
+
+# close the connection
+connection.close()
+
+END_PYTHON
+
+END_CELL
+
+# ------------------------------------------------------------------------------
+
+bash_cell 'ex2: create a ASP dataset in memory using create and export as a Pandas data frame' << END_CELL
+
+python3 << END_PYTHON
+
+import geist
+
+csv_str = """
+arg1,arg2
+a,b
+b,c
+"""
+
+# create a Connection object
+conn = geist.create(datastore='clingo', dataset=':memory:', inputfile=csv_str, inputformat="csv", isinputpath=False, config={"predicate": "friends"})
+connection = geist.Connection(datastore='clingo', dataset=':memory:', conn=conn)
+
+# query the dataset
+df = connection.export(hasoutput=False, config={'predicate': 'friends'})
 # show exported data
 print(df)
 
@@ -32,55 +66,25 @@ END_CELL
 
 # ------------------------------------------------------------------------------
 
-bash_cell 'ex2: create a DuckDB dataset in memory using create and export as a Pandas data frame' << END_CELL
-
-python3 << END_PYTHON
-
-import geist
-
-csv_str = """
-v1,v2,v3
-1,2,3
-7,8,9
-"""
-
-# create a Connection object
-conn = geist.create(datastore='duckdb', dataset=':memory:', inputfile=csv_str, inputformat="csv", isinputpath=False, config={"table": "df"})
-connection = geist.Connection(datastore='duckdb', dataset=':memory:', conn=conn)
-
-# query the dataset
-df = connection.export(hasoutput=False, config={'table': 'df'})
-# show exported data
-print(df)
-
-# close the connection
-connection.close()
-
-END_PYTHON
-
-END_CELL
-
-# ------------------------------------------------------------------------------
-
-bash_cell 'ex3: create and store a DuckDB dataset using Connection and query it' << END_CELL
+bash_cell 'ex3: create and store an ASP dataset using Connection and query it' << END_CELL
 
 python3 << END_PYTHON
 
 from geist import Connection
 
 csv_str = """
-v1,v2,v3
-1,2,3
-7,8,9
+arg1,arg2
+a,b
+b,c
 """
 
 # create a Connection object
-connection = Connection(datastore='duckdb', dataset='ex3')
-connection.create(inputfile=csv_str, inputformat="csv", isinputpath=False, config={"table": "df"})
+connection = Connection(datastore='clingo', dataset='ex3')
+connection.create(inputfile=csv_str, inputformat="csv", isinputpath=False, config={"predicate": "friends"})
 
 # query the dataset
 res = connection.query(
-    inputfile="SELECT * FROM df WHERE v1=7;",
+    inputfile="friends(X,Z) :- friends(X, Y), friends(Y, Z).",
     isinputpath=False,
     hasoutput=False
 )
@@ -98,26 +102,26 @@ END_CELL
 
 # ------------------------------------------------------------------------------
 
-bash_cell 'ex4: create and store a DuckDB dataset using create and query it' << END_CELL
+bash_cell 'ex4: create and store an ASP dataset using create and query it' << END_CELL
 
 python3 << END_PYTHON
 
 import geist
 
 csv_str = """
-v1,v2,v3
-1,2,3
-7,8,9
+arg1,arg2
+a,b
+b,c
 """
 
-# create a DuckDB dataset directly
-conn = geist.create(datastore='duckdb', dataset='ex4', inputfile=csv_str, inputformat='csv', isinputpath=False, config={'table': 'df'})
+# create an ASP dataset directly
+conn = geist.create(datastore='clingo', dataset='ex4', inputfile=csv_str, inputformat='csv', isinputpath=False, config={'predicate': 'friends'})
 # use the above connection to initialize a Connection object
-connection = geist.Connection(datastore='duckdb', dataset='ex4', conn=conn)
+connection = geist.Connection(datastore='clingo', dataset='ex4', conn=conn)
 
 # query the dataset
 res = connection.query(
-    inputfile="SELECT * FROM df WHERE v1=7;",
+    inputfile="friends(X,Z) :- friends(X, Y), friends(Y, Z).",
     isinputpath=False,
     hasoutput=False
 )
@@ -142,8 +146,8 @@ python3 << END_PYTHON
 from geist import Connection
 
 # connect to a Connection object
-connection_ex3 = Connection.connect(datastore='duckdb', dataset='ex3')
-connection_ex4 = Connection.connect(datastore='duckdb', dataset='ex4')
+connection_ex3 = Connection.connect(datastore='clingo', dataset='ex3')
+connection_ex4 = Connection.connect(datastore='clingo', dataset='ex4')
 
 # close the connection and delete the connected dataset
 connection_ex3.destroy()
