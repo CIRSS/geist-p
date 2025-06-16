@@ -102,8 +102,10 @@ Admissible extensions:
     {b}
 
 Complete extensions:
+    {b}
 
 Preferred extensions:
+    {b}
 
 Grounded extensions:
     {b}
@@ -222,9 +224,10 @@ Admissible extensions:
 
 Complete extensions:
     {}
+    {a}
 
 Preferred extensions:
-    {}
+    {a}
 
 Grounded extensions:
     {}
