@@ -1,0 +1,1 @@
+attacks(a, a).

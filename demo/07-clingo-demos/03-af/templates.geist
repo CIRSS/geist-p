@@ -1,0 +1,143 @@
+{% template rule_expand_args %}
+    arg(X) :- attacks(X, _).
+    arg(X) :- attacks(_, X).
+{% endtemplate %}
+
+{% template list_arguments_raw data %}
+{%- set sorted_data = data | clingo_list_arguments %}
+{%- for args in sorted_data %}
+    { {%- for arg in args %}{{ arg }}{% if not loop.last %}, {% endif %}{% endfor %}}
+{% endfor %}
+{% endtemplate %}
+
+{% template list_arguments data %}
+{%- set sorted_data = data | clingo_list_arguments %}
+{%- for args in sorted_data %}
+    $\\{ {%- for arg in args %}{{ arg }}{% if not loop.last %}, {% endif %}{% endfor %}$\\}
+{% endfor %}
+{% endtemplate %}
+
+{% template rule_conflict_free_extensions %}
+    % Generate all possible subsets of arguments
+    {in(X)} :- arg(X).
+    % An extension is conflict-free if it doesn't contain two arguments where one attacks the other
+    :- in(X), in(Y), attacks(X,Y).
+{% endtemplate %}
+
+{% template rule_admissible_extensions %}
+    {% rule_conflict_free_extensions %}
+    % Defense: Z defends X against attacker Y
+    defends(Z, X, Y) :- in(Z), attacks(Y, X), attacks(Z, Y).
+
+    % Admissibility: every argument must be defended against every attacker  
+    :- in(X), attacks(Y, X), not defends(_, X, Y).
+{% endtemplate %}
+
+{% template rule_complete_extensions %}
+    {% rule_admissible_extensions %}
+    undefended(X) :- not defends(_, X, Y), attacks(Y, X).
+    in(X) :- defends(Z, X, _), in(Z), not undefended(X).
+    :- arg(X), not attacks(_, X), not in(X).
+{% endtemplate %}
+
+{% template rule_preferred_extensions %}
+    % Get all model IDs
+    model_id(ID) :- in_arg_and_id(_, ID).
+
+    % ID1 is dominated by ID2 if ID1 is a subset of ID2
+    dominated(ID1) :-
+        model_id(ID1), model_id(ID2), ID1 != ID2,
+        not is_superset_of(ID1, ID2),  % ID1 doesn't have extra args
+        is_superset_of(ID2, ID1).      % ID2 has extra args
+
+    % ID1 is a superset of ID2 if ID1 has an argument that ID2 doesn't
+    is_superset_of(ID1, ID2) :- 
+        model_id(ID1), model_id(ID2), ID1 != ID2,
+        in_arg_and_id(ARG, ID1), 
+        not in_arg_and_id(ARG, ID2).
+    
+    % An admissible extension that is not a subset of a larger admissible extension
+    preferred_model_id(ID) :- model_id(ID), not dominated(ID).
+
+    % Force choice: pick exactly one preferred extension per answer set
+    1 {selected(ID) : preferred_model_id(ID)} 1.
+
+    % Show arguments from the selected extension
+    in(ARG) :- selected(ID), in_arg_and_id(ARG, ID).
+{% endtemplate %}
+
+{% template rule_grounded_extensions %}
+    % Flag for early stopping: changed(K) exists if there were changes at step K
+    changed(0).
+
+    % Set total number of arguments as the max number of iterations
+    step(0..N) :- N = #count{X : arg(X)}.
+
+    % Initial state of the iteration: arguments that have no attackers
+    in_with_step(X, 0) :- arg(X), not attacks(_, X).
+
+    % Iteratively add arguments that are directly or indirectly defended by the current extension
+    % defends(Z, X, Y, K): Z defends X against attacker Y at step K
+    defends(Z, X, Y, K) :- in_with_step(Z, K), attacks(Y, X), attacks(Z, Y), step(K).
+    % An argument X is undefended at step K if it is attacked by Y but Y is not attacked by any argument currently in the extension
+    undefended(X, K) :- not defends(_, X, Y, K), attacks(Y, X), step(K).
+    % Add argument X to the extension at step K+1 if it is defended and there were changes at step K
+    in_with_step(X, K+1) :- arg(X), not undefended(X, K), step(K), changed(K).
+
+    % Track when changes occur for early stopping
+    changed(K+1) :- not in_with_step(X, K), in_with_step(X, K+1).
+
+    % Grounded extension: include arguments from its final step
+    in(X) :- in_with_step(X, K), K = #max{S : in_with_step(X, S)}.
+{% endtemplate %}
+
+{% template rule_stable_extensions %}
+    {% rule_conflict_free_extensions %}
+    attacked_by_extension(X) :- in(Y), attacks(Y, X).
+    :- arg(X), not in(X), not attacked_by_extension(X).
+{% endtemplate %}
+
+{% template af_head attacks %}
+<!-- wp:column {"verticalAlignment":"top"} -->
+<div class="wp-block-column is-vertically-aligned-top"><!-- wp:spacer {"height":"12px"} -->
+<div style="height:12px" aria-hidden="true" class="wp-block-spacer"></div>
+<!-- /wp:spacer -->
+
+<!-- wp:merpress/mermaidjs -->
+    <div class="wp-block-merpress-mermaidjs diagram-source-mermaid"><pre class="mermaid">%%{ init: { 
+    "flowchart": { 
+    "htmlLabels": true, 
+    "curve": "curve",
+    "diagramPadding": 0,
+    "rankSpacing": 0
+    }
+    } }%%
+
+    flowchart LR
+    {% af_edges attacks %}</pre></div>
+    <!-- /wp:merpress/mermaidjs --></div>
+    <!-- /wp:column -->
+{% endtemplate %}
+
+{% template af_edges attacks %}
+    {% for _, row in attacks.iterrows() %}
+        {{ row["arg1"] }} --> {{ row["arg2"] }};
+    {% endfor %}
+{% endtemplate %}
+
+{% template af_tail %}
+    <!-- /wp:table --></div>
+    <!-- /wp:column --></div>
+    <!-- /wp:columns -->
+
+    <!-- wp:separator -->
+    <hr class="wp-block-separator has-alpha-channel-opacity"/>
+    <!-- /wp:separator -->
+
+    <!-- wp:columns -->
+    <div class="wp-block-columns"><!-- wp:column {"width":"250px"} -->
+    <div class="wp-block-column" style="flex-basis:250px"><!-- wp:table {"hasFixedLayout":false,"fontSize":"small"} -->
+    <figure class="wp-block-table has-small-font-size"><table><tbody><tr><td>$a$</td><td></td></tr><tr><td>$b$</td><td></td></tr><tr><td>$c$</td><td></td></tr></tbody></table></figure>
+    <!-- /wp:table --></div>
+    <!-- /wp:column -->
+{% endtemplate %}

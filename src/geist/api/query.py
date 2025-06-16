@@ -27,9 +27,10 @@ def geist_query(datastore, dataset, inputfile, isinputpath, hasoutput, config={}
     elif datastore == 'clingo':
         # Perform a Clingo query on a dataset
         from geist.datastore.clingo import clingo_query
+        returnformat = 'lp' if 'returnformat' not in config else config['returnformat']
         predicate = None if 'predicate' not in config else config['predicate']
         programname = 'base' if 'programname' not in config else config['programname']
-        (res, conn) = clingo_query(dataset=dataset, inputfile=content, hasoutput=hasoutput, outputroot=outputroot, outputfile=outputfile, predicate=predicate, programname=programname)
+        (res, conn) = clingo_query(dataset=dataset, inputfile=content, hasoutput=hasoutput, outputroot=outputroot, outputfile=outputfile, returnformat=returnformat, predicate=predicate, programname=programname)
     else:
         raise ValueError("Invalid datastore. Only rdflib, duckdb, and clingo are supported for now.")
     return res, conn

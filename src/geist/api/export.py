@@ -41,7 +41,7 @@ def geist_export(datastore, dataset, hasoutput, config={}):
             hasoutput=hasoutput, 
             outputroot=outputroot,
             outputfile=outputfile,
-            outputformat='lp' if 'outputformat' not in config else config['outputformat']
+            returnformat='lp' if 'returnformat' not in config else config['returnformat']
         )
     else:
         raise ValueError("Invalid datastore. Only rdflib, duckdb, and clingo are supported for now.")

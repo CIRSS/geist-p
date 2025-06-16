@@ -29,10 +29,9 @@ connection.close()
 END_PYTHON
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
-List of data frames: {'friends':   arg1 arg2
-0    a    b
-1    b    c}
+List of data frames: ['friends(a,b).\nfriends(b,c).\n']
 Facts:
+---Option 1---
 friends(a,b).
 friends(b,c).
 
@@ -66,9 +65,7 @@ connection.close()
 END_PYTHON
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
-{'friends':   arg1 arg2
-0    a    b
-1    b    c}
+['friends(a,b).\nfriends(b,c).\n']
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
@@ -105,10 +102,7 @@ echo "Stored Geist Datasets:"
 find .geistdata/ -type f | sort
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
-{'friends':   arg1 arg2
-0    a    b
-1    b    c
-2    a    c}
+['friends(a,b).\nfriends(b,c).\nfriends(a,c).\n']
 Stored Geist Datasets:
 .geistdata/clingo/ex3.pkl
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -148,10 +142,7 @@ echo "Stored Geist Datasets:"
 find .geistdata/ -type f | sort
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
-{'friends':   arg1 arg2
-0    a    b
-1    b    c
-2    a    c}
+['friends(a,b).\nfriends(b,c).\nfriends(a,c).\n']
 Stored Geist Datasets:
 .geistdata/clingo/ex3.pkl
 .geistdata/clingo/ex4.pkl

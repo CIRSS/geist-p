@@ -1,0 +1,62 @@
+{%- use "templates.geist" %}
+{%- create "af", datastore="clingo", isfilepath=True %}
+    {{ af }}
+{% endcreate %}
+
+{%- load "af", datastore="clingo", isfilepath=False %}
+    {% rule_expand_args %}
+{% endload %}
+
+Conflict-free extensions:
+{% query "af", datastore="clingo", rformat="dict", predicate="in", isfilepath=False as conflict_free %}
+    {% rule_conflict_free_extensions %}
+{% endquery %}
+{% list_arguments_raw conflict_free %}
+
+Admissible extensions:
+{% query "af", datastore="clingo", rformat="dict", predicate="in", isfilepath=False as admissible %}
+    {% rule_admissible_extensions %}
+{% endquery %}
+{% list_arguments_raw admissible %}
+
+Complete extensions:
+{% query "af", datastore="clingo", rformat="dict", predicate="in", isfilepath=False as complete %}
+    {% rule_complete_extensions %}
+{% endquery %}
+{% list_arguments_raw complete %}
+
+Preferred extensions:
+{% query "af", datastore="clingo", rformat="df", predicate="in", isfilepath=False as preferred_in %}
+    {% rule_admissible_extensions %}
+{% endquery %}
+{% if preferred_in|length == 1 %}
+    {%- set preferred = preferred_in %}
+{% else %}
+    {%- create "af_preferred", datastore="clingo", isfilepath=False %}
+        {%- for ext in preferred_in %}
+            {%- set idx = loop.index %}
+            {%- for _, row in ext["in"].iterrows() %}
+                in_arg_and_id({{ row["arg1"] }}, {{ idx }}).
+            {% endfor %}
+        {% endfor %}
+    {% endcreate %}
+    {%- query "af_preferred", datastore="clingo", rformat="dict", predicate="in", isfilepath=False as preferred %}
+        {% rule_preferred_extensions %}
+    {% endquery %}
+    {%- destroy "af_preferred", datastore="clingo" %}
+{% endif %}
+{% list_arguments_raw preferred %}
+
+Grounded extensions:
+{% query "af", datastore="clingo", rformat="dict", predicate="in", isfilepath=False as grounded %}
+    {% rule_grounded_extensions %}
+{% endquery %}
+{% list_arguments_raw grounded %}
+
+Stable extensions:
+{% query "af", datastore="clingo", rformat="dict", predicate="in", isfilepath=False as stable %}
+    {% rule_stable_extensions %}
+{% endquery %}
+{% list_arguments_raw stable %}
+
+{%- destroy "af", datastore="clingo" %}

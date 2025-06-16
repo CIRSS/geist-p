@@ -31,9 +31,9 @@ def duckdb(dataset, outputroot, outputfile, outputformat, table):
 @export.command()
 @click.option('--dataset', '-d', default='kb', type=str, callback=validate_dataset, help='Name of an ASP dataset to be exported (default "kb")')
 @click.option('--outputroot', '-oroot', default='./', type=str, help='Path of the directory to store the exported data (default: current directory). If the given path (i.e., --outputfile) is None or a relative path, it will be ignored.')
-@click.option('--outputfile', '-ofile', default=None, type=str, help='Path of the file to store the exported data. File name will be updated as "{ofile}#{predicate}.csv" (default: None)')
-@click.option('--outputformat', '-oformat', default='lp', type=click.Choice(['lp', 'csv']), help='Format of the exported data (default lp)')
+@click.option('--outputfile', '-ofile', default=None, type=str, help='Path of the file to store the exported data (default: None). This file can be reused to create a dataset by setting inputformat=json.')
+@click.option('--returnformat', '-rformat', default='lp', type=click.Choice(['lp', 'df', 'dict']), help='Format of the returned data in memory (default lp)')
 @click.option('--predicate', '-pred', default=None, type=str, help='Name of the predicate to be exported (default "predicate")')
-def clingo(dataset, outputroot, outputfile, outputformat, predicate):
+def clingo(dataset, outputroot, outputfile, returnformat, predicate):
     """Export an ASP dataset"""
-    geist_export(datastore='clingo', dataset=dataset, hasoutput=True, config={'outputroot': outputroot, 'outputfile': outputfile, 'outputformat': outputformat, 'predicate': predicate})
+    geist_export(datastore='clingo', dataset=dataset, hasoutput=True, config={'outputroot': outputroot, 'outputfile': outputfile, 'returnformat': returnformat, 'predicate': predicate})

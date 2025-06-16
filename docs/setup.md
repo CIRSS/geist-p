@@ -18,6 +18,11 @@ Install Geist:
 pip install geist-p
 ```
 
+You can also install the development version of Geist:
+```python
+pip install git+https://github.com/CIRSS/geist-p.git@develop
+```
+
 To check Geist is working, run `geist` in the command line. You should get the following output:
 ```
 Usage: geist [OPTIONS] COMMAND [ARGS]...

@@ -14,7 +14,7 @@ You need to update `TAG_NAME`, `PARAM1`, `PARAM2`, and `CONTENT` based on your u
 
 ??? example "Example: define `predicate_term` and `format_output` tags"
 
-    1. Write `{% use "templates.geist" %}` at the beginning of a Geist template, where you want to use the custom tags, i.e., `predicate_term` and `format_output` tags.
+    1. Write `{% use "templates.geist" %}` at the beginning of a Geist template, where you want to use the custom tags, i.e., `predicate_term` and `format_output` tags. Note that "templates.geist" is interpreted as a path relative to the input file's directory when `isinputpath=True`.
 
     2. Define custom tags in file with the path of "templates.geist":
 

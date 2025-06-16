@@ -1,6 +1,6 @@
-import json, re
+import json, re, os
 from geist.tools.utils import set_tags, ensure_dir_exists, get_content, update_outputroot, include_filepaths, generate_template_class, map_df
-from geist.tools.filters import head, csv2df, dict2df, json2df, json2dict, df2json, df2htmltable, escape_quotes, process_str_for_html
+from geist.tools.filters import head, csv2df, dict2df, json2df, json2dict, df2json, df2htmltable, escape_quotes, process_str_for_html, clingo_list_arguments
 from jinja2 import nodes, Environment, FileSystemLoader
 from jinja2.compiler import CodeGenerator, Frame
 from jinja2_simple_tags import StandaloneTag, ContainerTag
@@ -57,6 +57,7 @@ class CreateExtension(ContainerTag):
             conn.close()
         elif datastore == "clingo":
             from geist.datastore.clingo import clingo_create
+            inputformat = "lp" if inputformat == "json-ld" else inputformat
             clingo_create(dataset, content, inputformat, predicate, name)
         else:
             raise ValueError("Invalid datastore. Only rdflib, duckdb, and clingo are supported for now.")
@@ -76,6 +77,7 @@ class LoadExtension(ContainerTag):
             conn.close()
         elif datastore == "clingo":
             from geist.datastore.clingo import clingo_load
+            inputformat = "lp" if inputformat == "json-ld" else inputformat
             clingo_load(dataset, content, inputformat, predicate, programname, False)
         else:
             raise ValueError("Invalid datastore. Only rdflib, duckdb, and clingo are supported for now.")
@@ -84,7 +86,7 @@ class LoadExtension(ContainerTag):
 class QueryExtension(ContainerTag):
     tags = {"query"}
 
-    def render(self, dataset="kb", datastore="rdflib", isfilepath=True, predicate=None, oformat="lp", caller=None):
+    def render(self, dataset="kb", datastore="rdflib", isfilepath=True, predicate=None, programname='base', rformat="lp", caller=None):
         res = '{}'
         content = get_content(environment.from_string(str(caller())).render(), isfilepath)
         if datastore == "rdflib":
@@ -97,16 +99,10 @@ class QueryExtension(ContainerTag):
             res = conn.sql(content).df()
             conn.close()
         elif datastore == "clingo":
-            from geist.datastore.clingo import load_asp_dataset, query2dict, dict2facts, dict2dfs
+            from geist.datastore.clingo import load_asp_dataset, query2dicts, format_dicts
             conn = load_asp_dataset(dataset, name="base")
-            raw_res = query2dict(conn, content)
-            if oformat == "lp":
-                res = dict2facts({predicate: raw_res[predicate]})
-            elif oformat == "df":
-                res = dict2dfs(raw_res)
-                res = res[predicate] if predicate else res
-            else:
-                raise ValueError("Only 'lp' and 'df' are supported for now.")
+            dicts = query2dicts(conn, content, programname, predicate)
+            res = format_dicts(dicts, rformat)
         else:
             raise ValueError("Invalid datastore. Only rdflib, duckdb, and clingo are supported for now.")
         return res
@@ -246,13 +242,16 @@ def geist_report(inputfile, isinputpath=False, outputroot='./', suppressoutput=T
         extensions=[CreateExtension, LoadExtension, QueryExtension, DestroyExtension, GraphExtension, Graph2Extension, ComponentExtension, MapExtension, UseExtension, HtmlExtension, ImgExtension, TableExtension],
         cache_size=0 # recompile templates all the time
     )
-    for filter in ["head", "csv2df", "dict2df", "json2df", "json2dict", "df2json", "df2htmltable", "escape_quotes", "process_str_for_html"]:
+    for filter in ["head", "csv2df", "dict2df", "json2df", "json2dict", "df2json", "df2htmltable", "escape_quotes", "process_str_for_html", "clingo_list_arguments"]:
         environment.filters[filter] = globals()[filter]
     environment.code_generator_class = CustomCodeGenerator
 
     # Define custom tags based on files with the "use" tag
     file_paths = include_filepaths(content)
     if file_paths:
+        if isinputpath:
+            curr_dir = os.path.dirname(inputfile)
+            file_paths = [f"{curr_dir}/{file_path}" for file_path in file_paths] 
         templates = generate_template_class(file_paths, TAGS)
         exec(templates, globals())
 

@@ -32,6 +32,7 @@ Options:
   --help  Show this message and exit.
 
 Commands:
+  clingo  Create a new ASP dataset using Clingo
   duckdb  Create a new SQL dataset using DuckDB
   rdflib  Create a new RDF dataset using RDFLib
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -85,6 +86,7 @@ Options:
   --help  Show this message and exit.
 
 Commands:
+  clingo  Import data into an ASP dataset
   duckdb  Import data into a SQL dataset
   rdflib  Import data into a RDF dataset
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -111,6 +113,7 @@ Options:
   --help  Show this message and exit.
 
 Commands:
+  clingo  Delete an ASP dataset
   duckdb  Delete a SQL dataset
   rdflib  Delete an RDF dataset
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -158,6 +161,7 @@ Options:
   --help  Show this message and exit.
 
 Commands:
+  clingo  Export an ASP dataset
   duckdb  Export a SQL dataset
   rdflib  Export an RDF dataset
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -306,6 +310,7 @@ Options:
   --help  Show this message and exit.
 
 Commands:
+  clingo  Perform an ASP query on a dataset
   duckdb  Perform a SQL query on a dataset
   rdflib  Perform a SPARQL query on a dataset
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
