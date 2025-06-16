@@ -14,7 +14,6 @@ Admissible extensions:
     {a}
 
 Complete extensions:
-    {}
     {a}
 
 Preferred extensions:
@@ -73,7 +72,6 @@ Admissible extensions:
     {b}
 
 Complete extensions:
-    {}
     {b}
 
 Preferred extensions:
@@ -104,10 +102,8 @@ Admissible extensions:
     {b}
 
 Complete extensions:
-    {}
 
 Preferred extensions:
-    {}
 
 Grounded extensions:
     {b}
@@ -259,7 +255,6 @@ Admissible extensions:
     {a, c}
 
 Complete extensions:
-    {}
     {a, c}
 
 Preferred extensions:
@@ -295,9 +290,6 @@ Admissible extensions:
     {a, c}
 
 Complete extensions:
-    {}
-    {c}
-    {a}
     {a, c}
 
 Preferred extensions:
@@ -331,7 +323,6 @@ Admissible extensions:
     {b}
 
 Complete extensions:
-    {}
     {b}
 
 Preferred extensions:
@@ -367,8 +358,6 @@ Admissible extensions:
     {a, c}
 
 Complete extensions:
-    {}
-    {a}
     {a, c}
 
 Preferred extensions:

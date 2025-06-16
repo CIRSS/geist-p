@@ -36,6 +36,7 @@
 {% template rule_complete_extensions %}
     {% rule_admissible_extensions %}
     :- defends(_, X, _), not in(X).
+    :- arg(X), not attacks(_, X), not in(X).
 {% endtemplate %}
 
 {% template rule_preferred_extensions %}
