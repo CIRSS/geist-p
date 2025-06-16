@@ -30,7 +30,7 @@ def duckdb(dataset, inputfile, inputformat, table):
 @load.command()
 @click.option('--dataset', '-d', default='kb', type=str, callback=validate_dataset, help='Name of an ASP dataset to load a file (default "kb")')
 @click.option('--inputfile', '-ifile', required=True, type=click.File('r'), default=sys.stdin, help='Path of the file to be loaded')
-@click.option('--inputformat', '-iformat', default='lp', type=click.Choice(['lp', 'csv']), help='Format of the file to be loaded (default "lp")')
+@click.option('--inputformat', '-iformat', default='lp', type=click.Choice(['lp', 'csv', 'json']), help='Format of the file to be loaded (default "lp"). If multiple possibilities are provided (as a list), only the first one will be considered.')
 @click.option('--predicate', '-pred', default='isfirstcol', type=str, help='Name of the predicate to be loaded (default: "isfirstcol")')
 @click.option('--programname', '-prog', default='base', type=str, help='Name of the program (default: "base")')
 def clingo(dataset, inputfile, inputformat, predicate, programname):

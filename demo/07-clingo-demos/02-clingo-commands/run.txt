@@ -32,10 +32,12 @@ Options:
   -d, --dataset TEXT              Name of ASP dataset to create (default "kb")
   -ifile, --inputfile FILENAME    Path of the file to be loaded as facts,
                                   rules, and contraints  [required]
-  -iformat, --inputformat [lp|csv]
+  -iformat, --inputformat [lp|csv|json]
                                   Format of the file to be loaded as facts,
                                   rules, and constraints. Note that "csv" only
-                                  supports facts (default "lp")
+                                  supports facts (default "lp"). If multiple
+                                  possibilities are provided (as a list), only
+                                  the first one will be considered.
   -pred, --predicate TEXT         "isfirstcol" for using the first column as
                                   the predicate name; strings other than
                                   "isfirstcol" are used as the predicate name
@@ -60,6 +62,7 @@ geist destroy clingo -d test
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 
+---Option 1---
 friends(a,b).
 friends(a,c).
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -75,6 +78,7 @@ geist destroy clingo -d test
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 
+---Option 1---
 friends(a,b).
 friends(a,c).
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -88,6 +92,7 @@ geist export clingo -d test | sort
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 
+---Option 1---
 friends(a,b).
 friends(a,c).
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -106,11 +111,13 @@ Options:
   -d, --dataset TEXT              Name of an ASP dataset to load a file
                                   (default "kb")
   -ifile, --inputfile FILENAME    Path of the file to be loaded  [required]
-  -iformat, --inputformat [lp|csv]
+  -iformat, --inputformat [lp|csv|json]
                                   Format of the file to be loaded (default
-                                  "lp")
-  -pred, --predicate TEXT         Name of the predicate to be created
-                                  (default: "isfirstcol")
+                                  "lp"). If multiple possibilities are
+                                  provided (as a list), only the first one
+                                  will be considered.
+  -pred, --predicate TEXT         Name of the predicate to be loaded (default:
+                                  "isfirstcol")
   -prog, --programname TEXT       Name of the program (default: "base")
   --help                          Show this message and exit.
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -126,6 +133,7 @@ ls -R .geistdata
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 
+---Option 1---
 friends(a,b).
 friends(a,c).
 friends(b,d).
@@ -201,11 +209,13 @@ Options:
                                   data (default: current directory). If the
                                   given path (i.e., --outputfile) is None or a
                                   relative path, it will be ignored.
-  -ofile, --outputfile TEXT       Path of the file to store the exported data.
-                                  File name will be updated as
-                                  "{ofile}#{predicate}.csv" (default: None)
-  -oformat, --outputformat [lp|csv]
-                                  Format of the exported data (default lp)
+  -ofile, --outputfile TEXT       Path of the file to store the exported data
+                                  (default: None). This file can be reused to
+                                  create a dataset by setting
+                                  inputformat=json.
+  -rformat, --returnformat [lp|df|dict]
+                                  Format of the returned data in memory
+                                  (default lp)
   -pred, --predicate TEXT         Name of the predicate to be exported
                                   (default "predicate")
   --help                          Show this message and exit.
@@ -218,6 +228,7 @@ geist export clingo | sort
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 
+---Option 1---
 friends(a,b).
 friends(a,c).
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -244,9 +255,12 @@ Options:
                                   given path (i.e., --outputfile) is None or a
                                   relative path, it will be ignored.
   -ofile, --outputfile TEXT       Path of the file to store the query results
-                                  (default: None)
-  -oformat, --outputformat [lp|csv]
-                                  Format of the exported data (default lp)
+                                  (default: None). This file can be reused to
+                                  create a dataset by setting
+                                  inputformat=json.
+  -rformat, --returnformat [lp|df|dict]
+                                  Format of the returned data in memory
+                                  (default lp)
   -pred, --predicate TEXT         Name of the predicate to be queried
   -prog, --programname TEXT       Name of the program
   --help                          Show this message and exit.
@@ -258,6 +272,7 @@ Options:
 geist query clingo --inputfile data/query
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
+---Option 1---
 friends(a,b).
 friends(a,c).
 friends(b,c).
@@ -277,6 +292,7 @@ __END_QUERY__
 geist destroy clingo -d kb
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
+---Option 1---
 friends(a,b).
 friends(a,c).
 friends(b,c).
@@ -288,14 +304,14 @@ friends(b,c).
 
 geist create clingo -d kb -ifile data/friends.lp
 
-geist query clingo -d kb --outputfile products/qres -pred friends_of_b << __END_QUERY__
+geist query clingo -d kb --outputfile products/qres.json -pred friends_of_b << __END_QUERY__
 
 friends_of_b(X) :- friends(X, b).
 friends_of_b(X) :- friends(b, X).
 
 __END_QUERY__
 
-geist create clingo -d newkb -ifile products/qres#friends_of_b.csv -iformat csv -pred friends_of_b
+geist create clingo -d newkb -ifile products/qres.json -iformat json -pred friends_of_b
 
 geist export clingo -d newkb
 
@@ -303,6 +319,7 @@ geist destroy clingo -d newkb
 geist destroy clingo -d kb
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
+---Option 1---
 friends_of_b(a).
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -340,12 +357,12 @@ geist report << END_TEMPLATE
     friends(a, c).
 {% endcreate %}
 
-{% query datastore="clingo", oformat="df", isfilepath=False as expanded_friends %}
+{% query datastore="clingo", rformat="df", isfilepath=False as expanded_friends %}
     friends(X, Z) :- friends(X, Y), friends(Y, Z), X < Z.
     friends(Y, Z) :- friends(X, Y), friends(X, Z), Y < Z.
 {% endquery %}
 
-{% for _, row in expanded_friends["friends"].iterrows() %}
+{% for _, row in expanded_friends[0]["friends"].iterrows() %}
     {{ row.iloc[0] }} and {{ row.iloc[1] }} are friends.
 {% endfor %}
 
@@ -371,12 +388,12 @@ geist report -oroot products << END_TEMPLATE
 
 {% create datastore="clingo", inputformat="lp" %} data/friends.lp {% endcreate %}
 
-{% query datastore="clingo", oformat="df" as expanded_friends %} data/query {% endquery %}
+{% query datastore="clingo", rformat="df" as expanded_friends %} data/query {% endquery %}
 
 {%- html "report.html" %}
 <body>
     <u>Friends:</u>
-    {% for _, row in expanded_friends["friends"].iterrows() %}
+    {% for _, row in expanded_friends[0]["friends"].iterrows() %}
         {%- set p1 = row.iloc[0] | process_str_for_html %}
         {%- set p2 = row.iloc[1] | process_str_for_html %}
         <li>{{ p1 }}, {{ p2 }}</li>
@@ -424,17 +441,17 @@ geist report << END_TEMPLATE
 {% endcreate %}
 
 {%- load "kb1", datastore="clingo", inputformat="lp", isfilepath=False %}
-    {% query "kb2", datastore="clingo", predicate="select", oformat="lp", isfilepath=False as selected_person %}
+    {% query "kb2", datastore="clingo", predicate="select", rformat="lp", isfilepath=False as selected_person %}
         select(X) :- flag1(X), flag2(X).
     {% endquery %}
-    {{ selected_person }}
+    {{ selected_person[0] }}
 {% endload %}
 
 {% query "kb1", datastore="clingo", predicate="friends_of_selected_person", isfilepath=False as friends_of_selected_person %}
     friends_of_selected_person(X) :- friends(X, Y), select(Y).
     friends_of_selected_person(X) :- friends(Y, X), select(Y).
 {% endquery %}
-{{ friends_of_selected_person }}
+{{ friends_of_selected_person[0] }}
 
 {%- destroy "kb1", datastore="clingo" %}
 {%- destroy "kb2", datastore="clingo" %}
@@ -465,17 +482,17 @@ geist report << END_TEMPLATE
 {% endcreate %}
 
 {%- load "kb1", datastore="clingo", inputformat="csv", predicate="select", isfilepath=False %}
-    {% query "kb2", datastore="clingo", predicate="select", oformat="df", isfilepath=False as selected_person %}
+    {% query "kb2", datastore="clingo", predicate="select", rformat="df", isfilepath=False as selected_person %}
         select(X) :- flag1(X), flag2(X).
     {% endquery %}
-    {{ selected_person.to_string(index=False) }}
+    {{ selected_person[0]["select"].to_string(index=False) }}
 {% endload %}
 
 {% query "kb1", datastore="clingo", predicate="friends_of_selected_person", isfilepath=False as friends_of_selected_person %}
     friends_of_selected_person(X) :- friends(X, Y), select(Y).
     friends_of_selected_person(X) :- friends(Y, X), select(Y).
 {% endquery %}
-{{ friends_of_selected_person }}
+{{ friends_of_selected_person[0] }}
 
 {%- destroy "kb1", datastore="clingo" %}
 {%- destroy "kb2", datastore="clingo" %}
@@ -506,16 +523,16 @@ geist report << END_TEMPLATE
     flag2(c).
 {% endcreate %}
 
-{%- query "kb1", datastore="clingo", predicate="friends_of_selected_person", isfilepath=False %}
-    {% query "kb2", datastore="clingo", predicate="select", oformat="lp", isfilepath=False as selected_person %}
+{%- query "kb1", datastore="clingo", predicate="friends_of_selected_person", rformat="lp", isfilepath=False as friends_of_selected_person %}
+    {% query "kb2", datastore="clingo", predicate="select", rformat="lp", isfilepath=False as selected_person %}
         select(X) :- flag1(X), flag2(X).
     {% endquery %}
-    {{ selected_person }}
+    {{ selected_person[0] }}
     % friends_of_selected_person(X, Y): X is a friend of the selected person Y
     friends_of_selected_person(X, Y) :- friends(X, Y), select(Y).
     friends_of_selected_person(X, Y) :- friends(Y, X), select(Y).
 {% endquery %}
-{{ friends_of_selected_person }}
+{{ friends_of_selected_person[0] }}
 
 {%- destroy "kb1", datastore="clingo" %}
 {%- destroy "kb2", datastore="clingo" %}

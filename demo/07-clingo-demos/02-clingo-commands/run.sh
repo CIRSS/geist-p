@@ -156,14 +156,14 @@ bash_cell query_dataset_to_newkb << END_CELL
 
 geist create clingo -d kb -ifile data/friends.lp
 
-geist query clingo -d kb --outputfile products/qres -pred friends_of_b << __END_QUERY__
+geist query clingo -d kb --outputfile products/qres.json -pred friends_of_b << __END_QUERY__
 
 friends_of_b(X) :- friends(X, b).
 friends_of_b(X) :- friends(b, X).
 
 __END_QUERY__
 
-geist create clingo -d newkb -ifile products/qres#friends_of_b.csv -iformat csv -pred friends_of_b
+geist create clingo -d newkb -ifile products/qres.json -iformat json -pred friends_of_b
 
 geist export clingo -d newkb
 
@@ -191,12 +191,12 @@ geist report << END_TEMPLATE
     friends(a, c).
 {% endcreate %}
 
-{% query datastore="clingo", oformat="df", isfilepath=False as expanded_friends %}
+{% query datastore="clingo", rformat="df", isfilepath=False as expanded_friends %}
     friends(X, Z) :- friends(X, Y), friends(Y, Z), X < Z.
     friends(Y, Z) :- friends(X, Y), friends(X, Z), Y < Z.
 {% endquery %}
 
-{% for _, row in expanded_friends["friends"].iterrows() %}
+{% for _, row in expanded_friends[0]["friends"].iterrows() %}
     {{ row.iloc[0] }} and {{ row.iloc[1] }} are friends.
 {% endfor %}
 
@@ -214,12 +214,12 @@ geist report -oroot products << END_TEMPLATE
 
 {% create datastore="clingo", inputformat="lp" %} data/friends.lp {% endcreate %}
 
-{% query datastore="clingo", oformat="df" as expanded_friends %} data/query {% endquery %}
+{% query datastore="clingo", rformat="df" as expanded_friends %} data/query {% endquery %}
 
 {%- html "report.html" %}
 <body>
     <u>Friends:</u>
-    {% for _, row in expanded_friends["friends"].iterrows() %}
+    {% for _, row in expanded_friends[0]["friends"].iterrows() %}
         {%- set p1 = row.iloc[0] | process_str_for_html %}
         {%- set p2 = row.iloc[1] | process_str_for_html %}
         <li>{{ p1 }}, {{ p2 }}</li>
@@ -252,17 +252,17 @@ geist report << END_TEMPLATE
 {% endcreate %}
 
 {%- load "kb1", datastore="clingo", inputformat="lp", isfilepath=False %}
-    {% query "kb2", datastore="clingo", predicate="select", oformat="lp", isfilepath=False as selected_person %}
+    {% query "kb2", datastore="clingo", predicate="select", rformat="lp", isfilepath=False as selected_person %}
         select(X) :- flag1(X), flag2(X).
     {% endquery %}
-    {{ selected_person }}
+    {{ selected_person[0] }}
 {% endload %}
 
 {% query "kb1", datastore="clingo", predicate="friends_of_selected_person", isfilepath=False as friends_of_selected_person %}
     friends_of_selected_person(X) :- friends(X, Y), select(Y).
     friends_of_selected_person(X) :- friends(Y, X), select(Y).
 {% endquery %}
-{{ friends_of_selected_person }}
+{{ friends_of_selected_person[0] }}
 
 {%- destroy "kb1", datastore="clingo" %}
 {%- destroy "kb2", datastore="clingo" %}
@@ -290,17 +290,17 @@ geist report << END_TEMPLATE
 {% endcreate %}
 
 {%- load "kb1", datastore="clingo", inputformat="csv", predicate="select", isfilepath=False %}
-    {% query "kb2", datastore="clingo", predicate="select", oformat="df", isfilepath=False as selected_person %}
+    {% query "kb2", datastore="clingo", predicate="select", rformat="df", isfilepath=False as selected_person %}
         select(X) :- flag1(X), flag2(X).
     {% endquery %}
-    {{ selected_person.to_string(index=False) }}
+    {{ selected_person[0]["select"].to_string(index=False) }}
 {% endload %}
 
 {% query "kb1", datastore="clingo", predicate="friends_of_selected_person", isfilepath=False as friends_of_selected_person %}
     friends_of_selected_person(X) :- friends(X, Y), select(Y).
     friends_of_selected_person(X) :- friends(Y, X), select(Y).
 {% endquery %}
-{{ friends_of_selected_person }}
+{{ friends_of_selected_person[0] }}
 
 {%- destroy "kb1", datastore="clingo" %}
 {%- destroy "kb2", datastore="clingo" %}
@@ -328,16 +328,16 @@ geist report << END_TEMPLATE
     flag2(c).
 {% endcreate %}
 
-{%- query "kb1", datastore="clingo", predicate="friends_of_selected_person", isfilepath=False %}
-    {% query "kb2", datastore="clingo", predicate="select", oformat="lp", isfilepath=False as selected_person %}
+{%- query "kb1", datastore="clingo", predicate="friends_of_selected_person", rformat="lp", isfilepath=False as friends_of_selected_person %}
+    {% query "kb2", datastore="clingo", predicate="select", rformat="lp", isfilepath=False as selected_person %}
         select(X) :- flag1(X), flag2(X).
     {% endquery %}
-    {{ selected_person }}
+    {{ selected_person[0] }}
     % friends_of_selected_person(X, Y): X is a friend of the selected person Y
     friends_of_selected_person(X, Y) :- friends(X, Y), select(Y).
     friends_of_selected_person(X, Y) :- friends(Y, X), select(Y).
 {% endquery %}
-{{ friends_of_selected_person }}
+{{ friends_of_selected_person[0] }}
 
 {%- destroy "kb1", datastore="clingo" %}
 {%- destroy "kb2", datastore="clingo" %}

@@ -1,0 +1,580 @@
+==================================================== bash cell | report_af_ex1 =====================================================
+
+geist report --inputfile af_core.geist --args af data/af_ex1.lp
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+
+Conflict-free extensions:
+    {}
+    {a}
+
+Admissible extensions:
+    {}
+    {a}
+
+Complete extensions:
+    {}
+    {a}
+
+Preferred extensions:
+    {a}
+
+Grounded extensions:
+    {a}
+
+Stable extensions:
+    {a}
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================================== bash cell | report_af_ex2 =====================================================
+
+geist report --inputfile af_core.geist --args af data/af_ex2.lp 
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+
+Conflict-free extensions:
+    {}
+
+Admissible extensions:
+    {}
+
+Complete extensions:
+    {}
+
+Preferred extensions:
+    {}
+
+Grounded extensions:
+    {}
+
+Stable extensions:
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================================== bash cell | report_af_ex3 =====================================================
+
+geist report --inputfile af_core.geist --args af data/af_ex3.lp 
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+
+Conflict-free extensions:
+    {}
+    {b}
+    {a}
+
+Admissible extensions:
+    {}
+    {b}
+
+Complete extensions:
+    {}
+    {b}
+
+Preferred extensions:
+    {b}
+
+Grounded extensions:
+    {b}
+
+Stable extensions:
+    {b}
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================================== bash cell | report_af_ex4 =====================================================
+
+geist report --inputfile af_core.geist --args af data/af_ex4.lp 
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+
+Conflict-free extensions:
+    {}
+    {b}
+
+Admissible extensions:
+    {}
+    {b}
+
+Complete extensions:
+    {}
+
+Preferred extensions:
+    {}
+
+Grounded extensions:
+    {b}
+
+Stable extensions:
+    {b}
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================================== bash cell | report_af_ex5 =====================================================
+
+geist report --inputfile af_core.geist --args af data/af_ex5.lp 
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+
+Conflict-free extensions:
+    {}
+    {a}
+
+Admissible extensions:
+    {}
+
+Complete extensions:
+    {}
+
+Preferred extensions:
+    {}
+
+Grounded extensions:
+    {}
+
+Stable extensions:
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================================== bash cell | report_af_ex6 =====================================================
+
+geist report --inputfile af_core.geist --args af data/af_ex6.lp
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+
+Conflict-free extensions:
+    {}
+
+Admissible extensions:
+    {}
+
+Complete extensions:
+    {}
+
+Preferred extensions:
+    {}
+
+Grounded extensions:
+    {}
+
+Stable extensions:
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================================== bash cell | report_af_ex7 =====================================================
+
+geist report --inputfile af_core.geist --args af data/af_ex7.lp 
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+
+Conflict-free extensions:
+    {}
+    {a}
+    {b}
+
+Admissible extensions:
+    {}
+    {a}
+    {b}
+
+Complete extensions:
+    {}
+    {a}
+    {b}
+
+Preferred extensions:
+    {b}
+    {a}
+
+Grounded extensions:
+    {}
+
+Stable extensions:
+    {a}
+    {b}
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================================== bash cell | report_af_ex8 =====================================================
+
+geist report --inputfile af_core.geist --args af data/af_ex8.lp 
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+
+Conflict-free extensions:
+    {}
+    {a}
+
+Admissible extensions:
+    {}
+    {a}
+
+Complete extensions:
+    {}
+
+Preferred extensions:
+    {}
+
+Grounded extensions:
+    {}
+
+Stable extensions:
+    {a}
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================================== bash cell | report_af_ex9 =====================================================
+
+geist report --inputfile af_core.geist --args af data/af_ex9.lp 
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+
+Conflict-free extensions:
+    {}
+    {a}
+    {c}
+    {a, c}
+    {b}
+
+Admissible extensions:
+    {}
+    {a}
+    {a, c}
+
+Complete extensions:
+    {}
+    {a, c}
+
+Preferred extensions:
+    {a, c}
+
+Grounded extensions:
+    {a, c}
+
+Stable extensions:
+    {a, c}
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================================== bash cell | report_af_ex10 ====================================================
+
+geist report --inputfile af_core.geist --args af data/af_ex10.lp 
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+
+Conflict-free extensions:
+    {}
+    {c}
+    {a}
+    {a, c}
+    {b}
+
+Admissible extensions:
+    {}
+    {c}
+    {a}
+    {a, c}
+
+Complete extensions:
+    {}
+    {c}
+    {a}
+    {a, c}
+
+Preferred extensions:
+    {a, c}
+
+Grounded extensions:
+    {a, c}
+
+Stable extensions:
+    {a, c}
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================================== bash cell | report_af_ex11 ====================================================
+
+geist report --inputfile af_core.geist --args af data/af_ex11.lp
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+
+Conflict-free extensions:
+    {}
+    {a}
+    {c}
+    {a, c}
+    {b}
+
+Admissible extensions:
+    {}
+    {b}
+
+Complete extensions:
+    {}
+    {b}
+
+Preferred extensions:
+    {b}
+
+Grounded extensions:
+    {b}
+
+Stable extensions:
+    {b}
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================================== bash cell | report_af_ex12 ====================================================
+
+geist report --inputfile af_core.geist --args af data/af_ex12.lp 
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+
+Conflict-free extensions:
+    {}
+    {c}
+    {a}
+    {a, c}
+    {b}
+
+Admissible extensions:
+    {}
+    {a}
+    {c}
+    {a, c}
+
+Complete extensions:
+    {}
+    {a}
+    {a, c}
+
+Preferred extensions:
+    {a, c}
+
+Grounded extensions:
+    {a, c}
+
+Stable extensions:
+    {a, c}
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================================== bash cell | report_af_ex13 ====================================================
+
+geist report --inputfile af_core.geist --args af data/af_ex13.lp 
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+
+Conflict-free extensions:
+    {}
+    {d}
+    {a}
+    {a, d}
+    {c}
+    {a, c}
+    {b}
+    {b, d}
+
+Admissible extensions:
+    {}
+    {a}
+    {c}
+    {a, c}
+    {d}
+    {a, d}
+    {b, d}
+
+Complete extensions:
+    {}
+    {a}
+    {a, c}
+    {b, d}
+
+Preferred extensions:
+    {b, d}
+    {a, c}
+
+Grounded extensions:
+    {}
+
+Stable extensions:
+    {a, d}
+    {a, c}
+    {b, d}
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================================== bash cell | report_af_ex14 ====================================================
+
+geist report --inputfile af_core.geist --args af data/af_ex14.lp 
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+
+Conflict-free extensions:
+    {}
+    {c}
+    {a}
+    {a, c}
+    {b}
+
+Admissible extensions:
+    {}
+    {b}
+    {c}
+    {a}
+    {a, c}
+
+Complete extensions:
+    {}
+    {b}
+    {a, c}
+
+Preferred extensions:
+    {a, c}
+    {b}
+
+Grounded extensions:
+    {}
+
+Stable extensions:
+    {a, c}
+    {b}
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================================== bash cell | report_af_ex15 ====================================================
+
+geist report --inputfile af_core.geist --args af data/af_ex15.lp 
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+
+Conflict-free extensions:
+    {}
+    {a}
+    {c}
+    {b}
+
+Admissible extensions:
+    {}
+
+Complete extensions:
+    {}
+
+Preferred extensions:
+    {}
+
+Grounded extensions:
+    {}
+
+Stable extensions:
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================================== bash cell | report_af_ex16 ====================================================
+
+geist report --inputfile af_core.geist --args af data/af_ex16.lp
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+
+Conflict-free extensions:
+    {}
+    {d}
+    {a}
+    {a, d}
+    {b}
+    {b, d}
+    {c}
+
+Admissible extensions:
+    {}
+
+Complete extensions:
+    {}
+
+Preferred extensions:
+    {}
+
+Grounded extensions:
+    {}
+
+Stable extensions:
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+==================================================== bash cell | report_af_ex17 ====================================================
+
+geist report --inputfile af_core.geist --args af data/af_ex17.lp
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+
+Conflict-free extensions:
+    {}
+    {e}
+    {a}
+    {a, e}
+    {d}
+    {a, d}
+    {b}
+    {b, e}
+    {b, d}
+    {c}
+    {c, e}
+
+Admissible extensions:
+    {}
+
+Complete extensions:
+    {}
+
+Preferred extensions:
+    {}
+
+Grounded extensions:
+    {}
+
+Stable extensions:
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+================================================= bash cell | report_af7_to_report =================================================
+
+geist report --inputfile af.geist --args af data/af_ex7.lp > products/report.html
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
