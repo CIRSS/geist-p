@@ -64,8 +64,8 @@ geist report --inputfile af_core.geist --args af data/af_ex3.lp
 
 Conflict-free extensions:
     {}
-    {b}
     {a}
+    {b}
 
 Admissible extensions:
     {}
@@ -194,8 +194,8 @@ Complete extensions:
     {b}
 
 Preferred extensions:
-    {b}
     {a}
+    {b}
 
 Grounded extensions:
     {}
@@ -248,9 +248,9 @@ geist report --inputfile af_core.geist --args af data/af_ex9.lp
 Conflict-free extensions:
     {}
     {a}
-    {c}
     {a, c}
     {b}
+    {c}
 
 Admissible extensions:
     {}
@@ -281,16 +281,16 @@ geist report --inputfile af_core.geist --args af data/af_ex10.lp
 
 Conflict-free extensions:
     {}
-    {c}
     {a}
     {a, c}
     {b}
+    {c}
 
 Admissible extensions:
     {}
-    {c}
     {a}
     {a, c}
+    {c}
 
 Complete extensions:
     {a, c}
@@ -317,9 +317,9 @@ geist report --inputfile af_core.geist --args af data/af_ex11.lp
 Conflict-free extensions:
     {}
     {a}
-    {c}
     {a, c}
     {b}
+    {c}
 
 Admissible extensions:
     {}
@@ -349,16 +349,16 @@ geist report --inputfile af_core.geist --args af data/af_ex12.lp
 
 Conflict-free extensions:
     {}
-    {c}
     {a}
     {a, c}
     {b}
+    {c}
 
 Admissible extensions:
     {}
     {a}
-    {c}
     {a, c}
+    {c}
 
 Complete extensions:
     {a, c}
@@ -384,39 +384,42 @@ geist report --inputfile af_core.geist --args af data/af_ex13.lp
 
 Conflict-free extensions:
     {}
-    {d}
     {a}
-    {a, d}
-    {c}
     {a, c}
+    {a, d}
     {b}
     {b, d}
+    {c}
+    {d}
 
 Admissible extensions:
     {}
     {a}
-    {c}
     {a, c}
-    {d}
     {a, d}
     {b, d}
+    {c}
+    {d}
 
 Complete extensions:
     {}
     {a}
     {a, c}
+    {a, d}
     {b, d}
+    {d}
 
 Preferred extensions:
-    {b, d}
     {a, c}
+    {a, d}
+    {b, d}
 
 Grounded extensions:
     {}
 
 Stable extensions:
-    {a, d}
     {a, c}
+    {a, d}
     {b, d}
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -431,22 +434,22 @@ geist report --inputfile af_core.geist --args af data/af_ex14.lp
 
 Conflict-free extensions:
     {}
-    {c}
     {a}
     {a, c}
     {b}
+    {c}
 
 Admissible extensions:
     {}
-    {b}
-    {c}
     {a}
     {a, c}
+    {b}
+    {c}
 
 Complete extensions:
     {}
-    {b}
     {a, c}
+    {b}
 
 Preferred extensions:
     {a, c}
@@ -472,8 +475,8 @@ geist report --inputfile af_core.geist --args af data/af_ex15.lp
 Conflict-free extensions:
     {}
     {a}
-    {c}
     {b}
+    {c}
 
 Admissible extensions:
     {}
@@ -501,12 +504,12 @@ geist report --inputfile af_core.geist --args af data/af_ex16.lp
 
 Conflict-free extensions:
     {}
-    {d}
     {a}
     {a, d}
     {b}
     {b, d}
     {c}
+    {d}
 
 Admissible extensions:
     {}
@@ -534,16 +537,16 @@ geist report --inputfile af_core.geist --args af data/af_ex17.lp
 
 Conflict-free extensions:
     {}
-    {e}
     {a}
-    {a, e}
-    {d}
     {a, d}
+    {a, e}
     {b}
-    {b, e}
     {b, d}
+    {b, e}
     {c}
     {c, e}
+    {d}
+    {e}
 
 Admissible extensions:
     {}

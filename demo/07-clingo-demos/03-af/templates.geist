@@ -4,16 +4,16 @@
 {% endtemplate %}
 
 {% template list_arguments_raw data %}
-{%- for ext in data %}
-    {%- set args = ext["in"] | clingo_list_arguments %}
+{%- set sorted_data = data | clingo_list_arguments %}
+{%- for args in sorted_data %}
     { {%- for arg in args %}{{ arg }}{% if not loop.last %}, {% endif %}{% endfor %}}
 {% endfor %}
 {% endtemplate %}
 
 {% template list_arguments data %}
-{%- for ext in data %}
-    {%- set args = ext["in"] | clingo_list_arguments %}
-        $\\{ {%- for arg in args %}{{ arg }}{% if not loop.last %}, {% endif %}{% endfor %}$\\}
+{%- set sorted_data = data | clingo_list_arguments %}
+{%- for args in sorted_data %}
+    $\\{ {%- for arg in args %}{{ arg }}{% if not loop.last %}, {% endif %}{% endfor %}$\\}
 {% endfor %}
 {% endtemplate %}
 
@@ -35,7 +35,8 @@
 
 {% template rule_complete_extensions %}
     {% rule_admissible_extensions %}
-    :- defends(_, X, Y), not in(X), X != Y.
+    not_defended(X) :- defends(Z, X, Y1), attacks(Y2, X), in(Z), Y1!= Y2.
+    in(X) :- defends(Z, X, _), in(Z), not not_defended(X).
     :- arg(X), not attacks(_, X), not in(X).
 {% endtemplate %}
 

@@ -81,7 +81,7 @@ def process_str_for_html(cell):
 def escape_quotes(txt):
     return txt.replace("'", "\'").replace('"', '\"')
 
-def clingo_list_arguments(data):
+def clingo_list_arguments_per_answer_set(data):
     if isinstance(data, pd.DataFrame):
         if data.empty:
             return []
@@ -94,3 +94,10 @@ def clingo_list_arguments(data):
             return sorted([x[0] for x in data])
     else:
         return data
+
+
+def clingo_list_arguments(data):
+    data_lt = []
+    for case in data:
+        data_lt.append(clingo_list_arguments_per_answer_set(case["in"]))
+    return sorted(data_lt)

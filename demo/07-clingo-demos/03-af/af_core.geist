@@ -29,7 +29,7 @@ Complete extensions:
 
 Preferred extensions:
 {% query "af", datastore="clingo", rformat="df", predicate="in", isfilepath=False as preferred_in %}
-    {% rule_complete_extensions %}
+    {% rule_admissible_extensions %}
 {% endquery %}
 {% if preferred_in|length == 1 %}
     {%- set preferred = preferred_in %}
