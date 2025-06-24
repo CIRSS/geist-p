@@ -4,7 +4,6 @@ geist report --inputfile af_core.geist --args af data/af_ex1.lp
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 
-
 Conflict-free extensions:
     {}
     {a}
@@ -34,7 +33,6 @@ geist report --inputfile af_core.geist --args af data/af_ex2.lp
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 
-
 Conflict-free extensions:
     {}
 
@@ -60,7 +58,6 @@ Stable extensions:
 geist report --inputfile af_core.geist --args af data/af_ex3.lp 
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
-
 
 Conflict-free extensions:
     {}
@@ -92,7 +89,6 @@ geist report --inputfile af_core.geist --args af data/af_ex4.lp
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 
-
 Conflict-free extensions:
     {}
     {b}
@@ -122,7 +118,6 @@ geist report --inputfile af_core.geist --args af data/af_ex5.lp
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 
-
 Conflict-free extensions:
     {}
     {a}
@@ -150,7 +145,6 @@ geist report --inputfile af_core.geist --args af data/af_ex6.lp
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 
-
 Conflict-free extensions:
     {}
 
@@ -176,7 +170,6 @@ Stable extensions:
 geist report --inputfile af_core.geist --args af data/af_ex7.lp 
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
-
 
 Conflict-free extensions:
     {}
@@ -213,7 +206,6 @@ geist report --inputfile af_core.geist --args af data/af_ex8.lp
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 
-
 Conflict-free extensions:
     {}
     {a}
@@ -243,7 +235,6 @@ Stable extensions:
 geist report --inputfile af_core.geist --args af data/af_ex9.lp 
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
-
 
 Conflict-free extensions:
     {}
@@ -277,7 +268,6 @@ Stable extensions:
 geist report --inputfile af_core.geist --args af data/af_ex10.lp 
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
-
 
 Conflict-free extensions:
     {}
@@ -313,7 +303,6 @@ geist report --inputfile af_core.geist --args af data/af_ex11.lp
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 
-
 Conflict-free extensions:
     {}
     {a}
@@ -345,7 +334,6 @@ Stable extensions:
 geist report --inputfile af_core.geist --args af data/af_ex12.lp 
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
-
 
 Conflict-free extensions:
     {}
@@ -380,7 +368,6 @@ Stable extensions:
 geist report --inputfile af_core.geist --args af data/af_ex13.lp 
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
-
 
 Conflict-free extensions:
     {}
@@ -431,7 +418,6 @@ geist report --inputfile af_core.geist --args af data/af_ex14.lp
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 
-
 Conflict-free extensions:
     {}
     {a}
@@ -471,7 +457,6 @@ geist report --inputfile af_core.geist --args af data/af_ex15.lp
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 
-
 Conflict-free extensions:
     {}
     {a}
@@ -500,7 +485,6 @@ Stable extensions:
 geist report --inputfile af_core.geist --args af data/af_ex16.lp
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
-
 
 Conflict-free extensions:
     {}
@@ -533,7 +517,6 @@ Stable extensions:
 geist report --inputfile af_core.geist --args af data/af_ex17.lp
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
-
 
 Conflict-free extensions:
     {}

@@ -87,7 +87,20 @@ def add_and_ground_program(program, name="base", ctl=None):
 def create_asp_dataset(inputfile, inputformat, predicate="isfirstcol", name="base"):
     program = build_program(inputfile, inputformat, predicate)
     conn = add_and_ground_program(program, name, None)
-    return conn 
+    return conn, program
+
+def program2memory(program, dataset):
+    if dataset.startswith(':memory:'):
+        global geist_clingo_facts
+        if dataset == ':memory:':
+            geist_clingo_facts = program
+        else:
+            try:
+                geist_clingo_facts = {} if type(geist_clingo_facts) != dict else geist_clingo_facts
+            except:
+                geist_clingo_facts = {}
+            geist_clingo_facts[dataset.replace(':memory:', '')] = program
+    return
 
 def collect_fact_data(model):
     one_case = {}
@@ -96,30 +109,34 @@ def collect_fact_data(model):
         one_case.setdefault(predicate, []).append([str(argument) for argument in atom.arguments])
     fact_data.append(one_case)
 
-def collect_and_save_fact_data(conn, dataset, is_create=True):
-    data_path = DATA_DIR + dataset + '.pkl'
-    if is_create and os.path.isfile(data_path):
-        raise ValueError("Please remove the existing ASP dataset ({dataset}) before loading the new one. Run `geist destroy --help` for detailed information".format(dataset=dataset))
-    ensure_dir_exists(data_path, output=False)
+def collect_and_save_fact_data(conn, dataset, is_create=True, save_to_file=True):
     global fact_data
     fact_data = []
     conn.solve(on_model=collect_fact_data)
     if len(fact_data) > 1:
         warnings.warn("There are multiple possibilities. Only the first one is saved to an ASP dataset.")
-    with open(data_path, "wb") as f:
-        pickle.dump(fact_data[0], f)
-    return
+    if save_to_file:
+        data_path = DATA_DIR + dataset + '.pkl'
+        if is_create and os.path.isfile(data_path):
+            raise ValueError("Please remove the existing ASP dataset ({dataset}) before loading the new one. Run `geist destroy --help` for detailed information".format(dataset=dataset))
+        ensure_dir_exists(data_path, output=False)
+        with open(data_path, "wb") as f:
+            pickle.dump(fact_data[0], f)
+    return dict2facts(fact_data[0])
 
 def load_asp_dataset(dataset, name="base"):
     if isinstance(dataset, str):
         if dataset == ':memory:':
-            raise ValueError(":memory: is a reserved value for data stored in memory. Please specify another dataset name OR pass the Control object directly.")
-        data_path = DATA_DIR + dataset + ".pkl"
-        if not os.path.isfile(data_path):
-            raise ValueError("Please create the ASP dataset ({dataset}) before loading it. Run `geist create clingo --help` for detailed information".format(dataset=dataset))
-        with open(data_path, mode='rb') as f:
-            facts = dict2facts(pickle.load(f))
-        conn = add_and_ground_program(facts, name, None)
+            conn = add_and_ground_program(globals()["geist_clingo_facts"], name, None)
+        elif dataset.startswith(':memory:'):
+            conn = add_and_ground_program(globals()["geist_clingo_facts"][dataset.replace(':memory:', '')], name, None)
+        else:
+            data_path = DATA_DIR + dataset + ".pkl"
+            if not os.path.isfile(data_path):
+                raise ValueError("Please create the ASP dataset ({dataset}) before loading it. Run `geist create clingo --help` for detailed information".format(dataset=dataset))
+            with open(data_path, mode='rb') as f:
+                facts = dict2facts(pickle.load(f))
+            conn = add_and_ground_program(facts, name, None)
     else: # For Python API Control class
         conn = dataset
     return conn
@@ -134,9 +151,10 @@ def clingo():
 
 def clingo_create(dataset, inputfile, inputformat, predicate, programname):
     """Create a new ASP dataset using Clingo"""
-    conn = create_asp_dataset(inputfile, inputformat, predicate, programname)
-    if dataset != ':memory:':
-        collect_and_save_fact_data(conn, dataset, True)
+    conn, program = create_asp_dataset(inputfile, inputformat, predicate, programname)
+    program2memory(program, dataset)
+    if not dataset.startswith(':memory:'):
+        collect_and_save_fact_data(conn, dataset, True, True)
     return conn
 
 def clingo_load(dataset, inputfile, inputformat, predicate, programname, inmemory):
@@ -144,8 +162,10 @@ def clingo_load(dataset, inputfile, inputformat, predicate, programname, inmemor
     conn = load_asp_dataset(dataset)
     program = build_program(inputfile, inputformat, predicate)
     conn = add_and_ground_program(program, name=programname, ctl=conn)
-    if not inmemory:
-        collect_and_save_fact_data(conn, dataset, False)
+    save_to_file = not inmemory and not dataset.startswith(':memory:')
+    program = collect_and_save_fact_data(conn, dataset, False, save_to_file)
+    if not save_to_file:
+        program2memory(program, dataset)
     return conn
 
 def clingo_query(dataset, inputfile, hasoutput, outputroot, outputfile, returnformat='lp', predicate=None, programname='base'):
