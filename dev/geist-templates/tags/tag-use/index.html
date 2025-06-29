@@ -548,7 +548,7 @@ You need to update <code>TAG_NAME</code>, <code>PARAM1</code>, <code>PARAM2</cod
 <summary>Example: define <code>predicate_term</code> and <code>format_output</code> tags</summary>
 <ol>
 <li>
-<p>Write <code>{% use "templates.geist" %}</code> at the beginning of a Geist template, where you want to use the custom tags, i.e., <code>predicate_term</code> and <code>format_output</code> tags.</p>
+<p>Write <code>{% use "templates.geist" %}</code> at the beginning of a Geist template, where you want to use the custom tags, i.e., <code>predicate_term</code> and <code>format_output</code> tags. Note that "templates.geist" is interpreted as a path relative to the input file's directory when <code>isinputpath=True</code>.</p>
 </li>
 <li>
 <p>Define custom tags in file with the path of "templates.geist":</p>
