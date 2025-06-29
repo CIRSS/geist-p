@@ -1,4 +1,4 @@
-import json, re
+import json, re, os
 from geist.tools.utils import set_tags, ensure_dir_exists, get_content, update_outputroot, include_filepaths, generate_template_class, map_df
 from geist.tools.filters import head, csv2df, dict2df, json2df, json2dict, df2json, df2htmltable, escape_quotes, process_str_for_html, clingo_list_arguments
 from jinja2 import nodes, Environment, FileSystemLoader
@@ -249,6 +249,9 @@ def geist_report(inputfile, isinputpath=False, outputroot='./', suppressoutput=T
     # Define custom tags based on files with the "use" tag
     file_paths = include_filepaths(content)
     if file_paths:
+        if isinputpath:
+            curr_dir = os.path.dirname(inputfile)
+            file_paths = [f"{curr_dir}/{file_path}" for file_path in file_paths] 
         templates = generate_template_class(file_paths, TAGS)
         exec(templates, globals())
 
