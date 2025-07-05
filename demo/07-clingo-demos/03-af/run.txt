@@ -682,6 +682,109 @@ Stable extensions:
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
+==================================================== bash cell | report_af_ex20 ====================================================
+
+geist report --inputfile af_core.geist --args af data/af_ex20.lp
+
+----------------------------------------------------------- cell outputs -----------------------------------------------------------
+
+Conflict-free extensions:
+    {}
+    {a}
+    {a, c}
+    {a, c, e}
+    {a, c, e, g}
+    {a, c, e, h}
+    {a, c, g}
+    {a, c, h}
+    {a, d}
+    {a, d, f}
+    {a, d, f, g}
+    {a, d, f, h}
+    {a, d, g}
+    {a, d, h}
+    {a, e}
+    {a, e, f}
+    {a, e, f, g}
+    {a, e, f, h}
+    {a, e, g}
+    {a, e, h}
+    {a, f}
+    {a, f, g}
+    {a, f, h}
+    {a, g}
+    {a, h}
+    {b}
+    {b, d}
+    {b, d, f}
+    {b, d, f, h}
+    {b, d, h}
+    {b, e}
+    {b, e, f}
+    {b, e, f, h}
+    {b, e, h}
+    {b, f}
+    {b, f, h}
+    {b, h}
+    {c}
+    {c, e}
+    {c, e, g}
+    {c, e, h}
+    {c, g}
+    {c, h}
+    {d}
+    {d, f}
+    {d, f, g}
+    {d, f, h}
+    {d, g}
+    {d, h}
+    {e}
+    {e, f}
+    {e, f, g}
+    {e, f, h}
+    {e, g}
+    {e, h}
+    {f}
+    {f, g}
+    {f, h}
+    {g}
+    {h}
+
+Admissible extensions:
+    {}
+    {a, c, e}
+    {a, c, e, h}
+    {b, e, f, h}
+    {b, f, h}
+    {c, e}
+    {c, e, h}
+    {e}
+    {e, f}
+    {e, f, h}
+    {e, h}
+    {f}
+    {f, h}
+    {h}
+
+Complete extensions:
+    {a, c, e, h}
+    {b, e, f, h}
+    {e, h}
+
+Preferred extensions:
+    {a, c, e, h}
+    {b, e, f, h}
+
+Grounded extensions:
+    {e, h}
+
+Stable extensions:
+    {a, c, e, h}
+    {b, e, f, h}
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
 ================================================= bash cell | report_af7_to_report =================================================
 
 geist report --inputfile af.geist --args af data/af_ex7.lp > products/report.html

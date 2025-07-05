@@ -154,6 +154,14 @@ END_CELL
 
 # ------------------------------------------------------------------------------
 
+bash_cell report_af_ex20 << END_CELL
+
+geist report --inputfile af_core.geist --args af data/af_ex20.lp
+
+END_CELL
+
+# ------------------------------------------------------------------------------
+
 bash_cell report_af7_to_report << END_CELL
 
 geist report --inputfile af.geist --args af data/af_ex7.lp > products/report.html
