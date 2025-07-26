@@ -523,7 +523,7 @@
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
 <h1>Tag img</h1>
-<p>The <code>img</code> tag renders Graphviz code as an image and embeds it into HTML. Here are parameters of the <code>img</code> tag:</p>
+<p>The <code>img</code> tag renders the Mermaid string as an image and embeds it into HTML. Here are parameters of the <code>img</code> tag:</p>
 <table>
 <thead>
 <tr>
@@ -534,7 +534,7 @@
 <tbody>
 <tr>
 <td><code>src</code></td>
-<td>Path of the rendered image to be saved. Various extensions are supported. Check <a href="https://pygraphviz.github.io/documentation/stable/reference/agraph.html#pygraphviz.AGraph.draw">PyGraphviz Docs</a> for the whole list. Note: <code>dot</code> or <code>gv</code> will show code directly.</td>
+<td>Path of the rendered image to be saved. Various extensions are supported. Note: <code>mermaid</code>, <code>mmd</code>, <code>dot</code> or <code>gv</code> will show code directly. (Known issue: the image is rendered by mermaid.ink for now. Due to the limitation of URL length, you may get the <code>"414 Request-URI Too Large" errors</code> message. We recommend select <code>mermaid</code> or <code>mmd</code> instead.</td>
 </tr>
 <tr>
 <td>...</td>
@@ -544,14 +544,35 @@
 </table>
 <details class="example">
 <summary>Example 1: render as svg</summary>
-<div class="highlight"><pre><span></span><code>{% img src="test.svg" %}digraph test_graph { node1 -&gt; node2 }{% endimg %}
+<div class="highlight"><pre><span></span><code>{% img src="test.svg", width="50%" %}
+    graph TB
+        node1 --&gt; node2
+{% endimg %}
 </code></pre></div>
 <p>A file named <code>test.svg</code> will be created and the Geist template will be updated as:
-<div class="highlight"><pre><span></span><code>&lt;img src="test.svg" width="100%" &gt;
+<div class="highlight"><pre><span></span><code>&lt;img src="test.svg" width="50%" &gt;
 </code></pre></div></p>
 </details>
 <details class="example">
-<summary>Example 2: render as gv</summary>
+<summary>Example 2: using the mermaid string directly</summary>
+<div class="highlight"><pre><span></span><code>{% img src="test.mermaid" %}
+    graph TB
+        node1 --&gt; node2
+{% endimg %}
+</code></pre></div>
+<p>A file named <code>test.mermaid</code> will be created and the Geist template will be updated as:
+<div class="highlight"><pre><span></span><code>&lt;pre class="mermaid"&gt;
+    graph TB
+        node1 --&gt; node2
+&lt;/pre&gt;
+&lt;script type="module"&gt;
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({{ startOnLoad: true }});
+&lt;/script&gt;
+</code></pre></div></p>
+</details>
+<details class="example">
+<summary>Example 3: show gv directly</summary>
 <div class="highlight"><pre><span></span><code>{% img src="test.gv" %}digraph test_graph { node1 -&gt; node2 }{% endimg %}
 </code></pre></div>
 <p>A file named <code>test.gv</code> will be created and the Geist template will be updated as:
