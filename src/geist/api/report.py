@@ -200,7 +200,8 @@ class ImgExtension(ContainerTag):
             with open(path, 'w') as fout:
                 fout.write(report)
             # Code to be embeded in an HTML file
-            code = '<pre><code {params_assign}>{report}</code></pre>'.format(params_assign=params_assign, report=report)
+            if ext == 'gv' or ext == 'dot':
+                code = '<pre><code {params_assign}>{report}</code></pre>'.format(params_assign=params_assign, report=report)
             if ext == 'mermaid' or ext == 'mmd':
                 code = f'<pre class="mermaid">{report}</pre><script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";mermaid.initialize({{ startOnLoad: true }});</script>'
         elif ext == 'png' or ext == 'svg' or ext == 'pdf':
@@ -209,7 +210,7 @@ class ImgExtension(ContainerTag):
             # Code to be embeded in an HTML file
             code = '<img src="{src}" {params_assign}>'.format(src=src, params_assign=params_assign)
         else:
-            raise ValueError("Invalid src. Only gv, dot, mermaid, mmd, png, svg, and pdf are supported for now.")
+            raise ValueError("Invalid src. Only mermaid, mmd, png, svg, pdf, gv, or dot are supported for now.")
         return code
 
 class TableExtension(ContainerTag):
