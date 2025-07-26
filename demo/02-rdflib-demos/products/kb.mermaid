@@ -1,0 +1,38 @@
+graph TB
+	style N1 fill:#b3e2cd, stroke:#333, stroke-width:1px
+	style N2 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N1(&lt arrangement/1 &gt) --> |&lt rdf#type &gt| N2(&lt trov#ArtifactArrangement &gt)
+	style N3 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N1 --> |&lt trov#hasLocus &gt| N3(&lt arrangement/1/locus/1 &gt)
+	style N4 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N1 --> |&lt trov#hasLocus &gt| N4(&lt arrangement/1/locus/2 &gt)
+	style N5 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N3 --> |&lt rdf#type &gt| N5(&lt trov#ArtifactLocus &gt)
+	style N6 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N3 --> |&lt trov#hasArtifact &gt| N6(&lt composition/1/artifact/1 &gt)
+	style N7 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N3 --> |&lt trov#hasLocation &gt| N7(filepath1)
+N4 --> |&lt rdf#type &gt| N5
+	style N8 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N4 --> |&lt trov#hasArtifact &gt| N8(&lt composition/1/artifact/100 &gt)
+	style N9 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N4 --> |&lt trov#hasLocation &gt| N9(filepath2)
+	style N10 fill:#b3e2cd, stroke:#333, stroke-width:1px
+	style N11 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N10(&lt composition/1 &gt) --> |&lt rdf#type &gt| N11(&lt trov#ArtifactComposition &gt)
+N10 --> |&lt trov#hasArtifact &gt| N6
+	style N12 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N10 --> |&lt trov#hasFingerprint &gt| N12(&lt fp1 &gt)
+	style N13 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N6 --> |&lt rdf#type &gt| N13(&lt trov#ResearchArtifact &gt)
+	style N14 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N6 --> |&lt trov#sha256 &gt| N14(art.sha256.1)
+	style N15 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N12 --> |&lt rdf#type &gt| N15(&lt trov#CompositionFingerprint &gt)
+	style N16 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N12 --> |&lt trov#sha256 &gt| N16(sha256.fp1)
+	style N17 fill:#b3e2cd, stroke:#333, stroke-width:1px
+	style N18 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N17(&lt tro/1 &gt) --> |&lt rdf#type &gt| N18(&lt trov#TransparentResearchObject &gt)
+N17 --> |&lt trov#hasArrangement &gt| N1
+N17 --> |&lt trov#hasComposition &gt| N10

@@ -4,5 +4,5 @@ repro.require python-dev master ${REPROS_DEV} --default --code
 
 # install python packages required by Geist-P
 #sudo pip install Jinja2 jinja2-simple-tags rdflib click owlrl pandas tabulate
-sudo apt install graphviz-dev -y
+#sudo apt install graphviz-dev -y
 #sudo pip install pygraphviz

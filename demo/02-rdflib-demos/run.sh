@@ -115,7 +115,7 @@ END_CELL
 
 bash_cell graph_dataset_kb << END_CELL
 
-geist graph rdflib -m data/mappings.json -oroot products -ofile kb -oformat none -oformat png -oformat gv
+geist graph rdflib -m data/mappings.json -oroot products -ofile kb -oformat none -oformat png -oformat mermaid
 
 END_CELL
 
@@ -274,7 +274,7 @@ geist report -oroot products << END_TEMPLATE
         <li>Subject: {{ s }}, Predicate: {{ p }}, Object: {{ o }}.</li>
     {% endfor -%}<br>
     <u>Visualization</u><br>
-    {% img src="rdf.svg" %}
+    {% img src="rdf.png" %}
         {% graph datastore="rdflib" %}
     {% endimg %}
 </body>

@@ -67,28 +67,8 @@
 {% endtemplate %}
 
 {% template rule_grounded_extensions %}
-    % Flag for early stopping: changed(K) exists if there were changes at step K
-    changed(0).
-
-    % Set total number of arguments as the max number of iterations
-    step(0..N) :- N = #count{X : arg(X)}.
-
-    % Initial state of the iteration: arguments that have no attackers
-    in_with_step(X, 0) :- arg(X), not attacks(_, X).
-
-    % Iteratively add arguments that are directly or indirectly defended by the current extension
-    % defends(Z, X, Y, K): Z defends X against attacker Y at step K
-    defends(Z, X, Y, K) :- in_with_step(Z, K), attacks(Y, X), attacks(Z, Y), step(K).
-    % An argument X is undefended at step K if it is attacked by Y but Y is not attacked by any argument currently in the extension
-    undefended(X, K) :- not defends(_, X, Y, K), attacks(Y, X), step(K).
-    % Add argument X to the extension at step K+1 if it is defended and there were changes at step K
-    in_with_step(X, K+1) :- arg(X), not undefended(X, K), step(K), changed(K).
-
-    % Track when changes occur for early stopping
-    changed(K+1) :- not in_with_step(X, K), in_with_step(X, K+1).
-
-    % Grounded extension: include arguments from its final step
-    in(X) :- in_with_step(X, K), K = #max{S : in_with_step(X, S)}.
+    out(X) :- attacks(Y, X), in(Y).
+    in(X) :- arg(X), out(Y) : attacks(Y, X).
 {% endtemplate %}
 
 {% template rule_stable_extensions %}

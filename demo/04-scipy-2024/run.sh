@@ -55,13 +55,13 @@ geist report -oroot products << END_TEMPLATE
     {{ edges | head | df2htmltable }}
 
     <h4>1. Visualization of the Fish Graph</h4>
-    {% img src="fish.svg", width="80%%" %}
+    {% img src="fish.mermaid", width="80%" %}
         {% graph "fish", datastore="rdflib", rankdir="LR", mappings="data/mappings.json" %}
     {% endimg %}
 
     <h4>2. Visualization of the subgraph extracted from the Fish Graph</h4>
     Find all nodes that can be reached from node 5 by following either edge 2 or 3.
-    {% img src="subfish.svg", width="80%" %}
+    {% img src="subfish.mermaid", width="80%" %}
         {% graph "subfish", datastore="rdflib", rankdir="LR", mappings="data/mappings.json" %}
     {% endimg %}
 </body>

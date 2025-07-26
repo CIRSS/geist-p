@@ -1,10 +1,9 @@
 import json, re, os
-from geist.tools.utils import set_tags, ensure_dir_exists, get_content, update_outputroot, include_filepaths, generate_template_class, map_df
+from geist.tools.utils import set_tags, ensure_dir_exists, get_content, update_outputroot, include_filepaths, generate_template_class, map_df, export_mermaid
 from geist.tools.filters import head, csv2df, dict2df, json2df, json2dict, df2json, df2htmltable, escape_quotes, process_str_for_html, clingo_list_arguments
 from jinja2 import nodes, Environment, FileSystemLoader
 from jinja2.compiler import CodeGenerator, Frame
 from jinja2_simple_tags import StandaloneTag, ContainerTag
-import pygraphviz as pgv
 
 class CustomCodeGenerator(CodeGenerator):
     def visit_AssignBlock(self, node: nodes.AssignBlock, frame: Frame) -> None:
@@ -132,8 +131,7 @@ class GraphExtension(StandaloneTag):
         if datastore == "rdflib":
             from geist.datastore.rdflib import load_rdf_dataset, _graph
             (rdf_graph, _) = load_rdf_dataset(dataset)
-            G = _graph(rdf_graph, rankdir, mappings, on, samecolor)
-            res = G.string()
+            res = _graph(rdf_graph, rankdir, mappings, on, samecolor)
         else:
             raise ValueError("Invalid datastore. Only rdflib is supported for now.")
         return res
@@ -198,17 +196,20 @@ class ImgExtension(ContainerTag):
         # Extract extension from src
         ext = src.split('.')[-1]
         params_assign = " ".join(['{param_k}={param_v}'.format(param_k=param_k, param_v=param_v) for param_k, param_v in kwargs.items()])
-        if ext == 'gv' or ext == 'dot':
+        if ext == 'gv' or ext == 'dot' or ext == 'mermaid' or ext == 'mmd':
             with open(path, 'w') as fout:
                 fout.write(report)
             # Code to be embeded in an HTML file
             code = '<pre><code {params_assign}>{report}</code></pre>'.format(params_assign=params_assign, report=report)
-        else:
+            if ext == 'mermaid' or ext == 'mmd':
+                code = f'<pre class="mermaid">{report}</pre><script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";mermaid.initialize({{ startOnLoad: true }});</script>'
+        elif ext == 'png' or ext == 'svg' or ext == 'pdf':
             # Save as an image
-            graph = pgv.AGraph(string=report)
-            graph.draw(path, format=ext, prog='dot')
+            export_mermaid(report, ext, path)
             # Code to be embeded in an HTML file
             code = '<img src="{src}" {params_assign}>'.format(src=src, params_assign=params_assign)
+        else:
+            raise ValueError("Invalid src. Only gv, dot, mermaid, mmd, png, svg, and pdf are supported for now.")
         return code
 
 class TableExtension(ContainerTag):

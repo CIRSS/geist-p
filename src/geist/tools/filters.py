@@ -76,7 +76,7 @@ def process_str_for_html(cell):
     """
     if type(cell) != str:
         return cell
-    return cell.replace("<", "&lt").replace(">", "&gt")
+    return cell.replace("<", "&lt ").replace(">", " &gt").replace("http://", "").replace("https://", "").replace("www.", "")
 
 def escape_quotes(txt):
     return txt.replace("'", "\'").replace('"', '\"')
