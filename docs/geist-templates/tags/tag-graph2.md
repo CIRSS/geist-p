@@ -1,4 +1,4 @@
-The `graph2` tag visualizes a dataset. It does not rely on the `PyGraphviz` pacakge, which makes it more flexible compared to the `graph` tag. Here are parameters of the `graph2` tag:
+The `graph2` tag returns a DOT string of the visualization of a dataset. Here are parameters of the `graph2` tag:
 
 | Name          | Description                                                    |
 |---------------|----------------------------------------------------------------|
