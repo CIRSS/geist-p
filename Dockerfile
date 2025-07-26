@@ -10,7 +10,7 @@ RUN bash /repro/dist/boot-setup
 USER repro
 
 RUN repro.require shell-notebook master ${REPROS_DEV}
-RUN repro.require graphviz-runtime master ${REPROS_DEV} --util
+# RUN repro.require graphviz-runtime master ${REPROS_DEV} --util
 RUN repro.require geist-p exports --demo
 
 RUN repro.env REPRO_DEMO_TMP_DIRNAME tmp

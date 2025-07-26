@@ -16,7 +16,7 @@ def graph():
 @click.option('--samecolor', '-sc', is_flag=True, default=True, help='Use the same color for same edges.')
 @click.option('--outputroot', '-oroot', default='./', type=str, help='Path of the directory to store the graph (default: current directory). If the given path (i.e., --outputfile) is a relative path, it will be ignored.')
 @click.option('--outputfile', '-ofile', default='res', type=str, help='Path of the file without extension to store the graph (default: res)')
-@click.option('outputformats', '--outputformat', '-oformat', default=['none'], type=click.Choice(['none', 'svg', 'png', 'gv']), multiple=True, help='Format of the graph (default: none): none or svg or png or gv')
+@click.option('outputformats', '--outputformat', '-oformat', default=['none'], type=click.Choice(['none', 'svg', 'png', 'pdf', 'mermaid', 'mmd']), multiple=True, help='Format of the graph (default: none): none or svg or png or pdf or mermaid or mmd')
 def rdflib(dataset, rankdir, mappings, on, samecolor, outputroot, outputfile, outputformats):
     """Visualize an RDF dataset"""
     geist_graph(datastore='rdflib', dataset=dataset, hasoutput=True, config={'rankdir': rankdir, 'mappings': mappings, 'on': on, 'samecolor': samecolor, 'outputroot': outputroot, 'outputfile': outputfile, 'outputformats': outputformats})

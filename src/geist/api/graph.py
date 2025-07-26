@@ -5,14 +5,14 @@ def geist_graph(datastore, dataset, hasoutput, config={}):
     :param dataset: a string. Name of the dataset to be visualized
     :param hasoutput: bool. True to export as a file or print it out
     :param config: a dictionary with 'rankdir', 'mappings', 'on', 'samecolor', 'outputroot', 'outputfile', and 'outputformat' keys
-    :return G: a Graphviz graph object
+    :return g: a Mermaid string
     """
     if datastore == 'rdflib':
         # Visualize an RDF dataset
         from geist.datastore.rdflib import rdflib_graph
         if 'rankdir' in config and config['rankdir'] not in ['TB', 'BT', 'LR', 'RL']:
             raise ValueError("rankdir must be one of ['TB', 'BT', 'LR', 'RL']")
-        G = rdflib_graph(
+        g = rdflib_graph(
             dataset=dataset, 
             rankdir='TB' if 'rankdir' not in config else config['rankdir'], 
             mappings=None if 'mappings' not in config else config['mappings'], 
@@ -25,4 +25,4 @@ def geist_graph(datastore, dataset, hasoutput, config={}):
         )
     else:
         raise ValueError("Invalid datastore. Only rdflib is supported for now.")
-    return G
+    return g

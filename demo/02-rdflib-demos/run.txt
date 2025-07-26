@@ -214,85 +214,47 @@ Commands:
 
 =================================================== bash cell | graph_dataset_kb ===================================================
 
-geist graph rdflib -m data/mappings.json -oroot products -ofile kb -oformat none -oformat png -oformat gv
+geist graph rdflib -m data/mappings.json -oroot products -ofile kb -oformat none -oformat png -oformat mermaid
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
-strict digraph "" {
-	graph [rankdir=TB];
-	"<arrangement/1>"	[fillcolor="#b3e2cd",
-		shape=box,
-		style="filled, rounded"];
-	"<trov#ArtifactArrangement>"	[fillcolor="#b3e2cd",
-		shape=box,
-		style="filled, rounded"];
-	"<arrangement/1>" -> "<trov#ArtifactArrangement>"	[label=<rdf#type>];
-	"<arrangement/1/locus/1>"	[fillcolor="#b3e2cd",
-		shape=box,
-		style="filled, rounded"];
-	"<arrangement/1>" -> "<arrangement/1/locus/1>"	[label=<trov#hasLocus>];
-	"<arrangement/1/locus/2>"	[fillcolor="#b3e2cd",
-		shape=box,
-		style="filled, rounded"];
-	"<arrangement/1>" -> "<arrangement/1/locus/2>"	[label=<trov#hasLocus>];
-	"<trov#ArtifactLocus>"	[fillcolor="#b3e2cd",
-		shape=box,
-		style="filled, rounded"];
-	"<arrangement/1/locus/1>" -> "<trov#ArtifactLocus>"	[label=<rdf#type>];
-	"<composition/1/artifact/1>"	[fillcolor="#b3e2cd",
-		shape=box,
-		style="filled, rounded"];
-	"<arrangement/1/locus/1>" -> "<composition/1/artifact/1>"	[label=<trov#hasArtifact>];
-	filepath1	[fillcolor="#b3e2cd",
-		shape=box,
-		style="filled, rounded"];
-	"<arrangement/1/locus/1>" -> filepath1	[label=<trov#hasLocation>];
-	"<arrangement/1/locus/2>" -> "<trov#ArtifactLocus>"	[label=<rdf#type>];
-	"<composition/1/artifact/100>"	[fillcolor="#b3e2cd",
-		shape=box,
-		style="filled, rounded"];
-	"<arrangement/1/locus/2>" -> "<composition/1/artifact/100>"	[label=<trov#hasArtifact>];
-	filepath2	[fillcolor="#b3e2cd",
-		shape=box,
-		style="filled, rounded"];
-	"<arrangement/1/locus/2>" -> filepath2	[label=<trov#hasLocation>];
-	"<trov#ResearchArtifact>"	[fillcolor="#b3e2cd",
-		shape=box,
-		style="filled, rounded"];
-	"<composition/1/artifact/1>" -> "<trov#ResearchArtifact>"	[label=<rdf#type>];
-	"art.sha256.1"	[fillcolor="#b3e2cd",
-		shape=box,
-		style="filled, rounded"];
-	"<composition/1/artifact/1>" -> "art.sha256.1"	[label=<trov#sha256>];
-	"<composition/1>"	[fillcolor="#b3e2cd",
-		shape=box,
-		style="filled, rounded"];
-	"<composition/1>" -> "<composition/1/artifact/1>"	[label=<trov#hasArtifact>];
-	"<trov#ArtifactComposition>"	[fillcolor="#b3e2cd",
-		shape=box,
-		style="filled, rounded"];
-	"<composition/1>" -> "<trov#ArtifactComposition>"	[label=<rdf#type>];
-	"<fp1>"	[fillcolor="#b3e2cd",
-		shape=box,
-		style="filled, rounded"];
-	"<composition/1>" -> "<fp1>"	[label=<trov#hasFingerprint>];
-	"<trov#CompositionFingerprint>"	[fillcolor="#b3e2cd",
-		shape=box,
-		style="filled, rounded"];
-	"<fp1>" -> "<trov#CompositionFingerprint>"	[label=<rdf#type>];
-	"sha256.fp1"	[fillcolor="#b3e2cd",
-		shape=box,
-		style="filled, rounded"];
-	"<fp1>" -> "sha256.fp1"	[label=<trov#sha256>];
-	"<tro/1>"	[fillcolor="#b3e2cd",
-		shape=box,
-		style="filled, rounded"];
-	"<tro/1>" -> "<arrangement/1>"	[label=<trov#hasArrangement>];
-	"<tro/1>" -> "<composition/1>"	[label=<trov#hasComposition>];
-	"<trov#TransparentResearchObject>"	[fillcolor="#b3e2cd",
-		shape=box,
-		style="filled, rounded"];
-	"<tro/1>" -> "<trov#TransparentResearchObject>"	[label=<rdf#type>];
-}
+graph TB
+	style N1 fill:#b3e2cd, stroke:#333, stroke-width:1px
+	style N2 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N1(&lt arrangement/1 &gt) --> |&lt rdf#type &gt| N2(&lt trov#ArtifactArrangement &gt)
+	style N3 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N1 --> |&lt trov#hasLocus &gt| N3(&lt arrangement/1/locus/1 &gt)
+	style N4 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N1 --> |&lt trov#hasLocus &gt| N4(&lt arrangement/1/locus/2 &gt)
+	style N5 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N3 --> |&lt rdf#type &gt| N5(&lt trov#ArtifactLocus &gt)
+	style N6 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N3 --> |&lt trov#hasArtifact &gt| N6(&lt composition/1/artifact/1 &gt)
+	style N7 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N3 --> |&lt trov#hasLocation &gt| N7(filepath1)
+N4 --> |&lt rdf#type &gt| N5
+	style N8 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N4 --> |&lt trov#hasArtifact &gt| N8(&lt composition/1/artifact/100 &gt)
+	style N9 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N4 --> |&lt trov#hasLocation &gt| N9(filepath2)
+	style N10 fill:#b3e2cd, stroke:#333, stroke-width:1px
+	style N11 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N10(&lt composition/1 &gt) --> |&lt rdf#type &gt| N11(&lt trov#ArtifactComposition &gt)
+N10 --> |&lt trov#hasArtifact &gt| N6
+	style N12 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N10 --> |&lt trov#hasFingerprint &gt| N12(&lt fp1 &gt)
+	style N13 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N6 --> |&lt rdf#type &gt| N13(&lt trov#ResearchArtifact &gt)
+	style N14 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N6 --> |&lt trov#sha256 &gt| N14(art.sha256.1)
+	style N15 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N12 --> |&lt rdf#type &gt| N15(&lt trov#CompositionFingerprint &gt)
+	style N16 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N12 --> |&lt trov#sha256 &gt| N16(sha256.fp1)
+	style N17 fill:#b3e2cd, stroke:#333, stroke-width:1px
+	style N18 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N17(&lt tro/1 &gt) --> |&lt rdf#type &gt| N18(&lt trov#TransparentResearchObject &gt)
+N17 --> |&lt trov#hasArrangement &gt| N1
+N17 --> |&lt trov#hasComposition &gt| N10
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -536,7 +498,7 @@ geist report -oroot products << END_TEMPLATE
         <li>Subject: {{ s }}, Predicate: {{ p }}, Object: {{ o }}.</li>
     {% endfor -%}<br>
     <u>Visualization</u><br>
-    {% img src="rdf.svg" %}
+    {% img src="rdf.png" %}
         {% graph datastore="rdflib" %}
     {% endimg %}
 </body>
@@ -554,11 +516,11 @@ END_TEMPLATE
 <html>
 <body>
     <u>List</u>
-            <li>Subject: &lthttp://example.com/drewp&gt, Predicate: &lthttp://example.com/says&gt, Object: Hello World.</li>
-            <li>Subject: &lthttp://example.com/drewp&gt, Predicate: &lthttp://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt, Object: &lthttp://xmlns.com/foaf/0.1/Person&gt.</li>
+            <li>Subject: &lt example.com/drewp &gt, Predicate: &lt example.com/says &gt, Object: Hello World.</li>
+            <li>Subject: &lt example.com/drewp &gt, Predicate: &lt w3.org/1999/02/22-rdf-syntax-ns#type &gt, Object: &lt xmlns.com/foaf/0.1/Person &gt.</li>
     <br>
     <u>Visualization</u><br>
-    <img src="rdf.svg" ></body>
+    <img src="rdf.png" ></body>
 </html>
 
 

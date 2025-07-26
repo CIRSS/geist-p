@@ -1,4 +1,4 @@
-import json, re, os
+import json, re, os, base64, requests
 import pandas as pd
 from click import BadParameter
 
@@ -217,3 +217,13 @@ class {tag_cap}Extension(StandaloneTag):
 {render_func}
 globals()["environment"].add_extension({tag_cap}Extension)'''.format(tag_cap=tag_cap, tag_low=tag_low, render_func=render_func)
         return templates
+
+def export_mermaid(graph, type, output_path):
+    graphbytes = graph.encode("utf8")
+    base64_bytes = base64.urlsafe_b64encode(graphbytes)
+    base64_string = base64_bytes.decode("ascii")
+    endpoint = "img" if type == "png" else type
+    img = requests.get(f"https://mermaid.ink/{endpoint}/{base64_string}?type={type}").content
+    with open(output_path, 'wb') as fout:
+        fout.write(img)
+    return

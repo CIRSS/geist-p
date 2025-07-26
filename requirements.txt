@@ -1,3 +1,4 @@
+requests
 Jinja2
 jinja2-simple-tags
 rdflib
@@ -6,6 +7,5 @@ owlrl
 pyarrow
 pandas
 tabulate
-pygraphviz
 duckdb
 clingo==5.8.0

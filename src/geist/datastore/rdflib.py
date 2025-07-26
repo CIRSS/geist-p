@@ -1,10 +1,9 @@
-from geist.tools.utils import update_outputroot, ensure_dir_exists, map_df, df2nt
-from geist.tools.filters import csv2df, escape_quotes
+from geist.tools.utils import update_outputroot, ensure_dir_exists, map_df, df2nt, export_mermaid
+from geist.tools.filters import csv2df, escape_quotes, process_str_for_html
 import click, pickle, json, os, ast
 from jinja2 import Environment
 from io import StringIO
 import pandas as pd
-import pygraphviz as pgv
 from rdflib import Graph
 from owlrl import DeductiveClosure, RDFS_Semantics, OWLRL_Semantics, RDFS_OWLRL_Semantics
 from rdflib.plugins.sparql.results.jsonresults import JSONResultSerializer
@@ -93,29 +92,47 @@ def query2df(rdf_graph, query):
 
 def visualize_query_results(query_res, edges, rankdir="TB", same_color=False):
     """
-    This function is to visualize query results with pygraphviz
+    This function is to visualize query results using Mermaid
     :param query_res: a Pandas data frame.
     :param edges: a list of list. [[start_node1, end_node1, label1], [start_node2, end_node2, label2], ...] where these items are column names
     :param same_color: a bool value to denote if all edges are filled with the same color (default: False)
-    :return g: a Graphviz graph
+    :return g: a Mermaid string
     """
-    # Create a directed graph
-    G = pgv.AGraph(directed=True, rankdir=rankdir)
+    g = f"graph {rankdir}\n"
     # Add nodes and edges
+    name2idx = {}
+    count = 0
     for _, row in query_res.iterrows():
         for idx, edge in enumerate(edges):
             if same_color:
                 color = PASTEL_COLORS[0]
             else:
                 color = PASTEL_COLORS[idx % 8]
-            G.add_node(row[edge[0]], shape="box", style="filled, rounded", fillcolor=color)
-            G.add_node(row[edge[1]], shape="box", style="filled, rounded", fillcolor=color)
-            G.add_edge(row[edge[0]], row[edge[1]], label=row[edge[2]])
-    return G
+            start_node, end_node, label = process_str_for_html(row[edge[0]]), process_str_for_html(row[edge[1]]), process_str_for_html(row[edge[2]])
+            flag_start, flag_end = False, False
+            if start_node not in name2idx:
+                name2idx[start_node] = count + 1
+                count = count + 1
+                flag_start = True
+                g = g + f"\tstyle N{count} fill:{color}, stroke:#333, stroke-width:1px\n"
+            if end_node not in name2idx:
+                name2idx[end_node] = count + 1
+                count = count + 1
+                flag_end = True
+                g = g + f"\tstyle N{count} fill:{color}, stroke:#333, stroke-width:1px\n"
+            
+            g = g + "N{start_node_idx}{start_node_name} --> |{label}| N{end_node_idx}{end_node_name}\n".format(
+                start_node_idx=name2idx[start_node],
+                start_node_name=f"({start_node})" if flag_start else "",
+                label=label,
+                end_node_idx=name2idx[end_node],
+                end_node_name=f"({end_node})" if flag_end else ""
+            )
+    return g
 
-def visualize_query_results_without_pygraphviz(query_res, edges, rankdir="TB", same_color=False, **kwargs):
+def visualize_query_results_as_dot(query_res, edges, rankdir="TB", same_color=False, **kwargs):
     """
-    This function is to visualize query results without using pygraphviz
+    This function is to visualize query results as a DOT string
     :param query_res: a Pandas data frame.
     :param edges: a list of list. [[start_node1, end_node1, label1], [start_node2, end_node2, label2], ...] where these items are column names
     :param kwargs: a dict. Parameters for Graphviz
@@ -146,7 +163,7 @@ def visualize_query_results_without_pygraphviz(query_res, edges, rankdir="TB", s
     return 'digraph "" {' + gv + '}'
 
 def _graph(rdf_graph, rankdir, mappings, on, same_color):
-    """Convert a RDF graph object to a Graphviz graph object"""
+    """Convert a RDF graph object to a Mermaid string"""
     query = """
             SELECT ?s ?p ?o
             WHERE {
@@ -156,11 +173,11 @@ def _graph(rdf_graph, rankdir, mappings, on, same_color):
         """
     res = query2df(rdf_graph, query)
     res = map_df(res, mappings, on)
-    G = visualize_query_results(query_res=res, edges=[['s', 'o', 'p']], rankdir=rankdir, same_color=same_color)
-    return G
+    g = visualize_query_results(query_res=res, edges=[['s', 'o', 'p']], rankdir=rankdir, same_color=same_color)
+    return g
 
 def _graph2(rdf_graph, rankdir, mappings, on, **kwargs):
-    """Convert a RDF graph object to a Graphviz graph object"""
+    """Convert a RDF graph object to a DOT string"""
     query = """
             SELECT ?s ?p ?o
             WHERE {
@@ -170,8 +187,8 @@ def _graph2(rdf_graph, rankdir, mappings, on, **kwargs):
         """
     res = query2df(rdf_graph, query)
     res = map_df(res, mappings, on)
-    gv = visualize_query_results_without_pygraphviz(query_res=res, edges=[['s', 'o', 'p']], rankdir=rankdir, same_color=True, **kwargs)
-    return gv
+    g = visualize_query_results_as_dot(query_res=res, edges=[['s', 'o', 'p']], rankdir=rankdir, same_color=True, **kwargs)
+    return g
 
 def rdflib_create(dataset, inputfile, inputformat, colnames, infer):
     """Create a new RDF dataset"""
@@ -243,24 +260,25 @@ def rdflib_graph(dataset, rankdir, mappings, on, samecolor, hasoutput, outputroo
 
     # Load a RDF dataset
     (rdf_graph, _) = load_rdf_dataset(dataset)
-    # Convert a RDF graph object to a Graphviz graph object
-    G = _graph(rdf_graph, rankdir, mappings, on, samecolor)
+    # Convert a RDF graph object to a Mermaid string
+    g = _graph(rdf_graph, rankdir, mappings, on, samecolor)
 
     # Save the graph
     if hasoutput:
         outputfile = ensure_dir_exists(outputfile)
         for outputformat in set(outputformats):
             if outputformat == 'none':
-                print(G.string())
+                print(g)
             else:
                 output_path = outputfile + '.' + outputformat
-                if outputformat == 'gv' or outputformat == 'dot':
-                    G.write(output_path)
-                elif outputformat == 'svg' or outputformat == 'png':
-                    G.draw(output_path, prog='dot')
+                if outputformat == 'mermaid' or outputformat == 'mmd':
+                    with open(output_path, mode='w', encoding='utf-8') as fout:
+                        fout.write(g)
+                elif outputformat == 'svg' or outputformat == 'png' or outputformat == 'pdf':
+                    export_mermaid(g, outputformat, output_path)
                 else:
-                    raise ValueError("outputformat is required to be 'none' or 'svg' or 'png' or 'gv'")
-    return G
+                    raise ValueError("outputformat is required to be 'none' or 'svg' or 'png' or 'pdf' or 'mermaid' or 'mmd'")
+    return g
 
 
 
