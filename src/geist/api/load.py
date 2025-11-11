@@ -31,7 +31,7 @@ def geist_load(datastore, dataset, inputfile, inputformat, isinputpath, config={
         predicate = 'isfirstcol' if 'predicate' not in config else config['predicate']
         programname = 'base' if 'programname' not in config else config['programname']
         inmemory = False if 'inmemory' not in config else config['inmemory']
-        conn = clingo_load(dataset=dataset, inputfile=content, inputformat=inputformat, predicate=config['predicate'], programname=programname, inmemory=inmemory)
+        conn = clingo_load(dataset=dataset, inputfile=content, inputformat=inputformat, predicate=predicate, programname=programname, inmemory=inmemory)
     else:
         raise ValueError("Invalid datastore. Only rdflib, duckdb, and clingo are supported for now.")
     return conn
