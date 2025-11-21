@@ -38,7 +38,12 @@ def format_dicts(dicts, returnformat):
 def filter_by_predicate(dicts, predicate):
     filtered_dicts = []
     for one_case in dicts:
-        filtered_dict = {predicate: one_case[predicate]} if predicate in one_case else {predicate: []}
+        if type(predicate) == str:
+            filtered_dict = {predicate: one_case.get(predicate, [])}
+        elif type(predicate) == list:
+            filtered_dict = {p: one_case.get(p, []) for p in predicate}
+        else:
+            raise ValueError(f"Unsupported predicate type: {type(predicate)}")
         filtered_dicts.append(filtered_dict)
     return filtered_dicts
 
