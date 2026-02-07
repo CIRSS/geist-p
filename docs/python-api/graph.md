@@ -4,7 +4,7 @@ Parameters description for *export()*:
 
 |Name           |Type    |Description                    | Default    |
 |-------------- |------- |------------------------------ |----------- |
-|datastore      |string  |A backend datastore, i.e., `'rdflib'` or `'duckdb'` |REQUIRED |
+|datastore      |string  |A backend datastore, i.e., `'rdflib'` |REQUIRED |
 |dataset        |string OR `GeistGraph` object |Dataset to load an object: (1) A string indicates the name of the dataset stored on disk OR (2) a `GeistGraph` object for dataset in memory |REQUIRED |
 |hasoutput      |bool    |`True` to export as a file or print it out |REQUIRED |
 |config         |dict    |A dictionary with configurations for certain backend store |see below |

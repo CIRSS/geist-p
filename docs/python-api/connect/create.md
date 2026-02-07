@@ -183,3 +183,64 @@ Description for the *config* parameter:
         connection = geist.Connection(datastore='rdflib', dataset=':memory:')
         connection.create(inputfile="test.csv", inputformat="csv", isinputpath=True, config={"colnames": "[['subject', 'predicate', 'object']]"})
         ```
+
+??? info "datastore: clingo"
+
+    |Key            |Type    |Description                                | Default   |
+    |-------------- |------- |------------------------------------------ |---------- |
+    |predicate      |string  |`'isfirstcol'` for using the first column as the predicate name; strings other than `'isfirstcol'` are used as the predicate name directly |`'isfirstcol'` |
+    |programname    |string  |Name of the program                        |`'base'`   |
+
+    ??? example "Example 1: create a `test` ASP dataset from a string"
+
+        The `.geistdata/clingo/test.pkl` file is created and a `Connection` instance is returned.
+
+        ```
+        import geist
+
+        lp_str = """
+        friends(a, b).
+        friends(a, c).
+        """
+
+        # Create a Connection instance
+        connection = geist.Connection(datastore='clingo', dataset='test')
+        connection.create(inputfile=lp_str, inputformat="lp", isinputpath=False)
+        ```
+
+    ??? example "Example 2: create a `test` ASP dataset from a file"
+
+        The `.geistdata/clingo/test.pkl` file is created and a `Connection` instance is returned.
+
+        Here is the `friends.lp` file:
+
+        ```file
+        friends(a, b).
+        friends(a, c).
+        ```
+
+        Code:
+        ```
+        import geist
+
+        # Create a Connection instance
+        connection = geist.Connection(datastore='clingo', dataset='test')
+        connection.create(inputfile="friends.lp", inputformat="lp", isinputpath=True)
+        ```
+
+    ??? example "Example 3: create an ASP dataset in memory from a string"
+
+        A `Connection` instance is returned.
+
+        ```
+        import geist
+
+        lp_str = """
+        friends(a, b).
+        friends(a, c).
+        """
+
+        # Create a Connection instance
+        connection = geist.Connection(datastore='clingo', dataset=':memory:')
+        connection.create(inputfile=lp_str, inputformat="lp", isinputpath=False)
+        ```

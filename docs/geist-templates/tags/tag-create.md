@@ -3,12 +3,14 @@ The `create` tag creates a dataset based on the given string. By default, the gi
 |Name           | Description |
 |---------------|-------------|
 |`dataset`      |Name of RDF dataset to create (by default, `kb`) |
-|`datastore`    |Data backend. `duckdb` and `rdflib` are available for now. (by default, `rdflib`) |
+|`datastore`    |Data backend. `clingo`, `duckdb`, and `rdflib` are available. (by default, `rdflib`) |
 |`inputformat`  |Format of the file to be loaded as triples (by default, `json-ld`). It has to be one of {`xml`, `n3`, `turtle`, `nt`, `pretty-xml`, `trix`, `trig`, `nquads`, `json-ld`, `hext`, `csv`} |
 |`infer`        |Inference to perform on update choosing from {`none`, `rdfs`, `owl`, `rdfs_owl`} (by default, `none`). Please check [OWL-RL](https://owl-rl.readthedocs.io/en/latest/owlrl.html) document for detailed information. |
 |`isfilepath`   |A bool value to denote if the given data is a file path or not (by default: `True`, which denotes the given data is a file path) |
 |`table`        |Table name. Available for `duckdb` data backend only. |
 |`colnames`     |Column names of triples with the format of `[[subject1, predicate1, object1], [subject2, predicate2, object2], ...]` when the input format is csv (by default, `None`). Available for `rdflib` data backend only. |
+|`predicate`    |`'isfirstcol'` for using the first column as the predicate name; strings other than `'isfirstcol'` are used as the predicate name directly (by default, `'isfirstcol'`). Available for `clingo` data backend only. |
+|`name`         |Name of the program (by default, `'base'`). Available for `clingo` data backend only. |
 
 ??? example "Example 1: the given string is not a file path"
 

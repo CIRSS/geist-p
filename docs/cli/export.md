@@ -1,6 +1,6 @@
 *export* command can export a dataset.
 
-There are two subcommands for *export*:
+There are three subcommands for *export*:
 ```
 Usage: geist export [OPTIONS] COMMAND [ARGS]...
 
@@ -10,9 +10,43 @@ Options:
   --help  Show this message and exit.
 
 Commands:
+  clingo  Export an ASP dataset
   duckdb  Export a SQL dataset
   rdflib  Export an RDF dataset
 ```
+
+??? info "geist export clingo [OPTIONS]"
+
+    ```
+    Usage: geist export clingo [OPTIONS]
+
+    Export an ASP dataset
+
+    Options:
+    -d, --dataset TEXT              Name of an ASP dataset to be exported
+                                    (default "kb")
+    -oroot, --outputroot TEXT       Path of the directory to store the exported
+                                    data (default: current directory). If the
+                                    given path (i.e., --outputfile) is None or a
+                                    relative path, it will be ignored.
+    -ofile, --outputfile TEXT       Path of the file to store the exported data
+                                    (default: None). This file can be reused to
+                                    create a dataset by setting
+                                    inputformat=json.
+    -rformat, --returnformat [lp|df|dict]
+                                    Format of the returned data in memory
+                                    (default lp)
+    -pred, --predicate TEXT         Name of the predicate to be exported
+                                    (default "predicate")
+    --help                          Show this message and exit.
+    ```
+
+    ??? example "Example: export the `test` ASP dataset"
+
+        By default, the exported data will be printed in terminal:
+        ```
+        geist export clingo --dataset test
+        ```
 
 ??? info "geist export duckdb [OPTIONS]"
 

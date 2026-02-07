@@ -77,3 +77,36 @@ Description for the *config* parameter:
         # Export the df table of the test dataset
         data = connection.export(hasoutput=False)
         ```
+
+??? info "datastore: clingo"
+
+    |Key            |Type    |Description                                | Default   |
+    |-------------- |------- |------------------------------------------ |---------- |
+    |returnformat   |string  |Format of the returned data, i.e., `'lp'`, `'df'`, or `'dict'` |`'lp'` |
+    |predicate      |string  |Name of the predicate to be exported       |`None`     |
+
+    ??? example "Example 1: export all facts of the `test` ASP dataset on disk"
+
+        There exist a file with the path of `.geistdata/clingo/test.pkl`. The following code returns data.
+
+        ```
+        import geist
+
+        # Create a Connection instance
+        connection = geist.Connection.connect(datastore='clingo', dataset='test')
+        # Export all facts of the test ASP dataset
+        data = connection.export(hasoutput=False)
+        ```
+
+    ??? example "Example 2: export all facts of the `test` ASP dataset in memory"
+
+        Suppose `conn` is a `Control` object pointing to an ASP dataset in memory. The following code returns data.
+
+        ```
+        import geist
+
+        # Create a Connection instance
+        connection = geist.Connection(datastore='clingo', dataset=':memory:', conn=conn)
+        # Export all facts of the test ASP dataset
+        data = connection.export(hasoutput=False)
+        ```

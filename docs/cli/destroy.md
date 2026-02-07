@@ -1,6 +1,6 @@
 *destroy* command can delete a dataset. The `.duckdb` or the `.pkl` file of the corresponding dataset will be discarded.
 
-There are two subcommands for *destroy*:
+There are three subcommands for *destroy*:
 ```
 Usage: geist destroy [OPTIONS] COMMAND [ARGS]...
 
@@ -10,9 +10,36 @@ Options:
   --help  Show this message and exit.
 
 Commands:
+  clingo  Delete an ASP dataset
   duckdb  Delete a SQL dataset
   rdflib  Delete an RDF dataset
 ```
+
+??? info "geist destroy clingo [OPTIONS]"
+
+    ```
+    Usage: geist destroy clingo [OPTIONS]
+
+    Delete an ASP dataset
+
+    Options:
+    -d, --dataset TEXT  Name of an ASP dataset to be removed (default "kb")
+    -q, --quiet         Suppress error messages if the provided dataset does not
+                        exist
+    --help              Show this message and exit.
+    ```
+
+    ??? example "Example: delete the `test` ASP dataset"
+
+        ```
+        geist destroy clingo --dataset test
+        ```
+
+        The `.geistdata/clingo/test.pkl` file will be removed after this operation. By default, you will get an error message if the provided dataset (in this case, it is the `test` dataset) does not exist. To suppress this error message, you can add `--quiet`:
+
+        ```
+        geist destroy clingo --dataset test --quiet
+        ```
 
 ??? info "geist destroy duckdb [OPTIONS]"
 

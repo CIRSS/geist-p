@@ -1,6 +1,6 @@
 *load* command can import data into an existing dataset.
 
-There are two subcommands for *load*:
+There are three subcommands for *load*:
 ```
 Usage: geist load [OPTIONS] COMMAND [ARGS]...
 
@@ -10,9 +10,38 @@ Options:
   --help  Show this message and exit.
 
 Commands:
+  clingo  Import data into an ASP dataset
   duckdb  Import data into a SQL dataset
   rdflib  Import data into a RDF dataset
 ```
+
+??? info "geist load clingo [OPTIONS]"
+
+    ```
+    Usage: geist load clingo [OPTIONS]
+
+    Import data into an ASP dataset
+
+    Options:
+    -d, --dataset TEXT              Name of an ASP dataset to load a file
+                                    (default "kb")
+    -ifile, --inputfile FILENAME    Path of the file to be loaded  [required]
+    -iformat, --inputformat [lp|csv|json]
+                                    Format of the file to be loaded (default
+                                    "lp"). If multiple possibilities are
+                                    provided (as a list), only the first one
+                                    will be considered.
+    -pred, --predicate TEXT         Name of the predicate to be loaded (default:
+                                    "isfirstcol")
+    -prog, --programname TEXT       Name of the program (default: "base")
+    --help                          Show this message and exit.
+    ```
+
+    ??? example "Example: load a file into the `test` ASP dataset"
+
+        ```
+        geist load clingo --dataset test --inputfile new_friends.lp --inputformat lp
+        ```
 
 ??? info "geist load duckdb [OPTIONS]"
 

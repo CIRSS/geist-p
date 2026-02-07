@@ -6,17 +6,22 @@ A *Connection* class has three attributes:
 
 |Name       |Type    |Description                                | Default   |
 |---------- |------- |------------------------------------------ |---------- |
-|datastore  |string  |A backend datastore, i.e., `'rdflib'` or `'duckdb'`|REQUIRED |
+|datastore  |string  |A backend datastore, i.e., `'duckdb'`, `'rdflib'`, or `'clingo'`|REQUIRED |
 |dataset    |string  |Name of the dataset. Note that `':memory:'` is a reserved value for datasets that exist only in memory|REQUIRED |
-|conn       |object  |A `DuckPyConnection` object OR a `GeistGraph` object |`None`       |
+|conn       |object  |A `DuckPyConnection` object, a `GeistGraph` object, or a `Control` object |`None`       |
 
 ## How to instantiate a *Connection* class?
 
 If the dataset exists, the *Connection* class can be instantiated using its **connect** method:
 
 ```py
-# create a Connection object to an existing dataset named test
+# create a Connection object to an existing DuckDB dataset named test
 connection = geist.Connection.connect(datastore='duckdb', dataset='test')
+```
+
+```py
+# create a Connection object to an existing Clingo dataset named test
+connection = geist.Connection.connect(datastore='clingo', dataset='test')
 ```
 
 If the dataset does not exist, there are two approaches to create and connect:

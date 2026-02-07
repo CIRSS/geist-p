@@ -4,7 +4,7 @@ Parameters description for *create()*:
 
 |Name           |Type    |Description                    | Default    |
 |-------------- |------- |------------------------------ |----------- |
-|datastore      |string  |A backend datastore, i.e., `'rdflib'` or `'duckdb'` |REQUIRED |
+|datastore      |string  |A backend datastore, i.e., `'clingo'`, `'duckdb'`, or `'rdflib'` |REQUIRED |
 |dataset        |string  |Name of the dataset to be created. Note that `':memory:'` is a reserved value for datasets that exist only in memory |REQUIRED |
 |inputfile      |string  |A file to be loaded |REQUIRED |
 |inputformat    |string  |Format of the file to be loaded |REQUIRED |
@@ -12,6 +12,64 @@ Parameters description for *create()*:
 |config         |dict    |A dictionary with configurations for certain backend store |see below |
 
 Description for the *config* parameter:
+
+??? info "datastore: clingo"
+
+    |Name           |Type    |Description                    | Default    |
+    |-------------- |------- |------------------------------ |----------- |
+    |predicate      |string  |`'isfirstcol'` for using the first column as the predicate name; strings other than `'isfirstcol'` are used as the predicate name directly |`'isfirstcol'` |
+    |programname    |string  |Name of the program            |`'base'`    |
+
+    ??? example "Example 1: create a `test` ASP dataset on disk from a string"
+
+        The `.geistdata/clingo/test.pkl` file is created and a `Control` object is returned.
+
+        ```
+        import geist
+
+        lp_str = """
+        friends(a, b).
+        friends(a, c).
+        """
+
+        # Create a Control object
+        conn = geist.create(datastore='clingo', dataset='test', inputfile=lp_str, inputformat="lp", isinputpath=False)
+        ```
+
+    ??? example "Example 2: create a `test` ASP dataset on disk from a file"
+
+        The `.geistdata/clingo/test.pkl` file is created and a `Control` object is returned.
+
+        Here is the `friends.lp` file:
+
+        ```file
+        friends(a, b).
+        friends(a, c).
+        ```
+
+        Code:
+        ```
+        import geist
+
+        # Create a Control object
+        conn = geist.create(datastore='clingo', dataset='test', inputfile="friends.lp", inputformat="lp", isinputpath=True)
+        ```
+
+    ??? example "Example 3: create an ASP dataset in memory from a string"
+
+        A `Control` object is returned.
+
+        ```
+        import geist
+
+        lp_str = """
+        friends(a, b).
+        friends(a, c).
+        """
+
+        # Create a Control object
+        conn = geist.create(datastore='clingo', dataset=':memory:', inputfile=lp_str, inputformat="lp", isinputpath=False)
+        ```
 
 ??? info "datastore: duckdb"
 

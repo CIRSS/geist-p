@@ -84,7 +84,7 @@ def build_program(inputfile, inputformat, predicate="isfirstcol"):
 
 def add_and_ground_program(program, name="base", ctl=None):
     if not ctl:
-        ctl = Control()
+        ctl = Control(["--warn=none"])
     ctl.add(name, [], program)
     ctl.ground(parts=[(name, [])])
     return ctl

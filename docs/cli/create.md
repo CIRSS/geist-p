@@ -1,4 +1,4 @@
-The *create* command has two subcommands, both of which create a new dataset on disk. The dataset name `:memory:` is a reserved value for datasets that exist only in memory and is not allowed in the CLI.
+The *create* command has three subcommands, all of which create a new dataset on disk. The dataset name `:memory:` is a reserved value for datasets that exist only in memory and is not allowed in the CLI.
 
 ```
 Usage: geist create [OPTIONS] COMMAND [ARGS]...
@@ -9,9 +9,73 @@ Options:
 --help  Show this message and exit.
 
 Commands:
+clingo  Create a new ASP dataset using Clingo
 duckdb  Create a new SQL dataset using DuckDB
 rdflib  Create a new RDF dataset using RDFLib
 ```
+
+??? info "geist create clingo [OPTIONS]"
+
+    ```
+    Usage: geist create clingo [OPTIONS]
+
+    Create a new ASP dataset using Clingo
+
+    Options:
+    -d, --dataset TEXT              Name of ASP dataset to create (default "kb")
+    -ifile, --inputfile FILENAME    Path of the file to be loaded as facts,
+                                    rules, and contraints  [required]
+    -iformat, --inputformat [lp|csv|json]
+                                    Format of the file to be loaded as facts,
+                                    rules, and constraints. Note that "csv" only
+                                    supports facts (default "lp"). If multiple
+                                    possibilities are provided (as a list), only
+                                    the first one will be considered.
+    -pred, --predicate TEXT         "isfirstcol" for using the first column as
+                                    the predicate name; strings other than
+                                    "isfirstcol" are used as the predicate name
+                                    directly (default: "isfirstcol")
+    -prog, --programname TEXT       Name of the program (default: "base")
+    --help                          Show this message and exit.
+    ```
+
+    ??? example "Example 1: create a `test` ASP dataset from stdin with LP format"
+
+        ```
+        geist create clingo --dataset test --inputformat lp << __END_INPUT__
+        friends(a, b).
+        friends(a, c).
+        __END_INPUT__
+        ```
+
+    ??? example "Example 2: create a `test` ASP dataset from a file with LP format"
+
+        Here is the `friends.lp` file:
+
+        ```file
+        friends(a, b).
+        friends(a, c).
+        ```
+
+        Code:
+        ```
+        geist create clingo --dataset test --inputfile friends.lp --inputformat lp
+        ```
+
+    ??? example "Example 3: create a `test` ASP dataset from a CSV file"
+
+        Here is the `friends.csv` file:
+
+        ```file
+        arg1,arg2
+        a,b
+        a,c
+        ```
+
+        Code:
+        ```
+        geist create clingo --dataset test --inputfile friends.csv --inputformat csv --predicate friends
+        ```
 
 ??? info "geist create duckdb [OPTIONS]"
 

@@ -60,3 +60,27 @@ Description for the *config* parameter:
         # Load csv_str to the test dataset
         connection.load(inputfile=csv_str, inputformat='csv', isinputpath=False, config={"colnames": "[['subject', 'predicate', 'object']]"})
         ```
+
+??? info "datastore: clingo"
+
+    |Name           |Type    |Description                    | Default    |
+    |-------------- |------- |------------------------------ |----------- |
+    |predicate      |string  |`'isfirstcol'` for using the first column as the predicate name; strings other than `'isfirstcol'` are used as the predicate name directly |`'isfirstcol'` |
+    |programname    |string  |Name of the program            |`'base'`    |
+
+    ??? example "Example: load facts into the `test` ASP dataset"
+
+        There exist a file with the path of `.geistdata/clingo/test.pkl`. The `lp_str` will be imported into the `test` ASP dataset.
+
+        ```
+        import geist
+
+        lp_str = """
+        friends(b, d).
+        """
+
+        # Create a Connection instance
+        connection = geist.Connection.connect(datastore='clingo', dataset='test')
+        # Load lp_str into the test ASP dataset
+        connection.load(inputfile=lp_str, inputformat='lp', isinputpath=False)
+        ```

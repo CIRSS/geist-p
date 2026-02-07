@@ -4,7 +4,7 @@ Parameters description for *destroy()*:
 
 |Name           |Type    |Description                    | Default    |
 |-------------- |------- |------------------------------ |----------- |
-|datastore      |string  |A backend datastore, i.e., `'rdflib'` or `'duckdb'` |REQUIRED |
+|datastore      |string  |A backend datastore, i.e., `'clingo'`, `'duckdb'`, or `'rdflib'` |REQUIRED |
 |dataset        |string  |Name of the dataset to be removed |REQUIRED |
 |quiet          |bool    |`True` to suppress error messages if the provided dataset does not exist |`False` |
 

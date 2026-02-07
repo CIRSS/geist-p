@@ -4,8 +4,8 @@ Parameters description for *query()*:
 
 |Name           |Type    |Description                    | Default    |
 |-------------- |------- |------------------------------ |----------- |
-|datastore      |string  |A backend datastore, i.e., `'rdflib'` or `'duckdb'` |REQUIRED |
-|dataset        |string OR `DuckPyConnection` object OR `GeistGraph` object|(1) A string indicates the name of the dataset stored on disk OR (2) a `DuckPyConnection` object OR a `GeistGraph` object for dataset in memory |REQUIRED |
+|datastore      |string  |A backend datastore, i.e., `'clingo'`, `'duckdb'`, or `'rdflib'` |REQUIRED |
+|dataset        |string OR `Control` object OR `DuckPyConnection` object OR `GeistGraph` object |(1) A string indicates the name of the dataset stored on disk OR (2) a `Control` object, a `DuckPyConnection` object, or a `GeistGraph` object for dataset in memory |REQUIRED |
 |inputfile      |string  |File containing the query |REQUIRED |
 |isinputpath    |bool    |True if the inputfile is the file path, otherwise the inputfile is the content |REQUIRED |
 |hasoutput      |bool    |True to store the query results as a CSV file or print them out |REQUIRED |
@@ -17,6 +17,9 @@ Description for the *config* parameter:
 |-------------- |------- |------------------------------ |----------- |
 |outputroot     |string  |Path of the directory to store the query results |`'./'`  |
 |outputfile     |string  |Path of the file to store the query results |`None`       |
+|returnformat   |string  |Format of the returned data, i.e., `'lp'`, `'df'`, or `'dict'`. Available for `clingo` data backend only. |`'lp'` |
+|predicate      |string  |Name of the predicate to be queried. Available for `clingo` data backend only. |`None` |
+|programname    |string  |Name of the program. Available for `clingo` data backend only.           |`'base'`    |
 
 ??? example "Example 1: all rows of the `df` table in `test` dataset on disk (query from a string)"
 
@@ -74,4 +77,4 @@ Description for the *config* parameter:
 
     # Query the df table of the test dataset
     (res, conn) = geist.query(datastore='duckdb', dataset=conn, inputfile="query.txt", isinputpath=True, hasoutput=False)
-    ```
+```

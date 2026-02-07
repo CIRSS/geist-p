@@ -1,5 +1,11 @@
 # Changelog
 
+v0.4.0 (2026-02-07)
+
+- Replace [pygraphviz](https://pypi.org/project/pygraphviz) with [mermaid](https://mermaid.js.org/intro)
+- Add the [Clingo](https://potassco.org/clingo/) module
+- Update the "use" tag to interpret its content as a path relative to the input file's directory when `isinputpath=True`.
+
 v0.3.1 (2025-01-07)
 
 - Fix minor bug of the report feature: update TAGS and filters

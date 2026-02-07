@@ -4,12 +4,41 @@ Parameters description for *export()*:
 
 |Name           |Type    |Description                    | Default    |
 |-------------- |------- |------------------------------ |----------- |
-|datastore      |string  |A backend datastore, i.e., `'rdflib'` or `'duckdb'` |REQUIRED |
-|dataset        |string OR `DuckPyConnection` object OR `GeistGraph` object |Dataset to load an object: (1) A string indicates the name of the dataset stored on disk OR (2) a `DuckPyConnection` object OR a `GeistGraph` object for dataset in memory |REQUIRED |
+|datastore      |string  |A backend datastore, i.e., `'clingo'`, `'duckdb'`, or `'rdflib'` |REQUIRED |
+|dataset        |string OR `Control` object OR `DuckPyConnection` object OR `GeistGraph` object |Dataset to load an object: (1) A string indicates the name of the dataset stored on disk OR (2) a `Control` object, a `DuckPyConnection` object, or a `GeistGraph` object for dataset in memory |REQUIRED |
 |hasoutput      |bool    |`True` to export as a file or print it out |REQUIRED |
 |config         |dict    |A dictionary with configurations for certain backend store |see below |
 
 Description for the *config* parameter:
+
+??? info "datastore: clingo"
+
+    |Name           |Type    |Description                    | Default    |
+    |-------------- |------- |------------------------------ |----------- |
+    |returnformat   |string  |Format of the returned data, i.e., `'lp'`, `'df'`, or `'dict'` |`'lp'` |
+    |predicate      |string  |Name of the predicate to be exported |`None` |
+
+    ??? example "Example 1: export all facts of the `test` ASP dataset on disk"
+
+        There exist a file with the path of `.geistdata/clingo/test.pkl`. The following code returns data and a `Control` object named `conn`.
+
+        ```
+        import geist
+
+        # Export all facts of the test ASP dataset
+        (data, conn) = geist.export(datastore='clingo', dataset='test', hasoutput=False)
+        ```
+
+    ??? example "Example 2: export all facts of the `test` ASP dataset in memory"
+
+        Suppose `conn` is a `Control` object pointing to an ASP dataset in memory. The following code returns data and the same `Control` object named `conn`.
+
+        ```
+        import geist
+
+        # Export all facts of the test ASP dataset
+        (data, conn) = geist.export(datastore='clingo', dataset=conn, hasoutput=False)
+        ```
 
 ??? info "datastore: duckdb"
 

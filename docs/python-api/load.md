@@ -4,14 +4,36 @@ Parameters description for *query()*:
 
 |Name           |Type    |Description                    | Default    |
 |-------------- |------- |------------------------------ |----------- |
-|datastore      |string | A backend datastore, i.e., `'rdflib'` or `'duckdb'` |REQUIRED |
-|dataset        |string OR `DuckPyConnection` object OR `GeistGraph` object |Dataset to load an object: (1) A string indicates the name of the dataset stored on disk OR (2) a `DuckPyConnection` object OR a `GeistGraph` object for dataset in memory |REQUIRED |
+|datastore      |string | A backend datastore, i.e., `'clingo'`, `'duckdb'`, or `'rdflib'` |REQUIRED |
+|dataset        |string OR `Control` object OR `DuckPyConnection` object OR `GeistGraph` object |Dataset to load an object: (1) A string indicates the name of the dataset stored on disk OR (2) a `Control` object, a `DuckPyConnection` object, or a `GeistGraph` object for dataset in memory |REQUIRED |
 |inputfile      |string | File to be loaded |REQUIRED |
 |inputformat    |string | Format of the file to be loaded |REQUIRED |
 |isinputpath    |bool   |`True` if the inputfile is the file path, otherwise the inputfile is the content |REQUIRED |
 |config         |dict   | A dictionary with configurations for certain backend store |see below |
 
 Description for the *config* parameter:
+
+??? info "datastore: clingo"
+
+    |Name           |Type    |Description                    | Default    |
+    |-------------- |------- |------------------------------ |----------- |
+    |predicate      |string  |`'isfirstcol'` for using the first column as the predicate name; strings other than `'isfirstcol'` are used as the predicate name directly |`'isfirstcol'` |
+    |programname    |string  |Name of the program            |`'base'`    |
+
+    ??? example "Example: load facts into the `test` dataset"
+
+        There exist a file with the path of `.geistdata/clingo/test.pkl`. The `lp_str` will be imported into the `test` dataset.
+
+        ```
+        import geist
+
+        lp_str = """
+        friends(b, d).
+        """
+
+        # Load lp_str into the test dataset
+        geist.load(datastore='clingo', dataset='test', inputfile=lp_str, inputformat='lp', isinputpath=False)
+        ```
 
 ??? info "datastore: duckdb"
 
