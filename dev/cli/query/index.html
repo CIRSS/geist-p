@@ -8,9 +8,9 @@
 <link href="../load/" rel="prev"/>
 <link href="../../python-api/connect/Connection/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
-<meta content="mkdocs-1.6.1, mkdocs-material-9.7.0" name="generator"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.1" name="generator"/>
 <title>Command query - Geist</title>
-<link href="../../assets/stylesheets/main.618322db.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link href="../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
@@ -688,7 +688,7 @@
 <article class="md-content__inner md-typeset">
 <h1>Command query</h1>
 <p><em>query</em> command can perform a query on a dataset.</p>
-<p>There are two subcommands for <em>query</em>:
+<p>There are three subcommands for <em>query</em>:
 <div class="highlight"><pre><span></span><code>Usage: geist query [OPTIONS] COMMAND [ARGS]...
 
   Perform a query on a dataset
@@ -697,9 +697,58 @@ Options:
   --help  Show this message and exit.
 
 Commands:
+  clingo  Perform an ASP query on a dataset
   duckdb  Perform a SQL query on a dataset
   rdflib  Perform a SPARQL query on a dataset
 </code></pre></div></p>
+<details class="info">
+<summary>geist query clingo [OPTIONS]</summary>
+<div class="highlight"><pre><span></span><code>Usage: geist query clingo [OPTIONS]
+
+Perform an ASP query on a dataset
+
+Options:
+-d, --dataset TEXT              Name of ASP dataset to be queried (default
+                                "kb")
+-ifile, --inputfile FILENAME    Specify either the path of the file
+                                containing the ASP query to execute or
+                                provide the ASP query itself via stdin
+                                [required]
+-oroot, --outputroot TEXT       Path of the directory to store the query
+                                results (default: current directory). If the
+                                given path (i.e., --outputfile) is None or a
+                                relative path, it will be ignored.
+-ofile, --outputfile TEXT       Path of the file to store the query results
+                                (default: None). This file can be reused to
+                                create a dataset by setting
+                                inputformat=json.
+-rformat, --returnformat [lp|df|dict]
+                                Format of the returned data in memory
+                                (default lp)
+-pred, --predicate TEXT         Name of the predicate to be queried
+-prog, --programname TEXT       Name of the program
+--help                          Show this message and exit.
+</code></pre></div>
+<details class="example">
+<summary>Example 1: query the <code>test</code> ASP dataset from stdin</summary>
+<div class="highlight"><pre><span></span><code>geist query clingo --dataset test &lt;&lt; __END_QUERY__
+
+friends(X, Z) :- friends(X, Y), friends(Y, Z), X &lt; Z.
+friends(Y, Z) :- friends(X, Y), friends(X, Z), Y &lt; Z.
+
+__END_QUERY__
+</code></pre></div>
+</details>
+<details class="example">
+<summary>Example 2: query the <code>test</code> ASP dataset from a query file</summary>
+<div class="highlight"><pre><span></span><code>geist query clingo --dataset test --inputfile query
+</code></pre></div>
+<p>Here is the query file's content:
+<div class="highlight"><pre><span></span><code>friends(X, Z) :- friends(X, Y), friends(Y, Z), X &lt; Z.
+friends(Y, Z) :- friends(X, Y), friends(X, Z), Y &lt; Z.
+</code></pre></div></p>
+</details>
+</details>
 <details class="info">
 <summary>geist query duckdb [OPTIONS]</summary>
 <div class="highlight"><pre><span></span><code>Usage: geist query duckdb [OPTIONS]
@@ -815,7 +864,7 @@ ORDER BY ?s ?p ?o
 <div class="md-dialog" data-md-component="dialog">
 <div class="md-dialog__inner md-typeset"></div>
 </div>
-<script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.tabs.link", "content.code.copy"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
-<script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+<script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.tabs.link", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+<script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
 </body>
 </html>

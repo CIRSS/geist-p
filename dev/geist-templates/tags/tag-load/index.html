@@ -8,9 +8,9 @@
 <link href="../tag-graph2/" rel="prev"/>
 <link href="../tag-query/" rel="next"/>
 <link href="../../../assets/images/favicon.png" rel="icon"/>
-<meta content="mkdocs-1.6.1, mkdocs-material-9.7.0" name="generator"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.1" name="generator"/>
 <title>Tag load - Geist</title>
-<link href="../../../assets/stylesheets/main.618322db.min.css" rel="stylesheet"/>
+<link href="../../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link href="../../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
@@ -702,7 +702,7 @@
 </tr>
 <tr>
 <td><code>datastore</code></td>
-<td>Data backend. <code>duckdb</code> and <code>rdflib</code> are available for now. (by default, <code>rdflib</code>)</td>
+<td>Data backend. <code>duckdb</code>, <code>rdflib</code>, and <code>clingo</code> are available. (by default, <code>rdflib</code>)</td>
 </tr>
 <tr>
 <td><code>inputformat</code></td>
@@ -720,11 +720,24 @@
 <td><code>colnames</code></td>
 <td>Column names of triples with the format of <code>[[subject1, predicate1, object1], [subject2, predicate2, object2], ...]</code> when the input format is csv. Available for <code>rdflib</code> data backend only.</td>
 </tr>
+<tr>
+<td><code>predicate</code></td>
+<td><code>'isfirstcol'</code> for using the first column as the predicate name; strings other than <code>'isfirstcol'</code> are used as the predicate name directly (default <code>'isfirstcol'</code>). Available for <code>clingo</code> data backend only.</td>
+</tr>
+<tr>
+<td><code>programname</code></td>
+<td>Name of the program (default <code>'base'</code>). Available for <code>clingo</code> data backend only.</td>
+</tr>
 </tbody>
 </table>
 <details class="example">
-<summary>Example: load a file into the <code>test</code> dataset</summary>
+<summary>Example 1: load a file into the <code>test</code> RDF dataset</summary>
 <div class="highlight"><pre><span></span><code>{% load "test", datastore="rdflib" %} test_add.jsonld {% endload %}
+</code></pre></div>
+</details>
+<details class="example">
+<summary>Example 2: load a file into the <code>test</code> ASP dataset</summary>
+<div class="highlight"><pre><span></span><code>{% load "test", datastore="clingo", inputformat="lp" %} new_friends.lp {% endload %}
 </code></pre></div>
 </details>
 </article>
@@ -758,7 +771,7 @@
 <div class="md-dialog" data-md-component="dialog">
 <div class="md-dialog__inner md-typeset"></div>
 </div>
-<script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.tabs.link", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
-<script src="../../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+<script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.tabs.link", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+<script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
 </body>
 </html>
