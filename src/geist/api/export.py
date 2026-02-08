@@ -1,3 +1,5 @@
+from geist.tools.utils import _require_dependency
+
 def geist_export(datastore, dataset, hasoutput, config={}):
     """
     Export a dataset.
@@ -12,6 +14,7 @@ def geist_export(datastore, dataset, hasoutput, config={}):
     outputfile = None if 'outputfile' not in config else config['outputfile']
     if datastore == 'rdflib':
         # Export an RDF dataset
+        _require_dependency('rdflib')
         from geist.datastore.rdflib import rdflib_export
         data = rdflib_export(
             dataset=dataset, 
@@ -23,6 +26,7 @@ def geist_export(datastore, dataset, hasoutput, config={}):
         conn = None # This field is a placeholder only
     elif datastore == 'duckdb':
         # Export a SQL dataset
+        _require_dependency('duckdb')
         from geist.datastore.duckdb import duckdb_export
         (data, conn) = duckdb_export(
             dataset=dataset, 
@@ -34,6 +38,7 @@ def geist_export(datastore, dataset, hasoutput, config={}):
         )
     elif datastore == 'clingo':
         # Export an ASP dataset
+        _require_dependency('clingo')
         from geist.datastore.clingo import clingo_export
         (data, conn) = clingo_export(
             dataset=dataset,

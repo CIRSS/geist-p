@@ -1,5 +1,9 @@
 # Changelog
 
+v0.4.1 (2026-02-07)
+
+- Make rdflib, duckdb, and clingo optional dependencies (e.g., `pip install geist-p[rdflib]`) with friendly error messages when a required dependency is missing
+
 v0.4.0 (2026-02-07)
 
 - Replace [pygraphviz](https://pypi.org/project/pygraphviz) with [mermaid](https://mermaid.js.org/intro)

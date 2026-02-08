@@ -1,4 +1,4 @@
-from geist.tools.utils import get_content
+from geist.tools.utils import get_content, _require_dependency
 
 def geist_create(datastore, dataset, inputfile, inputformat, isinputpath, config={}):
     """
@@ -15,6 +15,7 @@ def geist_create(datastore, dataset, inputfile, inputformat, isinputpath, config
     content = get_content(inputfile, isinputpath)
     if datastore == 'rdflib':
         # Create a new RDF dataset using RDFLib
+        _require_dependency('rdflib')
         from geist.datastore.rdflib import rdflib_create
         conn = rdflib_create(
             dataset=dataset, 
@@ -25,6 +26,7 @@ def geist_create(datastore, dataset, inputfile, inputformat, isinputpath, config
         )
     elif datastore == 'duckdb':
         # Create a new SQL dataset using DuckDB
+        _require_dependency('duckdb')
         from geist.datastore.duckdb import duckdb_create
         conn = duckdb_create(
             dataset=dataset, 
@@ -34,6 +36,7 @@ def geist_create(datastore, dataset, inputfile, inputformat, isinputpath, config
         )
     elif datastore == 'clingo':
         # Create a new ASP dataset using Clingo
+        _require_dependency('clingo')
         from geist.datastore.clingo import clingo_create
         conn = clingo_create(
             dataset=dataset,

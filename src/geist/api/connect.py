@@ -4,10 +4,7 @@ from geist.api.export import geist_export
 from geist.api.graph import geist_graph
 from geist.api.load import geist_load
 from geist.api.query import geist_query
-from geist.datastore.rdflib import load_rdf_dataset
-from geist.datastore.duckdb import load_sql_dataset
-from geist.datastore.clingo import load_asp_dataset
-import duckdb, clingo
+from geist.tools.utils import _require_dependency
 
 class Connection:
     def __init__(self, datastore, dataset, conn=None):
@@ -26,6 +23,8 @@ class Connection:
         :return connection: a Connection object.
         """
         if datastore == 'rdflib':
+            _require_dependency('rdflib')
+            from geist.datastore.rdflib import load_rdf_dataset
             # Connect to an RDF dataset using RDFLib
             if dataset == ':memory:':
                 conn = None
@@ -33,12 +32,18 @@ class Connection:
                 (rdf_graph, infer) = load_rdf_dataset(dataset)
                 conn = {"rdf_graph": rdf_graph, "infer": infer}
         elif datastore == 'duckdb':
+            _require_dependency('duckdb')
+            from geist.datastore.duckdb import load_sql_dataset
             if dataset == ':memory:':
+                import duckdb
                 conn = duckdb.connect(dataset)
             else:
                 conn = load_sql_dataset(dataset)
         elif datastore == 'clingo':
+            _require_dependency('clingo')
+            from geist.datastore.clingo import load_asp_dataset
             if dataset == ':memory:':
+                import clingo
                 conn = clingo.control.Control()
             else:
                 conn = load_asp_dataset(dataset)

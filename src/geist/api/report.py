@@ -1,5 +1,5 @@
 import json, re, os
-from geist.tools.utils import set_tags, ensure_dir_exists, get_content, update_outputroot, include_filepaths, generate_template_class, map_df, export_mermaid
+from geist.tools.utils import set_tags, ensure_dir_exists, get_content, update_outputroot, include_filepaths, generate_template_class, map_df, export_mermaid, _require_dependency
 from geist.tools.filters import head, csv2df, dict2df, json2df, json2dict, df2json, df2htmltable, escape_quotes, process_str_for_html, clingo_list_arguments
 from jinja2 import nodes, Environment, FileSystemLoader
 from jinja2.compiler import CodeGenerator, Frame
@@ -48,13 +48,16 @@ class CreateExtension(ContainerTag):
     def render(self, dataset="kb", datastore="rdflib", inputformat="json-ld", colnames=None, infer="none", isfilepath=True, table="df", predicate="isfirstcol", name="base", caller=None):
         content = get_content(environment.from_string(str(caller())).render(), isfilepath)
         if datastore == "rdflib":
+            _require_dependency('rdflib')
             from geist.datastore.rdflib import rdflib_create
             rdflib_create(dataset, content, inputformat, colnames, infer)
         elif datastore == "duckdb":
+            _require_dependency('duckdb')
             from geist.datastore.duckdb import duckdb_create
             conn = duckdb_create(dataset, content, inputformat, table)
             conn.close()
         elif datastore == "clingo":
+            _require_dependency('clingo')
             from geist.datastore.clingo import clingo_create
             inputformat = "lp" if inputformat == "json-ld" else inputformat
             clingo_create(dataset, content, inputformat, predicate, name)
@@ -68,13 +71,16 @@ class LoadExtension(ContainerTag):
     def render(self, dataset="kb", datastore="rdflib", inputformat="json-ld", colnames=None, isfilepath=True, table="df", predicate="isfirstcol", programname="base", caller=None):
         content = get_content(environment.from_string(str(caller())).render(), isfilepath)
         if datastore == "rdflib":
+            _require_dependency('rdflib')
             from geist.datastore.rdflib import rdflib_load
             rdflib_load(dataset, content, inputformat, colnames, False, None)
         elif datastore == "duckdb":
+            _require_dependency('duckdb')
             from geist.datastore.duckdb import duckdb_load
             conn = duckdb_load(dataset, content, inputformat, table)
             conn.close()
         elif datastore == "clingo":
+            _require_dependency('clingo')
             from geist.datastore.clingo import clingo_load
             inputformat = "lp" if inputformat == "json-ld" else inputformat
             clingo_load(dataset, content, inputformat, predicate, programname, False)
@@ -89,15 +95,18 @@ class QueryExtension(ContainerTag):
         res = '{}'
         content = get_content(environment.from_string(str(caller())).render(), isfilepath)
         if datastore == "rdflib":
+            _require_dependency('rdflib')
             from geist.datastore.rdflib import load_rdf_dataset, query2df
             (rdf_graph, _) = load_rdf_dataset(dataset)
             res = query2df(rdf_graph, content)
         elif datastore == "duckdb":
+            _require_dependency('duckdb')
             from geist.datastore.duckdb import load_sql_dataset
             conn = load_sql_dataset(dataset)
             res = conn.sql(content).df()
             conn.close()
         elif datastore == "clingo":
+            _require_dependency('clingo')
             from geist.datastore.clingo import load_asp_dataset, query2dicts, format_dicts
             conn = load_asp_dataset(dataset, name="base")
             dicts = query2dicts(conn, content, programname, predicate)
@@ -111,12 +120,15 @@ class DestroyExtension(StandaloneTag):
     
     def render(self, dataset="kb", datastore="rdflib", quiet=False):
         if datastore == "rdflib":
+            _require_dependency('rdflib')
             from geist.datastore.rdflib import rdflib_destroy
             rdflib_destroy(dataset=dataset, quiet=quiet)
         elif datastore == "duckdb":
+            _require_dependency('duckdb')
             from geist.datastore.duckdb import duckdb_destroy
             duckdb_destroy(dataset=dataset, quiet=quiet)
         elif datastore == "clingo":
+            _require_dependency('clingo')
             from geist.datastore.clingo import clingo_destroy
             clingo_destroy(dataset=dataset, quiet=quiet)
         else:
@@ -129,6 +141,7 @@ class GraphExtension(StandaloneTag):
     def render(self, dataset="kb", datastore="rdflib", rankdir="TB", mappings=None, on=None, samecolor=True):
         res = ""
         if datastore == "rdflib":
+            _require_dependency('rdflib')
             from geist.datastore.rdflib import load_rdf_dataset, _graph
             (rdf_graph, _) = load_rdf_dataset(dataset)
             res = _graph(rdf_graph, rankdir, mappings, on, samecolor)
@@ -142,6 +155,7 @@ class Graph2Extension(StandaloneTag):
     def render(self, dataset="kb", datastore="rdflib", rankdir="TB", mappings=None, on=None, **kwargs):
         gv = ""
         if datastore == "rdflib":
+            _require_dependency('rdflib')
             from geist.datastore.rdflib import load_rdf_dataset, _graph2
             (rdf_graph, _) = load_rdf_dataset(dataset)
             gv = _graph2(rdf_graph, rankdir, mappings, on, **kwargs)

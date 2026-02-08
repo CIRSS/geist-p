@@ -1,4 +1,4 @@
-from geist.tools.utils import get_content
+from geist.tools.utils import get_content, _require_dependency
 
 def geist_load(datastore, dataset, inputfile, inputformat, isinputpath, config={}):
     """
@@ -14,6 +14,7 @@ def geist_load(datastore, dataset, inputfile, inputformat, isinputpath, config={
     content = get_content(inputfile, isinputpath)
     if datastore == 'rdflib':
         # Import data into a RDF dataset
+        _require_dependency('rdflib')
         from geist.datastore.rdflib import rdflib_load
         colnames = None if 'colnames' not in config else config['colnames']
         inmemory = False if 'inmemory' not in config else config['inmemory']
@@ -21,12 +22,14 @@ def geist_load(datastore, dataset, inputfile, inputformat, isinputpath, config={
         conn = rdflib_load(dataset=dataset, inputfile=content, inputformat=inputformat, colnames=colnames, inmemory=inmemory, datasetname=datasetname)
     elif datastore == 'duckdb':
         # Import data into a SQL dataset
+        _require_dependency('duckdb')
         from geist.datastore.duckdb import duckdb_load
         if 'table' not in config:
             raise ValueError("Please specify the value of 'table' in config")
         conn = duckdb_load(dataset=dataset, inputfile=content, inputformat=inputformat, table=config['table'])
     elif datastore == 'clingo':
         # Import data into an ASP dataset
+        _require_dependency('clingo')
         from geist.datastore.clingo import clingo_load
         predicate = 'isfirstcol' if 'predicate' not in config else config['predicate']
         programname = 'base' if 'programname' not in config else config['programname']

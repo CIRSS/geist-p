@@ -1,3 +1,5 @@
+from geist.tools.utils import _require_dependency
+
 def geist_graph(datastore, dataset, hasoutput, config={}):
     """
     Visualize a dataset
@@ -9,6 +11,7 @@ def geist_graph(datastore, dataset, hasoutput, config={}):
     """
     if datastore == 'rdflib':
         # Visualize an RDF dataset
+        _require_dependency('rdflib')
         from geist.datastore.rdflib import rdflib_graph
         if 'rankdir' in config and config['rankdir'] not in ['TB', 'BT', 'LR', 'RL']:
             raise ValueError("rankdir must be one of ['TB', 'BT', 'LR', 'RL']")

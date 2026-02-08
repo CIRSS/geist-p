@@ -1,4 +1,4 @@
-from geist.tools.utils import get_content
+from geist.tools.utils import get_content, _require_dependency
 
 def geist_query(datastore, dataset, inputfile, isinputpath, hasoutput, config={}):
     """
@@ -17,15 +17,18 @@ def geist_query(datastore, dataset, inputfile, isinputpath, hasoutput, config={}
     content = get_content(inputfile, isinputpath)
     if datastore == 'rdflib':
         # Perform a SPARQL query on a dataset
+        _require_dependency('rdflib')
         from geist.datastore.rdflib import rdflib_query
         res = rdflib_query(dataset=dataset, inputfile=content, hasoutput=hasoutput, outputroot=outputroot, outputfile=outputfile)
         conn = None # This field is a placeholder only
     elif datastore == 'duckdb':
         # Perform a SQL query on a dataset
+        _require_dependency('duckdb')
         from geist.datastore.duckdb import duckdb_query
         (res, conn) = duckdb_query(dataset=dataset, inputfile=content, hasoutput=hasoutput, outputroot=outputroot, outputfile=outputfile)
     elif datastore == 'clingo':
         # Perform a Clingo query on a dataset
+        _require_dependency('clingo')
         from geist.datastore.clingo import clingo_query
         returnformat = 'lp' if 'returnformat' not in config else config['returnformat']
         predicate = None if 'predicate' not in config else config['predicate']

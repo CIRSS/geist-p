@@ -2,6 +2,15 @@ import json, re, os, base64, requests
 import pandas as pd
 from click import BadParameter
 
+def _require_dependency(extra_name):
+    """Check that an optional extra is installed, raising a helpful error if not."""
+    try:
+        __import__(extra_name)
+    except ImportError:
+        raise ImportError(
+            f"Missing optional dependency '{extra_name}'. Install it with: pip install geist-p[{extra_name}]"
+        ) from None
+
 def set_tags():
     tags = ["use", "template", "create", "load", "query", "destroy", "graph", "graph2", "component", "map", "html", "img", "table", "include", "import", "macro", "block", "extends", "call", "filter", "set", "for", "if", "elif", "else"]
     return tags
