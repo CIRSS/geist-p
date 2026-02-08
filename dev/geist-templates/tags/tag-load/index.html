@@ -702,7 +702,7 @@
 </tr>
 <tr>
 <td><code>datastore</code></td>
-<td>Data backend. <code>duckdb</code>, <code>rdflib</code>, and <code>clingo</code> are available. (by default, <code>rdflib</code>)</td>
+<td>Data backend. <code>clingo</code>, <code>duckdb</code>, and <code>rdflib</code> are available. (by default, <code>rdflib</code>)</td>
 </tr>
 <tr>
 <td><code>inputformat</code></td>
@@ -731,13 +731,8 @@
 </tbody>
 </table>
 <details class="example">
-<summary>Example 1: load a file into the <code>test</code> RDF dataset</summary>
+<summary>Example 1: load a file into the <code>test</code> dataset</summary>
 <div class="highlight"><pre><span></span><code>{% load "test", datastore="rdflib" %} test_add.jsonld {% endload %}
-</code></pre></div>
-</details>
-<details class="example">
-<summary>Example 2: load a file into the <code>test</code> ASP dataset</summary>
-<div class="highlight"><pre><span></span><code>{% load "test", datastore="clingo", inputformat="lp" %} new_friends.lp {% endload %}
 </code></pre></div>
 </details>
 </article>

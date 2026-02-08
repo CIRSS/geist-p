@@ -702,7 +702,7 @@
 </tr>
 <tr>
 <td><code>datastore</code></td>
-<td>Data backend. <code>duckdb</code>, <code>rdflib</code>, and <code>clingo</code> are available. (by default, <code>rdflib</code>)</td>
+<td>Data backend. <code>clingo</code>, <code>duckdb</code>, and <code>rdflib</code> are available. (by default, <code>rdflib</code>)</td>
 </tr>
 <tr>
 <td><code>inputformat</code></td>
@@ -743,25 +743,7 @@
 </code></pre></div>
 </details>
 <details class="example">
-<summary>Example 2: create a Clingo dataset (the given string is not a file path)</summary>
-<div class="highlight"><pre><span></span><code>{% create "test", datastore="clingo", inputformat="lp", isfilepath=False %}
-    friends(a, b).
-    friends(a, c).
-{% endcreate %}
-</code></pre></div>
-</details>
-<details class="example">
-<summary>Example 3: create a Clingo dataset from a file</summary>
-<p>Here is the <code>friends.lp</code> file:</p>
-<div class="highlight"><pre><span></span><code>friends(a, b).
-friends(a, c).
-</code></pre></div>
-<p>Code:
-<div class="highlight"><pre><span></span><code>{% create "test", datastore="clingo", inputformat="lp", isfilepath=True %} friends.lp {% endcreate %}
-</code></pre></div></p>
-</details>
-<details class="example">
-<summary>Example 4: the given string is a file path</summary>
+<summary>Example 2: the given string is a file path</summary>
 <p>Here is the <code>test.nt</code> file:</p>
 <div class="highlight"><pre><span></span><code>&lt;http://example.com/drewp&gt; &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://xmlns.com/foaf/0.1/Person&gt; .
 &lt;http://example.com/drewp&gt; &lt;http://example.com/says&gt; "Hello World" .

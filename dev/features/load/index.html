@@ -796,13 +796,13 @@ Options:
 <tr>
 <td>datastore</td>
 <td>string</td>
-<td>A backend datastore, i.e., <code>'duckdb'</code>, <code>'rdflib'</code>, or <code>'clingo'</code></td>
+<td>A backend datastore, i.e., <code>'clingo'</code>, <code>'duckdb'</code>, or <code>'rdflib'</code></td>
 <td>REQUIRED</td>
 </tr>
 <tr>
 <td>dataset</td>
-<td>string OR <code>DuckPyConnection</code> object OR <code>GeistGraph</code> object OR <code>Control</code> object</td>
-<td>Dataset to load an object: (1) A string indicates the name of the dataset stored on disk OR (2) a <code>DuckPyConnection</code> object, a <code>GeistGraph</code> object, or a <code>Control</code> object for dataset in memory</td>
+<td>string OR <code>Control</code> object OR <code>DuckPyConnection</code> object OR <code>GeistGraph</code> object</td>
+<td>Dataset to load an object: (1) A string indicates the name of the dataset stored on disk OR (2) a <code>Control</code> object, a <code>DuckPyConnection</code> object, or a <code>GeistGraph</code> object for dataset in memory</td>
 <td>REQUIRED</td>
 </tr>
 <tr>
@@ -832,6 +832,46 @@ Options:
 </tbody>
 </table>
 <p>Description for the <em>config</em> parameter:</p>
+<details class="info">
+<summary>datastore: clingo</summary>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>predicate</td>
+<td>string</td>
+<td><code>'isfirstcol'</code> for using the first column as the predicate name; strings other than <code>'isfirstcol'</code> are used as the predicate name directly</td>
+<td><code>'isfirstcol'</code></td>
+</tr>
+<tr>
+<td>programname</td>
+<td>string</td>
+<td>Name of the program</td>
+<td><code>'base'</code></td>
+</tr>
+</tbody>
+</table>
+<details class="example">
+<summary>Example: load facts into the <code>test</code> dataset</summary>
+<p>There exist a file with the path of <code>.geistdata/clingo/test.pkl</code>. The <code>lp_str</code> will be imported into the <code>test</code> dataset.</p>
+<div class="highlight"><pre><span></span><code>import geist
+
+lp_str = """
+friends(b, d).
+"""
+
+# Load lp_str into the test dataset
+geist.load(datastore='clingo', dataset='test', inputfile=lp_str, inputformat='lp', isinputpath=False)
+</code></pre></div>
+</details>
+</details>
 <details class="info">
 <summary>datastore: duckdb</summary>
 <table>
@@ -907,46 +947,6 @@ subject,predicate,object
 
 # Load csv_str to the df table of the test dataset
 geist.load(datastore='rdflib', dataset='test', inputfile=csv_str, inputformat='csv', isinputpath=False, config={"colnames": "[['subject', 'predicate', 'object']]"})
-</code></pre></div>
-</details>
-</details>
-<details class="info">
-<summary>datastore: clingo</summary>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>predicate</td>
-<td>string</td>
-<td><code>'isfirstcol'</code> for using the first column as the predicate name; strings other than <code>'isfirstcol'</code> are used as the predicate name directly</td>
-<td><code>'isfirstcol'</code></td>
-</tr>
-<tr>
-<td>programname</td>
-<td>string</td>
-<td>Name of the program</td>
-<td><code>'base'</code></td>
-</tr>
-</tbody>
-</table>
-<details class="example">
-<summary>Example: load facts into the <code>test</code> ASP dataset</summary>
-<p>There exist a file with the path of <code>.geistdata/clingo/test.pkl</code>. The <code>lp_str</code> will be imported into the <code>test</code> ASP dataset.</p>
-<div class="highlight"><pre><span></span><code>import geist
-
-lp_str = """
-friends(b, d).
-"""
-
-# Load lp_str into the test ASP dataset
-geist.load(datastore='clingo', dataset='test', inputfile=lp_str, inputformat='lp', isinputpath=False)
 </code></pre></div>
 </details>
 </details>

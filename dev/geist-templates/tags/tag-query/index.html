@@ -702,7 +702,7 @@
 </tr>
 <tr>
 <td><code>datastore</code></td>
-<td>Data backend. <code>duckdb</code>, <code>rdflib</code>, and <code>clingo</code> are available. (by default, <code>rdflib</code>)</td>
+<td>Data backend. <code>clingo</code>, <code>duckdb</code>, and <code>rdflib</code> are available. (by default, <code>rdflib</code>)</td>
 </tr>
 <tr>
 <td><code>isfilepath</code></td>
@@ -743,23 +743,6 @@ WHERE {
     ?s ?p ?o
 }
 ORDER BY ?s ?p ?o
-</code></pre></div></p>
-</details>
-<details class="example">
-<summary>Example 3: query a Clingo dataset (the given string is not a file path)</summary>
-<div class="highlight"><pre><span></span><code>{% query "test", datastore="clingo", isfilepath=False %}
-    friends(X, Z) :- friends(X, Y), friends(Y, Z), X &lt; Z.
-    friends(Y, Z) :- friends(X, Y), friends(X, Z), Y &lt; Z.
-{% endquery %}
-</code></pre></div>
-</details>
-<details class="example">
-<summary>Example 4: query a Clingo dataset from a file</summary>
-<p><div class="highlight"><pre><span></span><code>{% query "test", datastore="clingo", isfilepath=True %} query {% endquery %}
-</code></pre></div>
-Here is the query file's content:
-<div class="highlight"><pre><span></span><code>friends(X, Z) :- friends(X, Y), friends(Y, Z), X &lt; Z.
-friends(Y, Z) :- friends(X, Y), friends(X, Z), Y &lt; Z.
 </code></pre></div></p>
 </details>
 </article>
