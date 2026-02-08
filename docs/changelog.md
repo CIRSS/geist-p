@@ -1,5 +1,9 @@
 # Changelog
 
+v0.4.2 (2026-02-07)
+
+- Add meta data to PyPI
+
 v0.4.1 (2026-02-07)
 
 - Make rdflib, duckdb, and clingo optional dependencies (e.g., `pip install geist-p[rdflib]`) with friendly error messages when a required dependency is missing

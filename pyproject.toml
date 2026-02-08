@@ -4,7 +4,21 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "geist-p"
-version = "0.4.1"
+version = "0.4.2"
+description = "Geist is a new templating language for declarative data manipulation, query, and report generation."
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+authors = [
+    {name = "Meng Li"},
+    {name = "Timothy McPhillips"},
+    {name = "Bertram Ludäscher"},
+]
+classifiers = [
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+]
 dependencies = [
     "click",
     "pandas",
@@ -13,6 +27,10 @@ dependencies = [
     "jinja2-simple-tags",
     "requests",
 ]
+
+[project.urls]
+Homepage = "https://cirss.github.io/geist-p"
+Repository = "https://github.com/cirss/geist-p"
 
 [project.optional-dependencies]
 rdflib = ["rdflib", "owlrl"]
