@@ -1,0 +1,382 @@
+
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body { margin: 3%; }
+            table, th, tr, td {
+                border:1px solid #69899F;
+                border-collapse: collapse;
+            }
+        </style>
+        <title>Geist</title>
+    </head><body>
+    <h1>Geist Demo for SciPy 2024</h1>
+    Suppose we have a <strong>Hamming numbers</strong> (let's call it a <strong>Fish</strong> Graph) dataset stored in DuckDB, which contains a table named <i>edges</i>. The fish dataset was generated based on the following rules:
+    <li>The initial starting node is 1.</li>
+    <li>The edge can be either 2 or 3 or 5.</li>
+    <li>Start node times edge equals to the end node.</li>
+
+    Below shows the first 5 rows of the fish table:
+    
+        <table>
+            <tr><th>startnode</th><th>label</th><th>endnode</th></tr>
+        
+			<tr><td>1</td><td>3</td><td>3</td>
+			<tr><td>1</td><td>2</td><td>2</td>
+			<tr><td>1</td><td>5</td><td>5</td>
+			<tr><td>5</td><td>3</td><td>15</td>
+			<tr><td>2</td><td>3</td><td>6</td>
+        </table>
+    
+
+    <h4>1. Visualization of the Fish Graph</h4>
+    <pre class="mermaid">        graph LR
+	style N1 fill:#b3e2cd, stroke:#333, stroke-width:1px
+	style N2 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N1(1) --> |× 2| N2(2)
+	style N3 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N1 --> |× 3| N3(3)
+	style N4 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N1 --> |× 5| N4(5)
+	style N5 fill:#b3e2cd, stroke:#333, stroke-width:1px
+	style N6 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N5(10) --> |× 2| N6(20)
+	style N7 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N5 --> |× 3| N7(30)
+	style N8 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N5 --> |× 5| N8(50)
+	style N9 fill:#b3e2cd, stroke:#333, stroke-width:1px
+	style N10 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N9(100) --> |× 2| N10(200)
+	style N11 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N9 --> |× 3| N11(300)
+	style N12 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N9 --> |× 5| N12(500)
+	style N13 fill:#b3e2cd, stroke:#333, stroke-width:1px
+	style N14 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N13(108) --> |× 2| N14(216)
+	style N15 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N13 --> |× 3| N15(324)
+	style N16 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N13 --> |× 5| N16(540)
+	style N17 fill:#b3e2cd, stroke:#333, stroke-width:1px
+	style N18 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N17(12) --> |× 2| N18(24)
+	style N19 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N17 --> |× 3| N19(36)
+	style N20 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N17 --> |× 5| N20(60)
+	style N21 fill:#b3e2cd, stroke:#333, stroke-width:1px
+	style N22 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N21(120) --> |× 2| N22(240)
+	style N23 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N21 --> |× 3| N23(360)
+	style N24 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N21 --> |× 5| N24(600)
+	style N25 fill:#b3e2cd, stroke:#333, stroke-width:1px
+	style N26 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N25(125) --> |× 2| N26(250)
+	style N27 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N25 --> |× 3| N27(375)
+	style N28 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N25 --> |× 5| N28(625)
+	style N29 fill:#b3e2cd, stroke:#333, stroke-width:1px
+	style N30 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N29(128) --> |× 2| N30(256)
+	style N31 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N29 --> |× 3| N31(384)
+	style N32 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N29 --> |× 5| N32(640)
+	style N33 fill:#b3e2cd, stroke:#333, stroke-width:1px
+	style N34 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N33(135) --> |× 2| N34(270)
+	style N35 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N33 --> |× 3| N35(405)
+	style N36 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N33 --> |× 5| N36(675)
+	style N37 fill:#b3e2cd, stroke:#333, stroke-width:1px
+	style N38 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N37(144) --> |× 2| N38(288)
+	style N39 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N37 --> |× 3| N39(432)
+	style N40 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N37 --> |× 5| N40(720)
+	style N41 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N41(15) --> |× 2| N7
+	style N42 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N41 --> |× 3| N42(45)
+	style N43 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N41 --> |× 5| N43(75)
+	style N44 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N44(150) --> |× 2| N11
+	style N45 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N44 --> |× 3| N45(450)
+	style N46 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N44 --> |× 5| N46(750)
+	style N47 fill:#b3e2cd, stroke:#333, stroke-width:1px
+	style N48 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N47(16) --> |× 2| N48(32)
+	style N49 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N47 --> |× 3| N49(48)
+	style N50 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N47 --> |× 5| N50(80)
+	style N51 fill:#b3e2cd, stroke:#333, stroke-width:1px
+	style N52 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N51(160) --> |× 2| N52(320)
+	style N53 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N51 --> |× 3| N53(480)
+	style N54 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N51 --> |× 5| N54(800)
+	style N55 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N55(162) --> |× 2| N15
+	style N56 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N55 --> |× 3| N56(486)
+	style N57 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N55 --> |× 5| N57(810)
+	style N58 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N58(18) --> |× 2| N19
+	style N59 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N58 --> |× 3| N59(54)
+	style N60 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N58 --> |× 5| N60(90)
+	style N61 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N61(180) --> |× 2| N23
+N61 --> |× 3| N16
+	style N62 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N61 --> |× 5| N62(900)
+	style N63 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N63(192) --> |× 2| N31
+	style N64 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N63 --> |× 3| N64(576)
+	style N65 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N63 --> |× 5| N65(960)
+	style N66 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N2 --> |× 2| N66(4)
+	style N67 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N2 --> |× 3| N67(6)
+N2 --> |× 5| N5
+	style N68 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N6 --> |× 2| N68(40)
+N6 --> |× 3| N20
+N6 --> |× 5| N9
+	style N69 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N10 --> |× 2| N69(400)
+N10 --> |× 3| N24
+	style N70 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N10 --> |× 5| N70(1000)
+N14 --> |× 2| N39
+	style N71 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N14 --> |× 3| N71(648)
+	style N72 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N72(225) --> |× 2| N45
+N72 --> |× 3| N36
+N18 --> |× 2| N49
+	style N73 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N18 --> |× 3| N73(72)
+N18 --> |× 5| N21
+N22 --> |× 2| N53
+N22 --> |× 3| N40
+	style N74 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N74(243) --> |× 2| N56
+	style N75 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N74 --> |× 3| N75(729)
+	style N76 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N76(25) --> |× 2| N8
+N76 --> |× 3| N43
+N76 --> |× 5| N25
+N26 --> |× 2| N12
+N26 --> |× 3| N46
+	style N77 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N30 --> |× 2| N77(512)
+	style N78 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N30 --> |× 3| N78(768)
+	style N79 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N79(27) --> |× 2| N59
+	style N80 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N79 --> |× 3| N80(81)
+N79 --> |× 5| N33
+N34 --> |× 2| N16
+N34 --> |× 3| N57
+N38 --> |× 2| N64
+	style N81 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N38 --> |× 3| N81(864)
+N3 --> |× 2| N67
+	style N82 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N3 --> |× 3| N82(9)
+N3 --> |× 5| N41
+N7 --> |× 2| N20
+N7 --> |× 3| N60
+N7 --> |× 5| N44
+N11 --> |× 2| N24
+N11 --> |× 3| N62
+	style N83 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N48 --> |× 2| N83(64)
+	style N84 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N48 --> |× 3| N84(96)
+N48 --> |× 5| N51
+N52 --> |× 2| N32
+N52 --> |× 3| N65
+N15 --> |× 2| N71
+	style N85 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N15 --> |× 3| N85(972)
+N19 --> |× 2| N73
+N19 --> |× 3| N13
+N19 --> |× 5| N61
+N23 --> |× 2| N40
+N27 --> |× 2| N46
+N31 --> |× 2| N78
+	style N86 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N66 --> |× 2| N86(8)
+N66 --> |× 3| N17
+N66 --> |× 5| N6
+N68 --> |× 2| N50
+N68 --> |× 3| N21
+N68 --> |× 5| N10
+N69 --> |× 2| N54
+N35 --> |× 2| N57
+N39 --> |× 2| N81
+N42 --> |× 2| N60
+N42 --> |× 3| N33
+N42 --> |× 5| N72
+N45 --> |× 2| N62
+N49 --> |× 2| N84
+N49 --> |× 3| N37
+N49 --> |× 5| N22
+N53 --> |× 2| N65
+N56 --> |× 2| N85
+N4 --> |× 2| N5
+N4 --> |× 3| N41
+N4 --> |× 5| N76
+N8 --> |× 2| N9
+N8 --> |× 3| N44
+N8 --> |× 5| N26
+N12 --> |× 2| N70
+N59 --> |× 2| N13
+N59 --> |× 3| N55
+N59 --> |× 5| N34
+N67 --> |× 2| N17
+N67 --> |× 3| N58
+N67 --> |× 5| N7
+N20 --> |× 2| N21
+N20 --> |× 3| N61
+N20 --> |× 5| N11
+N83 --> |× 2| N29
+N83 --> |× 3| N63
+N83 --> |× 5| N52
+N73 --> |× 2| N37
+N73 --> |× 3| N14
+N73 --> |× 5| N23
+N43 --> |× 2| N44
+N43 --> |× 3| N72
+N43 --> |× 5| N27
+N86 --> |× 2| N47
+N86 --> |× 3| N18
+N86 --> |× 5| N68
+N50 --> |× 2| N51
+N50 --> |× 3| N22
+N50 --> |× 5| N69
+N80 --> |× 2| N55
+N80 --> |× 3| N74
+N80 --> |× 5| N35
+N82 --> |× 2| N58
+N82 --> |× 3| N79
+N82 --> |× 5| N42
+N60 --> |× 2| N61
+N60 --> |× 3| N34
+N60 --> |× 5| N45
+N84 --> |× 2| N63
+N84 --> |× 3| N38
+N84 --> |× 5| N53
+    </pre><script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";mermaid.initialize({ startOnLoad: true });</script>
+    <h4>2. Visualization of the subgraph extracted from the Fish Graph</h4>
+    Find all nodes that can be reached from node 5 by following either edge 2 or 3.
+    <pre class="mermaid">        graph LR
+	style N1 fill:#b3e2cd, stroke:#333, stroke-width:1px
+	style N2 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N1(10) --> |× 2| N2(20)
+	style N3 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N1 --> |× 3| N3(30)
+	style N4 fill:#b3e2cd, stroke:#333, stroke-width:1px
+	style N5 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N4(120) --> |× 2| N5(240)
+	style N6 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N4 --> |× 3| N6(360)
+	style N7 fill:#b3e2cd, stroke:#333, stroke-width:1px
+	style N8 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N7(135) --> |× 2| N8(270)
+	style N9 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N7 --> |× 3| N9(405)
+	style N10 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N10(15) --> |× 2| N3
+	style N11 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N10 --> |× 3| N11(45)
+	style N12 fill:#b3e2cd, stroke:#333, stroke-width:1px
+	style N13 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N12(160) --> |× 2| N13(320)
+	style N14 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N12 --> |× 3| N14(480)
+	style N15 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N15(180) --> |× 2| N6
+	style N16 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N15 --> |× 3| N16(540)
+	style N17 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N2 --> |× 2| N17(40)
+	style N18 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N2 --> |× 3| N18(60)
+N5 --> |× 2| N14
+	style N19 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N5 --> |× 3| N19(720)
+N8 --> |× 2| N16
+	style N20 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N8 --> |× 3| N20(810)
+N3 --> |× 2| N18
+	style N21 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N3 --> |× 3| N21(90)
+	style N22 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N13 --> |× 2| N22(640)
+	style N23 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N13 --> |× 3| N23(960)
+	style N24 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N17 --> |× 2| N24(80)
+N17 --> |× 3| N4
+N11 --> |× 2| N21
+N11 --> |× 3| N7
+	style N25 fill:#b3e2cd, stroke:#333, stroke-width:1px
+N25(5) --> |× 2| N1
+N25 --> |× 3| N10
+N18 --> |× 2| N4
+N18 --> |× 3| N15
+N24 --> |× 2| N12
+N24 --> |× 3| N5
+N21 --> |× 2| N15
+N21 --> |× 3| N8
+    </pre><script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";mermaid.initialize({ startOnLoad: true });</script></body>
+<style>
+    table {
+        border-collapse: collapse;
+        width: 50%;
+    }
+
+    th, td {
+        border-collapse: collapse;
+        padding: 8px;
+        text-align: left;
+    }
+
+    tr:nth-child(odd) {
+        background-color: #f2f2f2;
+    }
+
+    th {
+        background-color: #B3E2CD;
+    }
+
+    tr:hover {
+        background-color: #ddd;
+    }
+</style>
+</html>
