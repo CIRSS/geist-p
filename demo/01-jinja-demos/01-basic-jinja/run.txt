@@ -4,13 +4,13 @@ pip show Jinja2
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
 Name: Jinja2
-Version: 3.1.2
+Version: 3.1.6
 Summary: A very fast and expressive template engine.
-Home-page: https://palletsprojects.com/p/jinja/
-Author: Armin Ronacher
-Author-email: armin.ronacher@active-4.com
-License: BSD-3-Clause
-Location: /mnt/geist-p/.python-dev/.local/lib/python3.10/site-packages
+Home-page: 
+Author: 
+Author-email: 
+License: 
+Location: /usr/local/lib/python3.10/site-packages
 Requires: MarkupSafe
 Required-by: geist-p, jinja2-simple-tags
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -27,7 +27,7 @@ print(jinja2)
 END_PYTHON
 
 ----------------------------------------------------------- cell outputs -----------------------------------------------------------
-<module 'jinja2' from '/mnt/geist-p/.python-dev/.local/lib/python3.10/site-packages/jinja2/__init__.py'>
+<module 'jinja2' from '/usr/local/lib/python3.10/site-packages/jinja2/__init__.py'>
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
