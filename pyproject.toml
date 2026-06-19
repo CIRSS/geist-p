@@ -37,6 +37,10 @@ rdflib = ["rdflib", "owlrl"]
 duckdb = ["duckdb", "pyarrow"]
 clingo = ["clingo==5.8.0"]
 all = ["geist-p[rdflib]", "geist-p[duckdb]", "geist-p[clingo]"]
+test = ["pytest", "geist-p[rdflib]"]
 
 [project.scripts]
 geist = "geist.__main__:cli"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

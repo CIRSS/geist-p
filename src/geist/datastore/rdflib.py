@@ -86,6 +86,12 @@ def query2df(rdf_graph, query):
     if bindings:
         # type: uri, literal, or bnode
         res_df = pd.DataFrame(bindings).apply(lambda row: row.apply(lambda x: "<"+x["value"]+">" if x["type"] == "uri" else x["value"] if x["type"] == "literal" else "_:"+x["value"]), axis=1)
+        # A SELECT var can be missing from the bindings when it is unbound in the
+        # results -- notably a GROUP BY query that matches nothing yields, in
+        # rdflib >= 7, a single all-unbound row. Ensure every SELECT var is a
+        # column, then drop fully-unbound rows, so such a query returns an empty
+        # result instead of raising a KeyError on the missing columns.
+        res_df = res_df.reindex(columns=colnames).dropna(axis=0, how="all")
     else:
         res_df = pd.DataFrame(columns=colnames)
     return res_df[colnames]
