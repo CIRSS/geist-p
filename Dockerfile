@@ -4,11 +4,12 @@ FROM ${PARENT_IMAGE}
 
 COPY exports /repro/exports
 
-# geist's own source, plus the signal that base-setup should install from it.
-# Only ever set here, in geist-p's own image; requirers never set it -> they get PyPI.
+# geist's own source, plus the selector telling base-setup to install from it.
+# Only set here, in geist-p's own image; requirers leave GEIST_INSTALL unset
+# (-> PyPI) or set it to "git" to install from the repo. See base-setup.
 COPY pyproject.toml README.md LICENSE /repro/
 COPY src /repro/src
-ENV GEIST_FROM_SOURCE=true
+ENV GEIST_INSTALL=source
 
 ADD ${REPRO_DIST}/boot-setup /repro/dist/
 RUN bash /repro/dist/boot-setup

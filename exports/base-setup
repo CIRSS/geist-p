@@ -2,15 +2,23 @@
 # install python3 development environment
 repro.require python-dev master ${REPROS_DEV} --default --code
 
-# install geist, with the rdflib datastore extra (rdflib + owlrl)
-if [[ "${GEIST_FROM_SOURCE}" == "true" ]] ; then
-    # geist-p building its own image: install from the local working tree, with
-    # all extras so geist-p's own demo (rdflib, clingo, duckdb datastores) runs.
-    echo "Installing geist from local source tree (/repro) with all extras ..."
-    sudo pip install '/repro[all]'
-else
-    # geist-p required by another repro: install the published package. The
-    # rdflib extra is what trace-model (the current consumer) needs.
-    echo "Installing geist-p[rdflib] from PyPI ..."
-    sudo pip install 'geist-p[rdflib]'
-fi
+# Install geist. GEIST_INSTALL selects where it comes from (default: pypi):
+#   source -> this repo's own working tree, used when geist-p builds its own image
+#   git    -> GitHub at GEIST_GIT_REF, to build against an unreleased change
+#   pypi   -> the published geist-p package
+case "${GEIST_INSTALL:-pypi}" in
+    source)
+        # all extras (rdflib + clingo + duckdb) so geist-p's own demo runs.
+        echo "Installing geist from local source tree (/repro) with all extras ..."
+        sudo pip install '/repro[all]'
+        ;;
+    git)
+        # lets a dependent use an unreleased change without waiting for a release.
+        echo "Installing geist-p[rdflib] from git@${GEIST_GIT_REF:-main} ..."
+        sudo pip install "geist-p[rdflib] @ git+https://github.com/cirss/geist-p@${GEIST_GIT_REF:-main}"
+        ;;
+    *)
+        echo "Installing geist-p[rdflib] from PyPI ..."
+        sudo pip install 'geist-p[rdflib]'
+        ;;
+esac
